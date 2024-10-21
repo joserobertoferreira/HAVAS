@@ -1,5 +1,0 @@
-{
-  "code-runner.executorMap": {
-    "python": "clear ; ./venv/Scripts/python.exe -u"
-  }
-}
