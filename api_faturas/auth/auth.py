@@ -7,7 +7,7 @@ class Auth:
     def login(base_url, username, password):
         service_url = f'https://{base_url}/GetTokenFromLogin'
 
-        query_params = { 'userId': username, 'password': password }
+        query_params = {'userId': username, 'password': password}
 
         response = requests.get(service_url, params=query_params)
 
@@ -16,5 +16,11 @@ class Auth:
         correlationId = json_response['CorrelationId']
         resultData = json_response['ResultData']
         resultCode = json_response['ResultCode']
+        errors = json_response['Errors']
 
-        return resultCode, correlationId, resultData
+        return {
+            'HttpStatus': resultCode,
+            'CorrelationId': correlationId,
+            'Token': resultData,
+            'Errors': errors,
+        }
