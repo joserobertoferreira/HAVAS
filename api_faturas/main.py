@@ -12,36 +12,42 @@ def api_faturas() -> None:
 
     xml_list = fileHandler.check_for_xml_files()
 
-    if xml_list:
-        # Generate the base64 strings
-        base64_strings = fileHandler.generate_base64_strings(xml_list)
+    if xml_list is None:
+        print('No files to be processed.')
 
-        if base64_strings:
-            for file, fileBase64 in base64_strings.items():
-                # Get the authentication token
-                authentication = Auth(settings.SERVER_BASE_ADDRESS)
+        return
 
-                login = authentication.login(
-                    settings.API_USER,
-                    settings.API_PASSWORD,
+    # Generate the base64 strings
+    base64_strings = fileHandler.generate_base64_strings(xml_list)
+
+    if base64_strings:
+        for file, fileBase64 in base64_strings.items():
+            # Get the authentication token
+            authentication = Auth(settings.SERVER_BASE_ADDRESS)
+
+            login = authentication.login(
+                settings.API_USER,
+                settings.API_PASSWORD,
+            )
+
+            # Check if the authentication was successful
+            if login['HttpStatus'] == HTTPStatus.OK:
+                handle_messages = ProcessedMessages(
+                    settings.SERVER_BASE_ADDRESS,
+                    login,
                 )
 
-                # Check if the authentication was successful
-                if login['HttpStatus'] == HTTPStatus.OK:
-                    handle_messages = ProcessedMessages(
-                        settings.SERVER_BASE_ADDRESS,
-                        login,
-                    )
+                # Send the messages
+                sent_message = handle_messages.send_message(
+                    settings.SENDER, file, fileBase64
+                )
 
-                    # Send the messages
-                    handle_messages.send_message(
-                        settings.SENDER, file, fileBase64
-                    )
+                # Logout from API
+                authentication.logout(login['Token'])
 
-                    # Logout from API
-                    http_status = authentication.logout(login['Token'])
-
-                    print(http_status)
+                # If the message was sent, move the file to the output folder
+                if sent_message:
+                    fileHandler.move_file(f'{file}.xml')
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 [tool.ruff]
-line-length = 79
+line-length = 88
 extend-exclude = ['migrations']
 
 [tool.ruff.lint]

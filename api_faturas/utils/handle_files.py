@@ -3,11 +3,11 @@ from pathlib import Path
 
 
 class HandleFiles:
-    def __init__(self, folder_input, folder_output):
+    def __init__(self, folder_input: str, folder_output: str):
         self.folder_input = folder_input
         self.folder_output = folder_output
 
-    def check_for_xml_files(self):
+    def check_for_xml_files(self) -> list[str]:
         work_path = Path(self.folder_input)
 
         # Check if the folder exists
@@ -20,7 +20,7 @@ class HandleFiles:
         # Return the list of XML files or a message if none are found
         return xml_files
 
-    def generate_base64_strings(self, xml_list):
+    def generate_base64_strings(self, xml_list: list[str]) -> dict[str, str]:
         base64_strings = {}
 
         for xml_file in xml_list:
@@ -33,3 +33,7 @@ class HandleFiles:
                 base64_strings[file_attributes.stem] = base_string
 
         return base64_strings
+
+    def move_file(self, file: str) -> None:
+        file_to_move = Path(self.folder_input) / file
+        file_to_move.replace(Path(self.folder_output) / file)

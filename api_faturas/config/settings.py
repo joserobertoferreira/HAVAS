@@ -12,3 +12,4 @@ FOLDER_XML_IN = os.environ.get('FOLDER_XML_IN', BASE_DIR / 'uploads')
 FOLDER_XML_OUT = os.environ.get('FOLDER_XML_OUT', BASE_DIR / 'downloads')
 
 SENDER = os.environ.get('SENDER', 'admin')
+RECEIVER = os.environ.get('RECEIVER', 'urn:netdoc:qa')
