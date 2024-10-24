@@ -1,11 +1,15 @@
 import json
+from typing import Any, Dict
 
 import requests
 
 
 class Auth:
-    def login(base_url, username, password):
-        service_url = f'https://{base_url}/GetTokenFromLogin'
+    def __init__(self, base_url: str) -> None:
+        self.base_url = f'https://{base_url}'
+
+    def login(self, username: str, password: str) -> Dict[str, Any]:
+        service_url = f'{self.base_url}/GetTokenFromLogin'
 
         query_params = {'userId': username, 'password': password}
 
@@ -24,3 +28,14 @@ class Auth:
             'Token': resultData,
             'Errors': errors,
         }
+
+    def logout(self, token: str) -> int:
+        service_url = f'{self.base_url}/Logout'
+
+        headers = {'Authorization': 'Bearer ' + token}
+
+        response = requests.get(service_url, headers=headers)
+
+        json_response = json.loads(response.text)
+
+        return json_response['ResultCode']

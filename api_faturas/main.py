@@ -17,22 +17,31 @@ def api_faturas() -> None:
         base64_strings = fileHandler.generate_base64_strings(xml_list)
 
         if base64_strings:
-            # Get the authentication token
-            authentication = Auth.login(
-                settings.SERVER_BASE_ADDRESS,
-                settings.API_USER,
-                settings.API_PASSWORD,
-            )
+            for file, fileBase64 in base64_strings.items():
+                # Get the authentication token
+                authentication = Auth(settings.SERVER_BASE_ADDRESS)
 
-            # # Check if the authentication was successful
-            if authentication['HttpStatus'] == HTTPStatus.OK:
-                handle_messages = ProcessedMessages(
-                    settings.SERVER_BASE_ADDRESS,
-                    authentication,
+                login = authentication.login(
+                    settings.API_USER,
+                    settings.API_PASSWORD,
                 )
 
-                # Send the messages
-                handle_messages.send_message(settings.SENDER, base64_strings)
+                # Check if the authentication was successful
+                if login['HttpStatus'] == HTTPStatus.OK:
+                    handle_messages = ProcessedMessages(
+                        settings.SERVER_BASE_ADDRESS,
+                        login,
+                    )
+
+                    # Send the messages
+                    handle_messages.send_message(
+                        settings.SENDER, file, fileBase64
+                    )
+
+                    # Logout from API
+                    http_status = authentication.logout(login['Token'])
+
+                    print(http_status)
 
 
 if __name__ == '__main__':

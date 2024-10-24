@@ -1,3 +1,6 @@
+import json
+
+
 class ProcessedMessages:
     def __init__(self, base_url, authentication) -> None:
         self.service_url = f'https://{base_url}/ReceiveMessage'
@@ -8,21 +11,17 @@ class ProcessedMessages:
         self.receiver = 'urn:netdoc:qa'
         self.message_id = authentication['CorrelationId']
 
-    @staticmethod
-    def send_message(sender, messages: dict) -> None:
-        print(messages)
+    def send_message(self, sender, file, fileBase64) -> None:
+        payload = {
+            'Sender': sender,
+            'Receiver': self.receiver,
+            'ContentType': 'application/xml',
+            'Base64Data': fileBase64,
+            'MessageId': self.message_id,
+            'Filename': file,
+        }
 
-        for message in messages:
-            print(message)
+        request_data = json.dumps(payload)
 
-            # payload = {
-            #     'sender': sender,
-            #     'receiver': self.receiver,
-            #     'content_type': 'application/xml',
-            #     'base64_string': message['base64_string'],
-            #     'message_id': self.message_id,
-            #     'filename': message['filename'],
-            # }
-
-            # response = requests.post(self.service_url, headers=self.headers, json=payload)
-            # print(response.json())
+        # response = requests.post(self.service_url, headers=self.headers, json=payload)
+        # print(response.json())
