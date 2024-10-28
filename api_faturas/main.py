@@ -12,7 +12,7 @@ def api_faturas() -> None:
 
     xml_list = fileHandler.check_for_xml_files()
 
-    if xml_list is None:
+    if not xml_list:
         print('No files to be processed.')
 
         return
