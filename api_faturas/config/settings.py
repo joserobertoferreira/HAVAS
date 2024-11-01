@@ -19,3 +19,10 @@ FOLDER_XML_OUT = os.environ.get('FOLDER_XML_OUT', BASE_DIR / 'downloads')
 
 SENDER = os.environ.get('SENDER', 'admin')
 RECEIVER = os.environ.get('RECEIVER', 'urn:netdoc:qa')
+
+# Database connection parameters
+DB_SERVER = os.environ.get('DB_SERVER', '')
+DB_DATABASE = os.environ.get('DB_DATABASE', '')
+DB_SCHEMA = os.environ.get('DB_SCHEMA', '')
+DB_USERNAME = os.environ.get('DB_USERNAME', '')
+DB_PASSWORD = os.environ.get('DB_PASSWORD', '')
