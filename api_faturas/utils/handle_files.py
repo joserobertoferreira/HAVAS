@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime
 from pathlib import Path
 
 
@@ -35,5 +36,16 @@ class HandleFiles:
         return base64_strings
 
     def move_file(self, file: str) -> None:
+        # Get the full path of the file to move
         file_to_move = Path(self.folder_input) / file
+
+        # Create the output folder with the current year and month
+        year_month_folder = datetime.now().strftime('%Y%m')
+        output_path = Path(self.folder_output) / year_month_folder
+
+        # Check if the folder exists
+        if not output_path.is_dir():
+            output_path.mkdir(parents=True, exist_ok=True)
+
+        # Move the file to the output folder
         file_to_move.replace(Path(self.folder_output) / file)

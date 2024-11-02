@@ -3,6 +3,9 @@ from typing import Any, Dict
 
 import requests
 
+from config import settings
+from database.database import DatabaseConnection
+
 
 class ProcessedMessages:
     def __init__(self, base_url: str, authentication: Dict[str, Any]) -> None:
@@ -33,3 +36,40 @@ class ProcessedMessages:
         json_response = json.loads(response.text)
 
         return json_response['IsValid']
+
+    @staticmethod
+    def update_database(file: str) -> bool:
+        with DatabaseConnection(
+            settings.DB_SERVER,
+            settings.DB_DATABASE,
+            settings.DB_USERNAME,
+            settings.DB_PASSWORD,
+        ) as db:
+            # Update table ZSINVOICEV
+            table_name = f'{settings.DB_SCHEMA}.ZSINVOICEV'
+            columns_to_update = ['ZSTATUS_0']
+            values_to_update = [6]
+            where_clause = {'NUMX3_0': f'{file}'}
+
+            response = db.execute_update(
+                table_name,
+                columns_to_update,
+                values_to_update,
+                where_clause,
+            )
+
+            if response['status'] == 'success':
+                # Update table ZLOGFAT
+                table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
+                columns_to_update = ['STATUT_0']
+                values_to_update = [6]
+                where_clause = {'NUMHAV_0': f'{file}'}
+
+                response = db.execute_update(
+                    table_name,
+                    columns_to_update,
+                    values_to_update,
+                    where_clause,
+                )
+
+            return response['status'] == 'success'

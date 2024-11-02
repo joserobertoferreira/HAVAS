@@ -1,3 +1,5 @@
+from typing import Any, Dict
+
 import pyodbc
 
 
@@ -65,6 +67,63 @@ class DatabaseConnection:
                 'message': 'Query executed successfully',
                 'columns': columns_names,
                 'data': results,
+            }
+        except pyodbc.Error as e:
+            return {
+                'status': 'error',
+                'message': f'Error executing query: {e}',
+                'data': None,
+            }
+
+    def execute_update(
+        self,
+        table_name: str,
+        set_columns: list,
+        set_values: list,
+        where_clauses: Dict[str, Any],
+    ) -> Dict[str, str]:
+        """
+        Atualiza registros em uma tabela específica do banco de dados com múltiplas
+        condições no WHERE.
+
+        Parâmetros:
+        - table_name: nome da tabela a ser atualizada
+        - set_columns: lista com o nome das colunas a serem atualizadas
+        - set_values: lista com os valores correspondentes às colunas a serem
+          atualizadas
+        - where_conditions: dicionário onde as chaves são as colunas e os valores são as
+          condições do WHERE
+
+        Exemplo de uso:
+        update_table("Clientes", ["Nome", "Idade"], ["João", 30], {"ID": 1,
+          "Status": "ativo"})
+        """
+
+        if not self.connection:
+            return {'status': 'error', 'message': 'No active connection', 'data': None}
+
+        # Build the SET clause dynamically with placeholders
+        set_clause = ', '.join([f'{column} = ?' for column in set_columns])
+
+        # Build the WHERE clause dynamically with multiple conditions
+        where_clause = ' AND '.join([
+            f'{column} = ?' for column in where_clauses.keys()
+        ])
+
+        # Build the query with the SET and WHERE clauses
+        query = f'UPDATE {table_name} SET {set_clause} WHERE {where_clause}'
+
+        # Prepare the values to be updated
+        values = set_values + list(where_clauses.values())
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query, values)
+            self.connection.commit()
+
+            return {
+                'status': 'success',
+                'message': 'Update executed successfully',
             }
         except pyodbc.Error as e:
             return {
