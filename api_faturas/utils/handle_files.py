@@ -48,4 +48,4 @@ class HandleFiles:
             output_path.mkdir(parents=True, exist_ok=True)
 
         # Move the file to the output folder
-        file_to_move.replace(Path(self.folder_output) / file)
+        file_to_move.replace(Path(output_path) / file)

@@ -48,8 +48,8 @@ class ProcessedMessages:
             # Update table ZSINVOICEV
             table_name = f'{settings.DB_SCHEMA}.ZSINVOICEV'
             columns_to_update = ['ZSTATUS_0']
-            values_to_update = [6]
-            where_clause = {'NUMX3_0': f'{file}'}
+            values_to_update = [7]
+            where_clause = {'NUMX3_0': f'{file[:8]}/{file[8:]}'}
 
             response = db.execute_update(
                 table_name,
@@ -62,8 +62,8 @@ class ProcessedMessages:
                 # Update table ZLOGFAT
                 table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
                 columns_to_update = ['STATUT_0']
-                values_to_update = [6]
-                where_clause = {'NUMHAV_0': f'{file}'}
+                values_to_update = [7]
+                where_clause = {'SIHNUM_0': f'{file[:8]}/{file[8:]}'}
 
                 response = db.execute_update(
                     table_name,
