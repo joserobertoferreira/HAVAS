@@ -41,3 +41,22 @@ class Conversions:
         """
 
         return {key: Conversions.convert_value(value) for key, value in data.items()}
+
+    @staticmethod
+    def generate_sql_with_values(query, values):
+        """
+        Gera a query SQL com valores reais substituindo os placeholders.
+
+        :param query: A consulta SQL com placeholders (?)
+        :param values: A lista de valores que substituirão os placeholders
+        :return: A query com valores reais
+        """
+        # Substituir os placeholders (?) pelos valores reais
+        # Primeiro, formatar os valores para evitar erro com tipos
+        formatted_values = [repr(v) for v in values]
+
+        # Substituir os placeholders (?):
+        for value in formatted_values:
+            query = query.replace('?', value, 1)  # Substituir um placeholder por vez
+
+        return query

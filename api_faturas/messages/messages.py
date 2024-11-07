@@ -4,7 +4,7 @@ from typing import Any, Dict
 import requests
 
 from config import settings
-from database.database import DatabaseConnection
+from database.database import Condition, DatabaseConnection
 
 
 class ProcessedMessages:
@@ -61,14 +61,12 @@ class ProcessedMessages:
             if response['status'] == 'success':
                 # Update table ZLOGFAT
                 table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
-                columns_to_update = ['STATUT_0']
-                values_to_update = [7]
-                where_clause = {'SIHNUM_0': f'{file[:8]}/{file[8:]}'}
+                set_columns = {'STATUT_0': 7}
+                where_clause = {'SIHNUM_0': Condition('=', f'{file[:8]}/{file[8:]}')}
 
                 response = db.execute_update(
                     table_name,
-                    columns_to_update,
-                    values_to_update,
+                    set_columns,
                     where_clause,
                 )
 
