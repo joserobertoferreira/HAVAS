@@ -1,0 +1,190 @@
+{
+  "message": {
+    "id": "TestGenXML2",
+    "creationDateTime": "{{creation_date_time}}"
+  },
+  "sender": {
+    "id": {
+      "attribute": "entityIdTypeCoded",
+      "attr_value": "{{type_code_seller}}",
+      "value": "{{seller_code}}"
+    },
+    "addressInformation": {
+      "countryCode": "{{company_country}}"
+    }
+  },
+  "receiver": {
+    "id": {
+      "attribute": "entityIdTypeCoded",
+      "attr_value": "{{type_code_receiver}}",
+      "value": "{{receiver_code}}"
+    },
+    "addressInformation": {
+      "countryCode": "{{invoice_country}}"
+    }
+  },
+  "invoice": {
+    "documentNumber": "{{invoice_number}}",
+    "documentDate": "{{invoice_date}}",
+    "schemaVersion": "1.1",
+    "binaryDocumentAttachment": {
+      "name": "attachment_name",
+      "contentType": "application/pdf",
+      "content": "attachment_base64"
+    }
+  },
+  "seller": {
+    "id": {
+      "attribute": "entityIdTypeCoded",
+      "attr_value": "{{type_code_seller}}",
+      "value": "{{seller_code}}"
+    },
+    "name": "{{seller_name}}",
+    "addressInformation": {
+      "address": "{{seller_address}}",
+      "city": "{{seller_city}}",
+      "postalCode": {
+        "zip": "{{seller_zip}}",
+        "area": "{{seller_area}}"
+      },
+      "countryCode": "{{seller_country}}"
+    },
+    "contactInformation": {
+      "phone": "{{seller_phone}}",
+      "fax": ""
+    },
+    "vatNumber": "{{seller_vat}}",
+    "commercialRegistrationNumber": "{{seller_commercial}}",
+    "commercialRegistrationLocation": "{{seller_location}}",
+    "socialCapital": "{{seller_social_capital}}"
+  },
+  "buyer": {
+    "id": {
+      "attribute": "entityIdTypeCoded",
+      "attr_value": "{{type_code_buyer}}",
+      "value": "{{buyer_code}}"
+    },
+    "name": "{{buyer_name}}",
+    "addressInformation": {
+      "address": "{{buyer_address}}",
+      "city": "{{buyer_city}}",
+      "postalCode": {
+        "zip": "{{buyer_zip}}",
+        "area": "{{buyer_area}}"
+      },
+      "countryCode": "{{buyer_country}}"
+    },
+    "contactInformation": {
+      "phone": "{{buyer_phone}}",
+      "fax": "",
+      "email": "{{buyer_email}}"
+    },
+    "vatNumber": "{{buyer_vat}}",
+    "commercialRegistrationNumber": "{{buyer_commercial}}",
+    "commercialRegistrationLocation": "{{buyer_location}}",
+    "socialCapital": "{{buyer_social_capital}}"
+  },
+  "billTo": {
+    "id": {
+      "attribute": "entityIdTypeCoded",
+      "attr_value": "{{type_code_billTo}}",
+      "value": "{{billTo_code}}"
+    },
+    "name": "{{billTo_name}}",
+    "addressInformation": {
+      "address": "{{billTo_address}}",
+      "city": "{{billTo_city}}",
+      "postalCode": {
+        "zip": "{{billTo_zip}}",
+        "area": "{{billTo_area}}"
+      },
+      "countryCode": "{{billTo_country}}"
+    },
+    "contactInformation": {
+      "phone": "{{billTo_phone}}",
+      "fax": "",
+      "email": "{{billTo_email}}"
+    },
+    "vatNumber": "{{billTo_vat}}",
+    "commercialRegistrationNumber": "{{billTo_commercial}}",
+    "commercialRegistrationLocation": "{{billTo_location}}",
+    "socialCapital": "{{billTo_social_capital}}"
+  },
+  "additionalDate": {
+    "type": "{{additional_date}}",
+    "value": "{{additional_date_value}}"
+  },
+  "reference": {
+    "type": "{{reference_type}}",
+    "referenceDocumentId": "{{reference_value}}"
+  },
+  "currencyCode": "{{currency_code}}",
+  "discount": {
+    "type": "{{discount_type}}",
+    "amount": "{{discount_amount}}"
+  },
+  "comment": {
+    "id": 1,
+    "value": "{{comment}}"
+  },
+  "senderSoftwareCertificationNumber": "{{software_certification_number}}",
+  "senderSoftwareDocumentSignatureHash": "{{software_document_signature_hash}}",
+  "atCud": "{{at_cud}}",
+  "qrData": {
+    "qrText": "{{qr_text}}",
+    "qrImage": {
+      "name": "{{qr_image_name}}",
+      "contentType": "image/png",
+      "content": "{{qr_image_base64}}"
+    }
+  },
+  "lineItem": {
+    "number": "{{line_number}}",
+    "gtinCode": "{{line_product}}",
+    "description": "{{line_description}}",
+    "quantity": {
+      "value": "{{line_quantity}}",
+      "unitOfMeasure": "{{line_unit_of_measure}}"
+    },
+    "freeQuantity": {
+      "value": "{{line_quantity}}",
+      "unitOfMeasure": "{{line_unit_of_measure}}"
+    },
+    "unitPrice": "{{line_unit_price}}",
+    "vatPercentage": {
+      "default": {
+        "value": "{{vat_percentage}}"
+      },
+      "condition": {
+        "field": "{{vat_exemption}}",
+        "value": true,
+        "attributes": {
+          "vatExemptionReasonCode": "{{vat_exemption_reason_code}}",
+          "vatExemptionReason": "{{vat_exemption_reason}}"
+        }
+      }
+    },
+    "vatAmount": "{{line_vat_amount}}",
+    "netAmount": "{{line_net_amount}}"
+  },
+  "vatSummary": {
+    "default": {
+      "value": ""
+    },
+    "condition": {
+      "field": "{{invoice_table.needs_reason}}",
+      "value": true,
+      "attributes": {
+        "exceptionReasonCode": "{{vat_exemption_reason_code}}",
+        "exceptionReason": "{{vat_exemption_reason}}"
+      }
+    },
+    "vatPercentage": "{{vat_percentage}}",
+    "vatAmount": "{{vat_amount}}",
+    "taxableAmount": "{{taxable_amount}}"
+  },
+  "totalVatAmount": "{{total_vat_amount}}",
+  "totalTaxableAmount": "{{total_taxable_amount}}",
+  "totalNetAmount": "{{total_net_amount}}",
+  "totalPayableAmount": "{{total_payable_amount}}"
+}

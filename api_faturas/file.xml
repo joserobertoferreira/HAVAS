@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  id="TestGenXML2" creationDateTime="2024-11-08T22:10:53.000" xmlns="urn:netdocs:schemas:message">
+  <sender xmlns="">
+    <id entityIdTypeCoded="{{type_code_seller}}">{{seller_code}}</id>
+    <addressInformation>
+      <countryCode>{{company_country}}</countryCode>
+    </addressInformation>
+  </sender>
+  <receiver xmlns="">
+    <id entityIdTypeCoded="{{type_code_receiver}}">{{receiver_code}}</id>
+    <addressInformation>
+      <countryCode>{{invoice_country}}</countryCode>
+    </addressInformation>
+  </receiver>
+  <invoice documentNumber="{{invoice_number}}" documentDate="{{invoice_date}}" schemaVersion="1.1"
+    xmlns="urn:netdocs:schemas:document">
+    <seller xmlns="">
+      <id entityIdTypeCoded="{{type_code_seller}}">{{seller_code}}</id>
+      <name>{{seller_name}}</name>
+      <addressInformation>
+        <address>{{seller_address}}</address>
+        <city>{{seller_city}}</city>
+        <countryCode>{{seller_country}}</countryCode>
+      </addressInformation>
+    </seller>
+  </invoice>
+</message>

@@ -1,12 +1,22 @@
 from http import HTTPStatus
+from pathlib import Path
 
 from auth.auth import Auth
 from config import settings
 from messages.messages import ProcessedMessages
 from utils.handle_files import HandleFiles
+from utils.handle_xml import HandleXML
 
 
 def api_faturas() -> None:
+    mapping_file_path = Path(settings.BASE_DIR / 'mapping_xml.json')
+
+    xmlHandler = HandleXML(mapping_file_path)  # noqa: F841
+
+    xmlHandler.generate_xml('file.xml')
+
+    return
+
     # Check if exists files to be processed
     fileHandler = HandleFiles(settings.FOLDER_XML_IN, settings.FOLDER_XML_OUT)
 
