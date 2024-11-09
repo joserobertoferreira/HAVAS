@@ -5,7 +5,7 @@ from auth.auth import Auth
 from config import settings
 from messages.messages import ProcessedMessages
 from utils.handle_files import HandleFiles
-from utils.handle_xml import HandleXML
+from utils.xml.handle_xml import HandleXML
 
 
 def api_faturas() -> None:

@@ -5,8 +5,12 @@
   },
   "sender": {
     "id": {
-      "attribute": "entityIdTypeCoded",
-      "attr_value": "{{type_code_seller}}",
+      "attributes": [
+        {
+          "attribute": "entityIdTypeCoded",
+          "attr_value": "{{type_code_seller}}"
+        }
+      ],
       "value": "{{seller_code}}"
     },
     "addressInformation": {
@@ -15,8 +19,12 @@
   },
   "receiver": {
     "id": {
-      "attribute": "entityIdTypeCoded",
-      "attr_value": "{{type_code_receiver}}",
+      "attributes": [
+        {
+          "attribute": "entityIdTypeCoded",
+          "attr_value": "{{type_code_receiver}}"
+        }
+      ],
       "value": "{{receiver_code}}"
     },
     "addressInformation": {
@@ -35,8 +43,12 @@
   },
   "seller": {
     "id": {
-      "attribute": "entityIdTypeCoded",
-      "attr_value": "{{type_code_seller}}",
+      "attributes": [
+        {
+          "attribute": "entityIdTypeCoded",
+          "attr_value": "{{type_code_seller}}"
+        }
+      ],
       "value": "{{seller_code}}"
     },
     "name": "{{seller_name}}",
@@ -51,7 +63,7 @@
     },
     "contactInformation": {
       "phone": "{{seller_phone}}",
-      "fax": ""
+      "fax": "{{seller_fax}}"
     },
     "vatNumber": "{{seller_vat}}",
     "commercialRegistrationNumber": "{{seller_commercial}}",
@@ -60,8 +72,12 @@
   },
   "buyer": {
     "id": {
-      "attribute": "entityIdTypeCoded",
-      "attr_value": "{{type_code_buyer}}",
+      "attributes": [
+        {
+          "attribute": "entityIdTypeCoded",
+          "attr_value": "{{type_code_buyer}}"
+        }
+      ],
       "value": "{{buyer_code}}"
     },
     "name": "{{buyer_name}}",
@@ -76,7 +92,7 @@
     },
     "contactInformation": {
       "phone": "{{buyer_phone}}",
-      "fax": "",
+      "fax": "{{buyer_fax}}",
       "email": "{{buyer_email}}"
     },
     "vatNumber": "{{buyer_vat}}",
@@ -86,8 +102,12 @@
   },
   "billTo": {
     "id": {
-      "attribute": "entityIdTypeCoded",
-      "attr_value": "{{type_code_billTo}}",
+      "attributes": [
+        {
+          "attribute": "entityIdTypeCoded",
+          "attr_value": "{{type_code_billTo}}"
+        }
+      ],
       "value": "{{billTo_code}}"
     },
     "name": "{{billTo_name}}",
@@ -102,7 +122,7 @@
     },
     "contactInformation": {
       "phone": "{{billTo_phone}}",
-      "fax": "",
+      "fax": "{{billTo_fax}}",
       "email": "{{billTo_email}}"
     },
     "vatNumber": "{{billTo_vat}}",
@@ -120,11 +140,16 @@
   },
   "currencyCode": "{{currency_code}}",
   "discount": {
-    "type": "{{discount_type}}",
+    "attributes": [
+      {
+        "attribute": "type",
+        "attr_value": "{{discount_type}}"
+      }
+    ],
     "amount": "{{discount_amount}}"
   },
   "comment": {
-    "id": 1,
+    "id": "1",
     "value": "{{comment}}"
   },
   "senderSoftwareCertificationNumber": "{{software_certification_number}}",
@@ -133,47 +158,55 @@
   "qrData": {
     "qrText": "{{qr_text}}",
     "qrImage": {
-      "name": "{{qr_image_name}}",
-      "contentType": "image/png",
-      "content": "{{qr_image_base64}}"
+      "attributes": [
+        {
+          "attribute": "name",
+          "attr_value": "{{qr_image_name}}"
+        },
+        {
+          "attribute": "contentType",
+          "attr_value": "image/png"
+        }
+      ],
+      "value": "{{qr_image_base64}}"
     }
   },
   "lineItem": {
-    "number": "{{line_number}}",
-    "gtinCode": "{{line_product}}",
-    "description": "{{line_description}}",
-    "quantity": {
-      "value": "{{line_quantity}}",
-      "unitOfMeasure": "{{line_unit_of_measure}}"
-    },
-    "freeQuantity": {
-      "value": "{{line_quantity}}",
-      "unitOfMeasure": "{{line_unit_of_measure}}"
-    },
-    "unitPrice": "{{line_unit_price}}",
-    "vatPercentage": {
-      "default": {
-        "value": "{{vat_percentage}}"
-      },
-      "condition": {
-        "field": "{{vat_exemption}}",
-        "value": true,
-        "attributes": {
-          "vatExemptionReasonCode": "{{vat_exemption_reason_code}}",
-          "vatExemptionReason": "{{vat_exemption_reason}}"
-        }
-      }
-    },
-    "vatAmount": "{{line_vat_amount}}",
-    "netAmount": "{{line_net_amount}}"
+    "number": "{{line_number}}"
   },
+  "gtinCode": "{{line_product}}",
+  "description": "{{line_description}}",
+  "quantity": {
+    "value": "{{line_quantity}}",
+    "unitOfMeasure": "{{line_unit_of_measure}}"
+  },
+  "freeQuantity": {
+    "value": "{{line_quantity}}",
+    "unitOfMeasure": "{{line_unit_of_measure}}"
+  },
+  "unitPrice": "{{line_unit_price}}",
+  "vatPercentage": {
+    "default": {
+      "value": "{{vat_percentage}}"
+    },
+    "condition": {
+      "field": "{{vat_exemption}}",
+      "value": "true",
+      "attributes": {
+        "vatExemptionReasonCode": "{{vat_exemption_reason_code}}",
+        "vatExemptionReason": "{{vat_exemption_reason}}"
+      }
+    }
+  },
+  "vatAmount": "{{line_vat_amount}}",
+  "netAmount": "{{line_net_amount}}",
   "vatSummary": {
     "default": {
       "value": ""
     },
     "condition": {
       "field": "{{invoice_table.needs_reason}}",
-      "value": true,
+      "value": "true",
       "attributes": {
         "exceptionReasonCode": "{{vat_exemption_reason_code}}",
         "exceptionReason": "{{vat_exemption_reason}}"

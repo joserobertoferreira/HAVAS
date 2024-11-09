@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  id="TestGenXML2" creationDateTime="2024-11-08T22:10:53.000" xmlns="urn:netdocs:schemas:message">
-  <sender xmlns="">
+  id="TestGenXML2" creationDateTime="2024-11-09T21:24:05.000" xmlns="urn:netdocs:schemas:message">
+  <sender>
     <id entityIdTypeCoded="{{type_code_seller}}">{{seller_code}}</id>
     <addressInformation>
       <countryCode>{{company_country}}</countryCode>
     </addressInformation>
   </sender>
-  <receiver xmlns="">
+  <receiver>
     <id entityIdTypeCoded="{{type_code_receiver}}">{{receiver_code}}</id>
     <addressInformation>
       <countryCode>{{invoice_country}}</countryCode>
@@ -15,14 +15,105 @@
   </receiver>
   <invoice documentNumber="{{invoice_number}}" documentDate="{{invoice_date}}" schemaVersion="1.1"
     xmlns="urn:netdocs:schemas:document">
-    <seller xmlns="">
+    <seller>
       <id entityIdTypeCoded="{{type_code_seller}}">{{seller_code}}</id>
       <name>{{seller_name}}</name>
       <addressInformation>
         <address>{{seller_address}}</address>
         <city>{{seller_city}}</city>
+        <postalCode>
+          <zip>{{seller_zip}}</zip><area>{{seller_area}}</area>
+        </postalCode>
         <countryCode>{{seller_country}}</countryCode>
       </addressInformation>
+      <contactInformation>
+        <phone>{{seller_phone}}</phone>
+        <fax>{{seller_fax}}</fax>
+      </contactInformation>
+      <vatNumber>{{seller_vat}}</vatNumber>
+      <commercialRegistrationNumber>{{seller_commercial}}</commercialRegistrationNumber>
+      <commercialRegistrationLocation>{{seller_location}}</commercialRegistrationLocation>
+      <socialCapital>{{seller_social_capital}}</socialCapital>
     </seller>
+    <buyer>
+      <id entityIdTypeCoded="{{type_code_buyer}}">{{buyer_code}}</id>
+      <name>{{buyer_name}}</name>
+      <addressInformation>
+        <address>{{buyer_address}}</address>
+        <city>{{buyer_city}}</city>
+        <postalCode>
+          <zip>{{buyer_zip}}</zip><area>{{buyer_area}}</area>
+        </postalCode>
+        <countryCode>{{buyer_country}}</countryCode>
+      </addressInformation>
+      <contactInformation>
+        <phone>{{buyer_phone}}</phone>
+        <fax>{{buyer_fax}}</fax>
+        <email>{{buyer_email}}</email>
+      </contactInformation>
+      <vatNumber>{{buyer_vat}}</vatNumber>
+      <commercialRegistrationNumber>{{buyer_commercial}}</commercialRegistrationNumber>
+      <commercialRegistrationLocation>{{buyer_location}}</commercialRegistrationLocation>
+      <socialCapital>{{buyer_social_capital}}</socialCapital>
+    </buyer>
+    <billTo>
+      <id entityIdTypeCoded="{{type_code_billTo}}">{{billTo_code}}</id>
+      <name>{{billTo_name}}</name>
+      <addressInformation>
+        <address>{{billTo_address}}</address>
+        <city>{{billTo_city}}</city>
+        <postalCode>
+          <zip>{{billTo_zip}}</zip><area>{{billTo_area}}</area>
+        </postalCode>
+        <countryCode>{{billTo_country}}</countryCode>
+      </addressInformation>
+      <contactInformation>
+        <phone>{{billTo_phone}}</phone>
+        <fax>{{billTo_fax}}</fax>
+        <email>{{billTo_email}}</email>
+      </contactInformation>
+      <vatNumber>{{billTo_vat}}</vatNumber>
+      <commercialRegistrationNumber>{{billTo_commercial}}</commercialRegistrationNumber>
+      <commercialRegistrationLocation>{{billTo_location}}</commercialRegistrationLocation>
+      <socialCapital>{{billTo_social_capital}}</socialCapital>
+    </billTo>
+    <additionalDate type="{{additional_date}}">{{additional_date_value}}</additionalDate>
+    <currencyCode>{{currency_code}}</currencyCode>
+    <discount type="{{discount_type}}">
+      <amount>{{discount_amount}}</amount>
+    </discount>
+    <comment id="1">{{comment}}</comment>
+    <senderSoftwareCertificationNumber>{{software_certification_number}}</senderSoftwareCertificationNumber>
+    <senderSoftwareDocumentSignatureHash>{{software_document_signature_hash}}</senderSoftwareDocumentSignatureHash>
+    <atCud>{{at_cud}}</atCud>
+    <qrData>
+      <qrText>{{qr_text}}</qrText>
+      <qrImage name="{{qr_image_name}}" contentType="image/png">{{qr_image_base64}}</qrImage>
+    </qrData>
+    <lineItem number="{{line_number}}">
+      <gtinCode>{{line_product}}</gtinCode>
+      <description>{{line_description}}</description>
+      <quantity>
+        <value>{{line_quantity}}</value>
+        <unitOfMeasure>{{line_unit_of_measure}}</unitOfMeasure>
+      </quantity>
+      <freeQuantity>
+        <value>{{line_quantity}}</value>
+        <unitOfMeasure>{{line_unit_of_measure}}</unitOfMeasure>
+      </freeQuantity>
+      <unitPrice>{{line_unit_price}}</unitPrice>
+      <vatPercentage>{{vat_percentage}}</vatPercentage>
+      <vatAmount>{{line_vat_amount}}</vatAmount>
+      <netAmount>{{line_net_amount}}</netAmount>
+    </lineItem>
+    <vatSummary exceptionReasonCode="{{vat_exemption_reason_code}}" exceptionReason="{{vat_exemption_reason}}">
+      <vatPercentage>{{vat_percentage}}</vatPercentage>
+      <vatAmount>{{vat_amount}}</vatAmount>
+      <taxableAmount>{{taxable_amount}}</taxableAmount>
+    </vatSummary>
+    <totalVatAmount>{{total_vat_amount}}</totalVatAmount>
+    <totalTaxableAmount>{{total_taxable_amount}}</totalTaxableAmount>
+    <totalNetAmount>{{total_net_amount}}</totalNetAmount>
+    <totalPayableAmount>{{total_payable_amount}}</totalPayableAmount>
   </invoice>
 </message>
