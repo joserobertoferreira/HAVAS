@@ -8,13 +8,13 @@
       "attributes": [
         {
           "attribute": "entityIdTypeCoded",
-          "attr_value": "{{type_code_seller}}"
+          "attr_value": "{{type_cod_sel}}"
         }
       ],
       "value": "{{seller_code}}"
     },
     "addressInformation": {
-      "countryCode": "{{company_country}}"
+      "countryCode": "{{company_cry}}"
     }
   },
   "receiver": {
@@ -22,17 +22,17 @@
       "attributes": [
         {
           "attribute": "entityIdTypeCoded",
-          "attr_value": "{{type_code_receiver}}"
+          "attr_value": "{{type_cod_rec}}"
         }
       ],
-      "value": "{{receiver_code}}"
+      "value": "{{receiver_cod}}"
     },
     "addressInformation": {
-      "countryCode": "{{invoice_country}}"
+      "countryCode": "{{invoice_cry}}"
     }
   },
   "invoice": {
-    "documentNumber": "{{invoice_number}}",
+    "documentNumber": "{{invoice_num}}",
     "documentDate": "{{invoice_date}}",
     "schemaVersion": "1.1",
     "binaryDocumentAttachment": {
@@ -46,7 +46,7 @@
       "attributes": [
         {
           "attribute": "entityIdTypeCoded",
-          "attr_value": "{{type_code_seller}}"
+          "attr_value": "{{type_cod_sel}}"
         }
       ],
       "value": "{{seller_code}}"
@@ -68,14 +68,14 @@
     "vatNumber": "{{seller_vat}}",
     "commercialRegistrationNumber": "{{seller_commercial}}",
     "commercialRegistrationLocation": "{{seller_location}}",
-    "socialCapital": "{{seller_social_capital}}"
+    "socialCapital": "{{sell_soccap}}"
   },
   "buyer": {
     "id": {
       "attributes": [
         {
           "attribute": "entityIdTypeCoded",
-          "attr_value": "{{type_code_buyer}}"
+          "attr_value": "{{type_cod_buyer}}"
         }
       ],
       "value": "{{buyer_code}}"
@@ -105,7 +105,7 @@
       "attributes": [
         {
           "attribute": "entityIdTypeCoded",
-          "attr_value": "{{type_code_billTo}}"
+          "attr_value": "{{type_cod_billTo}}"
         }
       ],
       "value": "{{billTo_code}}"
@@ -131,19 +131,19 @@
     "socialCapital": "{{billTo_social_capital}}"
   },
   "additionalDate": {
-    "type": "{{additional_date}}",
-    "value": "{{additional_date_value}}"
+    "type": "CUSTOMERAVAILABLE",
+    "value": "{{additionaldt}}"
   },
   "reference": {
     "type": "{{reference_type}}",
     "referenceDocumentId": "{{reference_value}}"
   },
-  "currencyCode": "{{currency_code}}",
+  "currencyCode": "{{currency_cod}}",
   "discount": {
     "attributes": [
       {
         "attribute": "type",
-        "attr_value": "{{discount_type}}"
+        "attr_value": "FINANCIAL"
       }
     ],
     "amount": "{{discount_amount}}"
@@ -175,31 +175,31 @@
     "number": "{{line_number}}"
   },
   "gtinCode": "{{line_product}}",
-  "description": "{{line_description}}",
+  "description": "{{line_descr}}",
   "quantity": {
-    "value": "{{line_quantity}}",
-    "unitOfMeasure": "{{line_unit_of_measure}}"
+    "value": "{{line_quant}}",
+    "unitOfMeasure": "{{line_unit}}"
   },
   "freeQuantity": {
-    "value": "{{line_quantity}}",
-    "unitOfMeasure": "{{line_unit_of_measure}}"
+    "value": "{{line_quant}}",
+    "unitOfMeasure": "{{line_unit}}"
   },
-  "unitPrice": "{{line_unit_price}}",
+  "unitPrice": "{{line_unit_pr}}",
   "vatPercentage": {
     "default": {
-      "value": "{{vat_percentage}}"
+      "value": "{{vat_percent}}"
     },
     "condition": {
       "field": "{{vat_exemption}}",
       "value": "true",
       "attributes": {
-        "vatExemptionReasonCode": "{{vat_exemption_reason_code}}",
-        "vatExemptionReason": "{{vat_exemption_reason}}"
+        "vatExemptionReasonCode": "{{vat_rea_code}}",
+        "vatExemptionReason": "{{vat_reason}}"
       }
     }
   },
-  "vatAmount": "{{line_vat_amount}}",
-  "netAmount": "{{line_net_amount}}",
+  "vatAmount": "{{line_vat_amt}}",
+  "netAmount": "{{line_net_amt}}",
   "vatSummary": {
     "default": {
       "value": ""

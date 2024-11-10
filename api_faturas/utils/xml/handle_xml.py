@@ -1,14 +1,29 @@
+import base64
 import json
-import re
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from typing import Any, Dict
 
+NORMAL = 1
+WITH_TIME = 2
+QR_CODE = 3
+LINES = 4
 
-class HandleXML:
-    def __init__(self, mapping_file_path: str, database_record: Dict[str, Any] = None):
+
+class HandleXML:  # noqa: PLR0904
+    def __init__(
+        self,
+        mapping_file_path: str,
+        field_headers: list[str] = None,
+        database_record: Dict[str, Any] = None,
+        database_qrcode: list[Dict[str, Any]] = None,
+        database_lines: list[Dict[str, Any]] = None,
+    ):
         self.mapping = self.load_mapping(mapping_file_path)
+        self.field_headers = field_headers if field_headers is not None else []
         self.data_cache = database_record if database_record is not None else {}
+        self.qrcode_cache = database_qrcode if database_qrcode is not None else [{}]
+        self.lines_cache = database_lines if database_lines is not None else [{}]
 
     def load_mapping(self, file_path: str) -> Any:  # noqa: PLR6301
         """Load a JSON mapping from a file.
@@ -37,27 +52,146 @@ class HandleXML:
         """Get the current date."""
         return datetime.now(timezone.utc).strftime('%Y-%m-%d')
 
+    def format_datetime(self, placeholder: str, conversion_type: int) -> str:
+        """Format a datetime object to a string."""
+        field_name = placeholder.replace('{{', '').replace('}}', '').upper() + '_0'
+
+        if conversion_type == NORMAL:
+            return_date = self.data_cache.get(field_name, '').strftime('%Y-%m-%d')
+        elif conversion_type == WITH_TIME:
+            return_date = (
+                self.data_cache.get(field_name, '').strftime('%Y-%m-%dT%H:%M:%S') + '.000'
+            )
+
+        return return_date
+
+    def return_normal_value(self, placeholder: str) -> str:
+        """Return a generic value for the placeholder."""
+
+        normal_mapping = {
+            '{{buyer_code}}': 'RECEIVER_COD_0',
+            '{{billTo_code}}': 'RECEIVER_COD_0',
+            '{{type_cod_buyer}}': 'TYPE_COD_REC_0',
+            '{{type_cod_billTo}}': 'TYPE_COD_REC_0',
+            '{{billTo_name}}': 'BUYER_NAME_0',
+        }
+
+        field_name = normal_mapping.get(
+            placeholder,
+            placeholder.replace('{{', '').replace('}}', '').upper() + '_0',
+        )
+
+        return str(self.data_cache.get(field_name, ''))
+
+    def return_line_value(self, placeholder: str) -> str:
+        """Return a generic value for the placeholder."""
+
+        line_mapping = {}
+
+        # Get the field name from the placeholder
+        field_name = line_mapping.get(
+            placeholder,
+            placeholder.replace('{{', '').replace('}}', '').upper() + '_0',
+        )
+
+        if field_name:
+            for line in self.lines_cache:
+                if field_name in line:
+                    return str(line[field_name])
+
+        return ''
+
+    def return_qr_code_value(self, placeholder: str) -> str:
+        """Return a generic value for the placeholder."""
+
+        qr_code_mapping = {
+            '{{software_certification_number}}': 'QRC_R_0',
+            '{{software_document_signature_hash}}': 'QRC_Q_0',
+            '{{at_cud}}': 'QRC_H_0',
+            '{{qr_text}}': 'STRQRC_0',
+            '{{qr_image_name}}': 'DOCNUM_0',
+            '{{qr_image_base64}}': 'IMGQRC_0',
+        }
+
+        field_name = qr_code_mapping.get(placeholder)
+
+        if field_name:
+            for qrcode in self.qrcode_cache:
+                if field_name in qrcode:
+                    if field_name == 'IMGQRC_0':
+                        return base64.b64encode(qrcode[field_name]).decode('utf-8')
+                    else:
+                        return str(qrcode[field_name])
+
+        return ''
+
     def resolve_placeholder(self, placeholder: str) -> str:
         """Substitute placeholders with the corresponding value from the database
         or the current date.
         """
-        # Placeholder actions that do not require a database query
+        # Placeholder actions thats require another approach
         placeholder_actions = {
             '{{creation_date_time}}': self.get_current_date_time,
             '{{data_atual}}': self.get_current_date,
+            '{{invoice_date}}': lambda: self.format_datetime(placeholder, NORMAL),
+            '{{additionaldt}}': lambda: self.format_datetime(placeholder, WITH_TIME),
+        }
+
+        normal_placeholders = {
+            '{{type_cod_buyer}}': lambda: self.return_normal_value(placeholder),
+            '{{buyer_code}}': lambda: self.return_normal_value(placeholder),
+            '{{type_cod_billTo}}': lambda: self.return_normal_value(placeholder),
+            '{{billTo_code}}': lambda: self.return_normal_value(placeholder),
+            '{{billTo_name}}': lambda: self.return_normal_value(placeholder),
+        }
+
+        qr_code_placeholders = {
+            '{{software_certification_number}}': lambda: self.return_qr_code_value(
+                placeholder
+            ),
+            '{{software_document_signature_hash}}': lambda: self.return_qr_code_value(
+                placeholder
+            ),
+            '{{at_cud}}': lambda: self.return_qr_code_value(placeholder),
+            '{{qr_text}}': lambda: self.return_qr_code_value(placeholder),
+            '{{qr_image_name}}': lambda: self.return_qr_code_value(placeholder),
+            '{{qr_image_base64}}': lambda: self.return_qr_code_value(placeholder),
+        }
+
+        lines_placeholders = {
+            '{{line_number}}': lambda: self.return_line_value(placeholder),
+            '{{line_product}}': lambda: self.return_line_value(placeholder),
+            '{{line_descr}}': lambda: self.return_line_value(placeholder),
+            '{{line_quant}}': lambda: self.return_line_value(placeholder),
+            '{{line_unit}}': lambda: self.return_line_value(placeholder),
+            '{{line_unit_pr}}': lambda: self.return_line_value(placeholder),
+            '{{line_vat_amt}}': lambda: self.return_line_value(placeholder),
+            '{{line_net_amt}}': lambda: self.return_line_value(placeholder),
+            '{{vat_percent}}': lambda: self.return_line_value(placeholder),
+            '{{vat_rea_code}}': lambda: self.return_line_value(placeholder),
+            '{{vat_reason}}': lambda: self.return_line_value(placeholder),
         }
 
         if placeholder in placeholder_actions:
             return placeholder_actions[placeholder]()
 
-        match = re.match(r'\{\{(\w+)\.(\w+)\}\}', placeholder)
-        if match:
-            table_name, field_name = match.groups()
-            return field_name
-            # data = self.fetch_data(table_name)
-            # return data[field_name].iloc[0] if not data.empty else ''
+        if placeholder in normal_placeholders:
+            return normal_placeholders[placeholder]()
 
-        return placeholder
+        if placeholder in qr_code_placeholders:
+            return qr_code_placeholders[placeholder]()
+
+        if placeholder in lines_placeholders:
+            return lines_placeholders[placeholder]()
+
+        # Get the field name from the placeholder
+        field_name = placeholder.replace('{{', '').replace('}}', '').upper() + '_0'
+
+        # Check if the field name is in the field headers
+        if field_name in self.field_headers:
+            return str(self.data_cache.get(field_name, ''))
+
+        return str(placeholder)
 
     def process_mapping_value(self, value: Any) -> Any:
         """Process a value from the mapping to replace placeholders."""
@@ -195,33 +329,28 @@ class HandleXML:
         element.text = default_value
 
     # Auxiliary function to add an element
-    def add_element(self, parent, id_elem, atributes={}):
-        id_config = self.mapping[id_elem]
+    def add_element(self, parent, **kwargs):
+        id_elem = kwargs.get('id_elem')
+        id_sub_elem = kwargs.get('id_sub_elem', None)
+        atributes = kwargs.get('atributes', {})
+
+        if id_sub_elem is not None:
+            id_config = self.mapping[id_sub_elem][id_elem]
+        else:
+            id_config = self.mapping[id_elem]
+
         elem = ET.SubElement(parent, id_elem, atributes)
 
         return id_config, elem
 
     # Auxiliary function to add a party element
-    def add_party_element(self, parent, party_type, atributes={}):
-        party_id_config, party_elem = self.add_element(parent, party_type, atributes)
-
-        if isinstance(party_id_config, dict):
-            for key, value in party_id_config.items():
-                self.create_sub_element_from_mapping(party_elem, key, value)
-        else:
-            party_elem.text = self.process_mapping_value(party_id_config)
-
-    def add_element_test(self, parent, id_elem, id_sub_elem, atributes={}):
-        id_config = self.mapping[id_elem][id_sub_elem]
-        elem = ET.SubElement(parent, id_sub_elem, atributes)
-
-        return id_config, elem
-
-    # Auxiliary function to add a party element
-    def add_party_element_test(self, parent, party_type, parent_party, atributes={}):
-        party_id_config, party_elem = self.add_element_test(
-            parent, parent_party, party_type, atributes
-        )
+    def add_party_element(self, parent, party_type, **kwargs):
+        arguments = {
+            'id_elem': party_type,
+            'id_sub_elem': kwargs.get('id_sub_elem', None),
+            'atributes': kwargs.get('atributes', {}),
+        }
+        party_id_config, party_elem = self.add_element(parent, **arguments)
 
         if isinstance(party_id_config, dict):
             for key, value in party_id_config.items():
@@ -239,7 +368,7 @@ class HandleXML:
         if conditional:
             self.add_conditional_element(parent, tag, self.mapping[tag])
         elif parent_tag:
-            self.add_party_element_test(parent, tag, parent_tag)
+            self.add_party_element(parent, tag, id_sub_elem=parent_tag)
         else:
             self.add_party_element(parent, tag)
 
@@ -259,8 +388,12 @@ class HandleXML:
             root,
             'invoice',
             {
-                'documentNumber': self.mapping['invoice']['documentNumber'],
-                'documentDate': self.mapping['invoice']['documentDate'],
+                'documentNumber': self.process_mapping_value(
+                    self.mapping['invoice']['documentNumber']
+                ),
+                'documentDate': self.process_mapping_value(
+                    self.mapping['invoice']['documentDate']
+                ),
                 'schemaVersion': self.mapping['invoice']['schemaVersion'],
                 'xmlns': 'urn:netdocs:schemas:document',
             },
@@ -306,7 +439,9 @@ class HandleXML:
 
         # Add the <lineItem> element to the invoice element
         line_item = self.create_sub_element(
-            invoice, 'lineItem', {'number': self.mapping['lineItem']['number']}
+            invoice,
+            'lineItem',
+            {'number': self.process_mapping_value(self.mapping['lineItem']['number'])},
         )
 
         elements = [

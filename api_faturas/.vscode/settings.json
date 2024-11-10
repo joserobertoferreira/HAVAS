@@ -1,16 +1,34 @@
 {
   "cSpell.words": [
+    "additionaldt",
+    "ADDITIONALDT",
+    "CUSTOMERAVAILABLE",
+    "dataframe",
+    "descr",
+    "DOCNUM",
+    "DOCTYP",
     "gtin",
     "Havas",
+    "IMGQRC",
+    "intertuples",
     "INVDAT",
+    "itertuples",
     "netdocs",
     "NUMHAV",
+    "PORQRC",
+    "qrcode",
     "saphety",
     "Saphety",
     "SIHNUM",
+    "soccap",
+    "SOCCAP",
     "STATUT",
+    "STRQRC",
+    "VALEUR",
     "ZLOGFAT",
     "ZSINVOICEV",
-    "ZSTATUS"
+    "ZSTATUS",
+    "ZVWSAPHSID",
+    "ZVWSAPHSIV"
   ]
 }

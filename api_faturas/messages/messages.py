@@ -47,14 +47,12 @@ class ProcessedMessages:
         ) as db:
             # Update table ZSINVOICEV
             table_name = f'{settings.DB_SCHEMA}.ZSINVOICEV'
-            columns_to_update = ['ZSTATUS_0']
-            values_to_update = [7]
-            where_clause = {'NUMX3_0': f'{file[:8]}/{file[8:]}'}
+            set_columns = {'ZSTATUS_0': 7}
+            where_clause = {'NUMX3_0': Condition('=', f'{file[:8]}/{file[8:]}')}
 
             response = db.execute_update(
                 table_name,
-                columns_to_update,
-                values_to_update,
+                set_columns,
                 where_clause,
             )
 

@@ -1,24 +1,26 @@
 from http import HTTPStatus
-from pathlib import Path
 
 from auth.auth import Auth
 from config import settings
+from messages.invoices import HandleInvoices
 from messages.messages import ProcessedMessages
 from utils.handle_files import HandleFiles
-from utils.xml.handle_xml import HandleXML
 
 
 def api_faturas() -> None:
-    mapping_file_path = Path(settings.BASE_DIR / 'mapping_xml.json')
-
-    xmlHandler = HandleXML(mapping_file_path)  # noqa: F841
-
-    xmlHandler.generate_xml('file.xml')
+    # Get the invoices to be processed and parse them to XML
+    HandleInvoices.get_invoices()
 
     return
 
     # Check if exists files to be processed
-    fileHandler = HandleFiles(settings.FOLDER_XML_IN, settings.FOLDER_XML_OUT)
+    fileHandler = HandleFiles(
+        settings.BASE_DIR, settings.FOLDER_XML_IN, settings.FOLDER_XML_OUT
+    )
+
+    xml_list = fileHandler.generate_xml('file.xml')
+
+    return
 
     xml_list = fileHandler.check_for_xml_files()
 

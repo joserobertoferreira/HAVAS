@@ -4,7 +4,8 @@ from pathlib import Path
 
 
 class HandleFiles:
-    def __init__(self, folder_input: str, folder_output: str):
+    def __init__(self, base_folder: str, folder_input: str, folder_output: str):
+        self.base_folder = base_folder
         self.folder_input = folder_input
         self.folder_output = folder_output
 
