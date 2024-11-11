@@ -4,6 +4,8 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from typing import Any, Dict
 
+from utils.comparisons import compare
+
 NORMAL = 1
 WITH_TIME = 2
 QR_CODE = 3
@@ -24,6 +26,7 @@ class HandleXML:  # noqa: PLR0904
         self.data_cache = database_record if database_record is not None else {}
         self.qrcode_cache = database_qrcode if database_qrcode is not None else [{}]
         self.lines_cache = database_lines if database_lines is not None else [{}]
+        self.line_number = 0
 
     def load_mapping(self, file_path: str) -> Any:  # noqa: PLR6301
         """Load a JSON mapping from a file.
@@ -95,9 +98,7 @@ class HandleXML:  # noqa: PLR0904
         )
 
         if field_name:
-            for line in self.lines_cache:
-                if field_name in line:
-                    return str(line[field_name])
+            return str(self.lines_cache[self.line_number][field_name])
 
         return ''
 
@@ -293,10 +294,12 @@ class HandleXML:  # noqa: PLR0904
             # Extract the field and value of the condition
             condition = config['condition']
             condition_field = self.resolve_placeholder(condition['field'])
+            operator = condition['operator']
             condition_value = condition['value']
 
             # Check if the condition is met
-            if condition_field == condition_value:
+            #            if condition_field == condition_value:
+            if compare(operator, condition_field, condition_value):
                 # Define os atributos do elemento com base na configuração da condição
                 attributes = self.process_mapping_value(condition['attributes'])
                 return attributes
@@ -314,10 +317,12 @@ class HandleXML:  # noqa: PLR0904
             # Extract the field and value of the condition
             condition = config['condition']
             condition_field = self.resolve_placeholder(condition['field'])
+            operator = condition['operator']
             condition_value = condition['value']
 
             # Check if the condition is met
-            if condition_field == condition_value:
+            #            if condition_field == condition_value:
+            if compare(operator, condition_field, condition_value):
                 # Define os atributos do elemento com base na configuração da condição
                 attributes = self.process_mapping_value(condition['attributes'])
                 element = ET.SubElement(parent, tag_name, attributes)
@@ -438,24 +443,35 @@ class HandleXML:  # noqa: PLR0904
             self.insert_element(*element)
 
         # Add the <lineItem> element to the invoice element
-        line_item = self.create_sub_element(
-            invoice,
-            'lineItem',
-            {'number': self.process_mapping_value(self.mapping['lineItem']['number'])},
-        )
+        for index_line, _ in enumerate(self.lines_cache):
+            self.line_number = index_line
 
-        elements = [
-            (line_item, 'gtinCode'),
-            (line_item, 'description'),
-            (line_item, 'quantity'),
-            (line_item, 'freeQuantity'),
-            (line_item, 'unitPrice'),
-            (line_item, 'vatPercentage', True),
-            (line_item, 'vatAmount'),
-            (line_item, 'netAmount'),
-        ]
-        for element in elements:
-            self.insert_element(*element)
+            line_item = self.create_sub_element(
+                invoice,
+                'lineItem',
+                {
+                    'number': self.process_mapping_value(
+                        self.mapping['lineItem']['number']
+                    )
+                },
+            )
+
+            # elements = [
+            #     (line_item, 'gtinCode'),
+            #     (line_item, 'description'),
+            #     (line_item, 'quantity'),
+            #     (line_item, 'freeQuantity'),
+            #     (line_item, 'unitPrice'),
+            #     (line_item, 'vatPercentage', True),
+            #     (line_item, 'vatAmount'),
+            #     (line_item, 'netAmount'),
+            # ]
+            elements = [
+                (line_item, 'vatPercentage', True),
+                (line_item, 'vatAmount'),
+            ]
+            for element in elements:
+                self.insert_element(*element)
 
         # Add the <vatSummary> element to the invoice element
         vat_summary = self.create_sub_element(

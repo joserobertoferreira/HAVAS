@@ -95,10 +95,7 @@
       "fax": "{{buyer_fax}}",
       "email": "{{buyer_email}}"
     },
-    "vatNumber": "{{buyer_vat}}",
-    "commercialRegistrationNumber": "{{buyer_commercial}}",
-    "commercialRegistrationLocation": "{{buyer_location}}",
-    "socialCapital": "{{buyer_social_capital}}"
+    "vatNumber": "{{buyer_vat}}"
   },
   "billTo": {
     "id": {
@@ -125,10 +122,7 @@
       "fax": "{{billTo_fax}}",
       "email": "{{billTo_email}}"
     },
-    "vatNumber": "{{billTo_vat}}",
-    "commercialRegistrationNumber": "{{billTo_commercial}}",
-    "commercialRegistrationLocation": "{{billTo_location}}",
-    "socialCapital": "{{billTo_social_capital}}"
+    "vatNumber": "{{billTo_vat}}"
   },
   "additionalDate": {
     "type": "CUSTOMERAVAILABLE",
@@ -190,8 +184,9 @@
       "value": "{{vat_percent}}"
     },
     "condition": {
-      "field": "{{vat_exemption}}",
-      "value": "true",
+      "field": "{{vat_rea_code}}",
+      "operator": "isNotEmpty",
+      "value": "",
       "attributes": {
         "vatExemptionReasonCode": "{{vat_rea_code}}",
         "vatExemptionReason": "{{vat_reason}}"
@@ -206,6 +201,7 @@
     },
     "condition": {
       "field": "{{invoice_table.needs_reason}}",
+      "operator": "=",
       "value": "true",
       "attributes": {
         "exceptionReasonCode": "{{vat_exemption_reason_code}}",

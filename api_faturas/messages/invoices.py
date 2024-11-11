@@ -1,15 +1,13 @@
 from pathlib import Path
 from typing import Any, Dict
 
-from pandas import DataFrame
-
 from config import settings
 from database.database import Condition, DatabaseConnection
 from utils.xml.handle_xml import HandleXML
 
 
 class HandleInvoices:
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     @staticmethod
@@ -24,7 +22,7 @@ class HandleInvoices:
             settings.DB_PASSWORD,
         ) as db:
             # Execute query to get the invoices to be processed
-            result_query = db.execute_pandas_query(
+            result_query = db.execute_query(
                 table=f'{settings.DB_SCHEMA}.ZVWSAPHSIV',
                 columns=[
                     'INVOICE_TYP_0',
@@ -53,6 +51,9 @@ class HandleInvoices:
                     'CURRENCY_COD_0',
                     'COMMENT_0',
                 ],
+                where_clauses={
+                    'INVOICE_NUM_0': Condition('=', 'FT-01323/00056').as_tuple()
+                },
             )
 
         # Check if the query was successful
@@ -61,31 +62,60 @@ class HandleInvoices:
             mapping_file_path = Path(settings.BASE_DIR / 'mapping_xml.json')
 
             # Process the invoices
-            result_data: DataFrame = result_query['data']
+            result_data = result_query['data']
+            # result_data: DataFrame = result_query['data'] - Pandas
 
-            # Extract the columns headers from the dataframe
-            result_headers = result_data.columns.tolist()
+            # Extract the columns headers from the dataframe - Pandas
+            # result_headers = result_data.columns.tolist()
 
-            for row in result_data.itertuples(index=False):
-                file_name = str(row.INVOICE_NUM_0).replace('/', '')
+            # for row in result_data.itertuples(index=False): - Pandas
+            #     file_name = (
+            #         Path(settings.FOLDER_XML_IN) / str(row.INVOICE_NUM_0).replace('/', '')  # noqa: E501
+            #         + '.xml'
+            #     )
 
-                # Read QR Code table from Portugal
-                qr_code = HandleInvoices.get_qr_code(
-                    str(row.INVOICE_TYP_0), str(row.INVOICE_NUM_0)
+            #     # Read QR Code table from Portugal
+            #     qr_code = HandleInvoices.get_qr_code(
+            #         str(row.INVOICE_TYP_0), str(row.INVOICE_NUM_0)
+            #     )
+
+            #     # Read invoice lines
+            #     invoice_lines = HandleInvoices.get_invoice_lines(str(row.INVOICE_NUM_0))
+
+            #     xmlHandler = HandleXML(
+            #         mapping_file_path,
+            #         result_headers,
+            #         row._asdict(),
+            #         qr_code,
+            #         invoice_lines,
+            #     )
+
+            # Loop through the invoices
+            for record in result_data:
+                invoice_number = str(record.get('INVOICE_NUM_0', ''))
+                invoice_type = str(record.get('INVOICE_TYP_0', 'FT'))
+
+                file_name = (
+                    f'{Path(settings.FOLDER_XML_IN) / invoice_number.replace("/", "")}'
+                    '.xml'
                 )
 
+                # Read QR Code table from Portugal
+                qr_code = HandleInvoices.get_qr_code(invoice_type, invoice_number)
+
                 # Read invoice lines
-                invoice_lines = HandleInvoices.get_invoice_lines(str(row.INVOICE_NUM_0))
+                invoice_lines = HandleInvoices.get_invoice_lines(invoice_number)
 
                 xmlHandler = HandleXML(
                     mapping_file_path,
-                    result_headers,
-                    row._asdict(),
+                    result_query['columns'],
+                    record,
                     qr_code,
                     invoice_lines,
                 )
 
                 xmlHandler.generate_xml(file_name)
+
                 break
 
     @staticmethod

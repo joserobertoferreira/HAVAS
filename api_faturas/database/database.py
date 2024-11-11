@@ -1,6 +1,5 @@
 from typing import Any, Dict, Optional, Tuple
 
-import pandas as pd
 import pyodbc
 
 from database.condition import Condition
@@ -305,61 +304,61 @@ class DatabaseConnection:
                 'data': None,
             }
 
-    def execute_pandas_query(
-        self,
-        table: str,
-        columns: Optional[list[str]] = None,
-        where_clauses: Optional[Dict[str, Tuple[str, Any]]] = None,
-        group_by: Optional[str] = None,
-        order_by: Optional[str] = None,
-    ):
-        # Check if there is an active connection
-        if not self.connection:
-            try:
-                self.connect()
-            except Exception:
-                return {
-                    'status': 'error',
-                    'message': 'No active connection',
-                    'data': None,
-                }
+    # def execute_pandas_query(
+    #     self,
+    #     table: str,
+    #     columns: Optional[list[str]] = None,
+    #     where_clauses: Optional[Dict[str, Tuple[str, Any]]] = None,
+    #     group_by: Optional[str] = None,
+    #     order_by: Optional[str] = None,
+    # ):
+    #     # Check if there is an active connection
+    #     if not self.connection:
+    #         try:
+    #             self.connect()
+    #         except Exception:
+    #             return {
+    #                 'status': 'error',
+    #                 'message': 'No active connection',
+    #                 'data': None,
+    #             }
 
-        # Build the SELECT clause dynamically
-        select_clause = ', '.join(columns) if columns else '*'
+    #     # Build the SELECT clause dynamically
+    #     select_clause = ', '.join(columns) if columns else '*'
 
-        query = f'SELECT {select_clause} FROM {table}'
+    #     query = f'SELECT {select_clause} FROM {table}'
 
-        # Build the WHERE clause dynamically with multiple conditions
-        if where_clauses:
-            where_clause = ' AND '.join([
-                f'{column} {operator} ?'
-                for column, (operator, _) in where_clauses.items()
-            ])
-            query += f' WHERE {where_clause}'
-            where_values = tuple(value for _, value in where_clauses.values())
-        else:
-            where_values = ()
+    #     # Build the WHERE clause dynamically with multiple conditions
+    #     if where_clauses:
+    #         where_clause = ' AND '.join([
+    #             f'{column} {operator} ?'
+    #             for column, (operator, _) in where_clauses.items()
+    #         ])
+    #         query += f' WHERE {where_clause}'
+    #         where_values = tuple(value for _, value in where_clauses.values())
+    #     else:
+    #         where_values = ()
 
-        try:
-            df = pd.read_sql(query, self.connection, params=where_values)
+    #     try:
+    #         df = pd.read_sql(query, self.connection, params=where_values)
 
-            return {
-                'status': 'success',
-                'message': 'Query executed successfully',
-                'data': df,
-            }
-        except pyodbc.Error as e:
-            return {
-                'status': 'error',
-                'message': f'Error executing query: {e}',
-                'data': None,
-            }
-        except Exception as e:
-            return {
-                'status': 'error',
-                'message': f'Unexpected error: {e}',
-                'data': None,
-            }
+    #         return {
+    #             'status': 'success',
+    #             'message': 'Query executed successfully',
+    #             'data': df,
+    #         }
+    #     except pyodbc.Error as e:
+    #         return {
+    #             'status': 'error',
+    #             'message': f'Error executing query: {e}',
+    #             'data': None,
+    #         }
+    #     except Exception as e:
+    #         return {
+    #             'status': 'error',
+    #             'message': f'Unexpected error: {e}',
+    #             'data': None,
+    #         }
 
     def __enter__(self):
         self.connect()
