@@ -62,11 +62,10 @@
       "countryCode": "{{seller_country}}"
     },
     "contactInformation": {
-      "phone": "{{seller_phone}}",
-      "fax": "{{seller_fax}}"
+      "phone": "{{seller_phone}}"
     },
     "vatNumber": "{{seller_vat}}",
-    "commercialRegistrationNumber": "{{seller_commercial}}",
+    "commercialRegistrationNumber": "{{seller_comm}}",
     "commercialRegistrationLocation": "{{seller_location}}",
     "socialCapital": "{{sell_soccap}}"
   },
@@ -92,7 +91,6 @@
     },
     "contactInformation": {
       "phone": "{{buyer_phone}}",
-      "fax": "{{buyer_fax}}",
       "email": "{{buyer_email}}"
     },
     "vatNumber": "{{buyer_vat}}"
@@ -119,7 +117,6 @@
     },
     "contactInformation": {
       "phone": "{{billTo_phone}}",
-      "fax": "{{billTo_fax}}",
       "email": "{{billTo_email}}"
     },
     "vatNumber": "{{billTo_vat}}"
@@ -168,7 +165,7 @@
   "lineItem": {
     "number": "{{line_number}}"
   },
-  "gtinCode": "{{line_product}}",
+  "sellerItemCode": "{{line_product}}",
   "description": "{{line_descr}}",
   "quantity": {
     "value": "{{line_quant}}",
@@ -200,20 +197,20 @@
       "value": ""
     },
     "condition": {
-      "field": "{{invoice_table.needs_reason}}",
-      "operator": "=",
-      "value": "true",
+      "field": "{{vat_rea_code}}",
+      "operator": "isNotEmpty",
+      "value": "",
       "attributes": {
-        "exceptionReasonCode": "{{vat_exemption_reason_code}}",
-        "exceptionReason": "{{vat_exemption_reason}}"
+        "exceptionReasonCode": "{{vat_rea_code}}",
+        "exceptionReason": "{{vat_reason}}"
       }
     },
-    "vatPercentage": "{{vat_percentage}}",
+    "vatPercentage": "{{vat_percent}}",
     "vatAmount": "{{vat_amount}}",
-    "taxableAmount": "{{taxable_amount}}"
+    "taxableAmount": "{{taxable_amt}}"
   },
-  "totalVatAmount": "{{total_vat_amount}}",
-  "totalTaxableAmount": "{{total_taxable_amount}}",
-  "totalNetAmount": "{{total_net_amount}}",
-  "totalPayableAmount": "{{total_payable_amount}}"
+  "totalVatAmount": "{{tot_vat_amt}}",
+  "totalTaxableAmount": "{{tot_tax_amt}}",
+  "totalNetAmount": "{{tot_tax_amt}}",
+  "totalPayableAmount": "{{total_amount}}"
 }

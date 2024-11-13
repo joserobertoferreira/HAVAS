@@ -1,32 +1,56 @@
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 
 class Conversions:
     @staticmethod
-    def convert_value(value: Any) -> Any:  # noqa: PLR0911
+    def convert_value(value: Any, precision: Optional[int]) -> Any:
         if isinstance(value, str):
-            return value.strip()
+            return_value = Conversions._convert_str(value)
         elif isinstance(value, int):
-            return value
+            return_value = value
         elif isinstance(value, float):
-            return value
+            return_value = Conversions._convert_float(value, precision)
         elif isinstance(value, bool):
-            return value
+            return_value = value
         elif value is None:
-            return value
+            return_value = value
         elif isinstance(value, datetime):
-            return value
+            return_value = value
         elif isinstance(value, date):
-            return value
+            return_value = value
         elif isinstance(value, Decimal):
-            return str(value)
+            return_value = Conversions._convert_decimal(value, precision)
         elif isinstance(value, list):
-            # Aplica a formatação em cada item da lista mantendo o tipo
-            return [Conversions.convert_value(item) for item in value]
+            return_value = Conversions._convert_list(value)
         else:
-            return value  # Retorna outros tipos diretamente
+            return_value = value
+
+        return return_value
+
+    @staticmethod
+    def _convert_str(value: str) -> str:
+        return value.strip()
+
+    @staticmethod
+    def _convert_float(value: float, precision: Optional[int]) -> float:
+        if precision != 0:
+            return round(value, precision)
+        return value
+
+    @staticmethod
+    def _convert_decimal(value: Decimal, precision: Optional[int]) -> Decimal:
+        if value.is_normal():
+            if precision != 0:
+                return round(value, precision)
+            return value
+        else:
+            return Decimal(0)
+
+    @staticmethod
+    def _convert_list(value: list) -> list:
+        return [Conversions.convert_value(item) for item in value]
 
     @staticmethod
     def convert_values(data: Dict[str, Any]) -> Dict[str, Any]:

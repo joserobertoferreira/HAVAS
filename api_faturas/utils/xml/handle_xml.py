@@ -1,32 +1,30 @@
 import base64
 import json
+import re
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from typing import Any, Dict
 
 from utils.comparisons import compare
+from utils.conversions import Conversions
 
 NORMAL = 1
 WITH_TIME = 2
-QR_CODE = 3
-LINES = 4
 
 
 class HandleXML:  # noqa: PLR0904
-    def __init__(
-        self,
-        mapping_file_path: str,
-        field_headers: list[str] = None,
-        database_record: Dict[str, Any] = None,
-        database_qrcode: list[Dict[str, Any]] = None,
-        database_lines: list[Dict[str, Any]] = None,
-    ):
-        self.mapping = self.load_mapping(mapping_file_path)
-        self.field_headers = field_headers if field_headers is not None else []
-        self.data_cache = database_record if database_record is not None else {}
-        self.qrcode_cache = database_qrcode if database_qrcode is not None else [{}]
-        self.lines_cache = database_lines if database_lines is not None else [{}]
+    def __init__(self, **kwargs) -> None:
+        self.mapping = self.load_mapping(kwargs.get('mapping_file_path'))
+        self.field_headers = kwargs.get('field_headers', [])  # list[str]
+        self.data_cache = kwargs.get('db_record', {})  # Dict[str, Any]
+        self.qrcode_cache = kwargs.get('db_qrcode', [{}])  # list[Dict[str, Any]]
+        self.lines_cache = kwargs.get('db_lines', [{}])  # list[Dict[str, Any]]
+        self.vat_summary_cache = kwargs.get(
+            'db_vat_summary', [{}]
+        )  # list[Dict[str, Any]]
+        self.addresses = kwargs.get('db_addresses', [{}])  # list[Dict[str, Any]]
         self.line_number = 0
+        self.current_tag = ''
 
     def load_mapping(self, file_path: str) -> Any:  # noqa: PLR6301
         """Load a JSON mapping from a file.
@@ -68,6 +66,62 @@ class HandleXML:  # noqa: PLR0904
 
         return return_date
 
+    def return_address_value(self, placeholder: str, address_type: int) -> str:
+        """Return a generic value for the placeholder."""
+
+        address_mapping = {
+            '{{seller_address}}': 'BPAADDLIG_0',
+            '{{buyer_address}}': 'BPAADDLIG_0',
+            '{{billTo_address}}': 'BPAADDLIG_0',
+        }
+
+        complement_mapping = {
+            '{{seller_city}}': 'CTY_0',
+            '{{seller_country}}': 'CRY_0',
+            '{{seller_zip}}': 'POSCOD_0',
+            '{{seller_area}}': 'CTY_0',
+            '{{seller_phone}}': 'TEL_0',
+            '{{seller_location}}': 'CTY_0',
+            '{{buyer_city}}': 'CTY_0',
+            '{{buyer_country}}': 'CRY_0',
+            '{{buyer_zip}}': 'POSCOD_0',
+            '{{buyer_area}}': 'CTY_0',
+            '{{buyer_phone}}': 'TEL_0',
+            '{{buyer_email}}': 'WEB_0',
+            '{{billTo_city}}': 'CTY_0',
+            '{{billTo_country}}': 'CRY_0',
+            '{{billTo_zip}}': 'POSCOD_0',
+            '{{billTo_area}}': 'CTY_0',
+            '{{billTo_phone}}': 'TEL_0',
+            '{{billTo_email}}': 'WEB_0',
+        }
+
+        for address in self.addresses:
+            if address.get('BPATYP_0') == address_type:
+                if placeholder in address_mapping:
+                    return_value = ' '.join(
+                        address.get(f'BPAADDLIG_{i}', '').strip() for i in range(3)
+                    )
+                    return_value = return_value.strip()
+                elif placeholder in complement_mapping:
+                    field_name = complement_mapping.get(
+                        placeholder,
+                        placeholder.replace('{{', '').replace('}}', '').upper() + '_0',
+                    )
+
+                    if field_name == 'POSCOD_0' and address.get('CRY_0') == 'PT':
+                        return_value = re.sub(
+                            r'(\d{4})(\d{3})', r'\1-\2', address.get(field_name, '')
+                        )
+                    else:
+                        return_value = Conversions.convert_value(
+                            address.get(field_name, ''), 0
+                        )
+
+                return str(return_value)
+
+        return ''
+
     def return_normal_value(self, placeholder: str) -> str:
         """Return a generic value for the placeholder."""
 
@@ -77,16 +131,19 @@ class HandleXML:  # noqa: PLR0904
             '{{type_cod_buyer}}': 'TYPE_COD_REC_0',
             '{{type_cod_billTo}}': 'TYPE_COD_REC_0',
             '{{billTo_name}}': 'BUYER_NAME_0',
+            '{{seller_vat}}': 'SELLER_COMM_0',
+            '{{billTo_vat}}': 'BUYER_VAT_0',
         }
 
         field_name = normal_mapping.get(
             placeholder,
             placeholder.replace('{{', '').replace('}}', '').upper() + '_0',
         )
+        return_value = Conversions.convert_value(self.data_cache.get(field_name, ''), 0)
 
-        return str(self.data_cache.get(field_name, ''))
+        return str(return_value)
 
-    def return_line_value(self, placeholder: str) -> str:
+    def return_line_value(self, placeholder: str, precision: int) -> str:
         """Return a generic value for the placeholder."""
 
         line_mapping = {}
@@ -98,7 +155,17 @@ class HandleXML:  # noqa: PLR0904
         )
 
         if field_name:
-            return str(self.lines_cache[self.line_number][field_name])
+            if self.current_tag == 'vatSummary':
+                cache = self.vat_summary_cache
+            else:
+                cache = self.lines_cache
+
+            if cache:
+                return_value = Conversions.convert_value(
+                    cache[self.line_number][field_name], precision
+                )
+
+                return str(return_value)
 
         return ''
 
@@ -139,11 +206,37 @@ class HandleXML:  # noqa: PLR0904
         }
 
         normal_placeholders = {
+            '{{seller_vat}}': lambda: self.return_normal_value(placeholder),
             '{{type_cod_buyer}}': lambda: self.return_normal_value(placeholder),
             '{{buyer_code}}': lambda: self.return_normal_value(placeholder),
             '{{type_cod_billTo}}': lambda: self.return_normal_value(placeholder),
             '{{billTo_code}}': lambda: self.return_normal_value(placeholder),
             '{{billTo_name}}': lambda: self.return_normal_value(placeholder),
+            '{{billTo_vat}}': lambda: self.return_normal_value(placeholder),
+        }
+
+        address_placeholders = {
+            '{{seller_address}}': lambda: self.return_address_value(placeholder, 3),
+            '{{seller_city}}': lambda: self.return_address_value(placeholder, 3),
+            '{{seller_zip}}': lambda: self.return_address_value(placeholder, 3),
+            '{{seller_area}}': lambda: self.return_address_value(placeholder, 3),
+            '{{seller_country}}': lambda: self.return_address_value(placeholder, 3),
+            '{{seller_phone}}': lambda: self.return_address_value(placeholder, 3),
+            '{{seller_location}}': lambda: self.return_address_value(placeholder, 3),
+            '{{buyer_address}}': lambda: self.return_address_value(placeholder, 1),
+            '{{buyer_city}}': lambda: self.return_address_value(placeholder, 1),
+            '{{buyer_zip}}': lambda: self.return_address_value(placeholder, 1),
+            '{{buyer_area}}': lambda: self.return_address_value(placeholder, 1),
+            '{{buyer_country}}': lambda: self.return_address_value(placeholder, 1),
+            '{{buyer_phone}}': lambda: self.return_address_value(placeholder, 1),
+            '{{buyer_email}}': lambda: self.return_address_value(placeholder, 1),
+            '{{billTo_address}}': lambda: self.return_address_value(placeholder, 1),
+            '{{billTo_city}}': lambda: self.return_address_value(placeholder, 1),
+            '{{billTo_zip}}': lambda: self.return_address_value(placeholder, 1),
+            '{{billTo_area}}': lambda: self.return_address_value(placeholder, 1),
+            '{{billTo_country}}': lambda: self.return_address_value(placeholder, 1),
+            '{{billTo_phone}}': lambda: self.return_address_value(placeholder, 1),
+            '{{billTo_email}}': lambda: self.return_address_value(placeholder, 1),
         }
 
         qr_code_placeholders = {
@@ -160,37 +253,66 @@ class HandleXML:  # noqa: PLR0904
         }
 
         lines_placeholders = {
-            '{{line_number}}': lambda: self.return_line_value(placeholder),
-            '{{line_product}}': lambda: self.return_line_value(placeholder),
-            '{{line_descr}}': lambda: self.return_line_value(placeholder),
-            '{{line_quant}}': lambda: self.return_line_value(placeholder),
-            '{{line_unit}}': lambda: self.return_line_value(placeholder),
-            '{{line_unit_pr}}': lambda: self.return_line_value(placeholder),
-            '{{line_vat_amt}}': lambda: self.return_line_value(placeholder),
-            '{{line_net_amt}}': lambda: self.return_line_value(placeholder),
-            '{{vat_percent}}': lambda: self.return_line_value(placeholder),
-            '{{vat_rea_code}}': lambda: self.return_line_value(placeholder),
-            '{{vat_reason}}': lambda: self.return_line_value(placeholder),
+            '{{line_number}}': lambda: self.return_line_value(placeholder, 0),
+            '{{line_product}}': lambda: self.return_line_value(placeholder, 0),
+            '{{line_descr}}': lambda: self.return_line_value(placeholder, 0),
+            '{{line_quant}}': lambda: self.return_line_value(placeholder, 0),
+            '{{line_unit}}': lambda: self.return_line_value(placeholder, 0),
+            '{{line_unit_pr}}': lambda: self.return_line_value(placeholder, 4),
+            '{{line_vat_amt}}': lambda: self.return_line_value(placeholder, 2),
+            '{{line_net_amt}}': lambda: self.return_line_value(placeholder, 2),
+            '{{vat_percent}}': lambda: self.return_line_value(placeholder, 0),
+            '{{vat_rea_code}}': lambda: self.return_line_value(placeholder, 0),
+            '{{vat_reason}}': lambda: self.return_line_value(placeholder, 0),
         }
 
+        vat_summary_placeholders = {
+            '{{vat_amount}}': lambda: self.return_line_value(placeholder, 2),
+            '{{taxable_amt}}': lambda: self.return_line_value(placeholder, 2),
+        }
+
+        return_value = None
+
         if placeholder in placeholder_actions:
-            return placeholder_actions[placeholder]()
+            return_value = placeholder_actions[placeholder]()
 
         if placeholder in normal_placeholders:
-            return normal_placeholders[placeholder]()
+            return_value = normal_placeholders[placeholder]()
+
+        if placeholder in address_placeholders:
+            return_value = address_placeholders[placeholder]()
 
         if placeholder in qr_code_placeholders:
-            return qr_code_placeholders[placeholder]()
+            return_value = qr_code_placeholders[placeholder]()
 
         if placeholder in lines_placeholders:
-            return lines_placeholders[placeholder]()
+            return_value = lines_placeholders[placeholder]()
+
+        if placeholder in vat_summary_placeholders:
+            return_value = vat_summary_placeholders[placeholder]()
+
+        if return_value is not None:
+            return return_value
 
         # Get the field name from the placeholder
         field_name = placeholder.replace('{{', '').replace('}}', '').upper() + '_0'
 
         # Check if the field name is in the field headers
         if field_name in self.field_headers:
-            return str(self.data_cache.get(field_name, ''))
+            if field_name in {
+                'SELL_SOCCAP_0',
+                'TOT_VAT_AMT_0',
+                'TOT_TAX_AMT_0',
+                'TOTAL_AMOUNT_0',
+            }:
+                return_value = Conversions.convert_value(
+                    self.data_cache.get(field_name, ''), 2
+                )
+            else:
+                return_value = Conversions.convert_value(
+                    self.data_cache.get(field_name, ''), 0
+                )
+            return str(return_value)
 
         return str(placeholder)
 
@@ -204,6 +326,8 @@ class HandleXML:  # noqa: PLR0904
 
     def create_root_element(self):
         """Create the root <message> element with namespaces and attributes."""
+        self.current_tag = 'message'
+
         return ET.Element(
             'message',
             {
@@ -217,17 +341,20 @@ class HandleXML:  # noqa: PLR0904
             },
         )
 
-    @staticmethod
     def create_sub_element(
-        parent: ET.Element, tag: str, value: Dict[str, Any]
+        self, parent: ET.Element, tag: str, value: Dict[str, Any]
     ) -> ET.Element:
         """Create an XML sub-element with a tag and value."""
+        self.current_tag = tag
+
         return ET.SubElement(parent, tag, value)
 
     def create_sub_element_from_mapping(
         self, parent: ET.Element, tag: str, config: Any
     ) -> None:
         """Create an XML sub-element from a JSON mapping with placeholders."""
+
+        self.current_tag = tag
 
         # Determine how to process the config based on its type
         if isinstance(config, list):
@@ -369,11 +496,14 @@ class HandleXML:  # noqa: PLR0904
         tag: str,
         conditional: bool = False,
         parent_tag: str = None,
+        saphety_tag: bool = False,
     ) -> None:
         if conditional:
             self.add_conditional_element(parent, tag, self.mapping[tag])
         elif parent_tag:
             self.add_party_element(parent, tag, id_sub_elem=parent_tag)
+        # elif saphety_tag:
+        #     self.add_saphety_element(parent, tag)
         else:
             self.add_party_element(parent, tag)
 
@@ -420,7 +550,11 @@ class HandleXML:  # noqa: PLR0904
             self.mapping['additionalDate']['value']
         )
 
-        elements = [(invoice, 'currencyCode'), (invoice, 'discount')]
+        elements = [
+            (invoice, 'reference'),
+            (invoice, 'currencyCode'),
+            (invoice, 'discount'),
+        ]
         for element in elements:
             self.insert_element(*element)
 
@@ -445,6 +579,7 @@ class HandleXML:  # noqa: PLR0904
         # Add the <lineItem> element to the invoice element
         for index_line, _ in enumerate(self.lines_cache):
             self.line_number = index_line
+            self.current_tag = 'lineItem'
 
             line_item = self.create_sub_element(
                 invoice,
@@ -456,38 +591,39 @@ class HandleXML:  # noqa: PLR0904
                 },
             )
 
-            # elements = [
-            #     (line_item, 'gtinCode'),
-            #     (line_item, 'description'),
-            #     (line_item, 'quantity'),
-            #     (line_item, 'freeQuantity'),
-            #     (line_item, 'unitPrice'),
-            #     (line_item, 'vatPercentage', True),
-            #     (line_item, 'vatAmount'),
-            #     (line_item, 'netAmount'),
-            # ]
             elements = [
+                (line_item, 'sellerItemCode'),
+                (line_item, 'description'),
+                (line_item, 'quantity'),
+                (line_item, 'freeQuantity'),
+                (line_item, 'unitPrice'),
                 (line_item, 'vatPercentage', True),
                 (line_item, 'vatAmount'),
+                (line_item, 'netAmount'),
             ]
             for element in elements:
                 self.insert_element(*element)
 
         # Add the <vatSummary> element to the invoice element
-        vat_summary = self.create_sub_element(
-            invoice,
-            'vatSummary',
-            self.add_conditional_sub_element(self.mapping['vatSummary']),
-        )
+        for index_line, _ in enumerate(self.vat_summary_cache):
+            self.line_number = index_line
+            self.current_tag = 'vatSummary'
 
-        elements = [
-            (vat_summary, 'vatPercentage', True),
-            (vat_summary, 'vatAmount', False, 'vatSummary'),
-            (vat_summary, 'taxableAmount', False, 'vatSummary'),
-        ]
-        for element in elements:
-            self.insert_element(*element)
+            vat_summary = self.create_sub_element(
+                invoice,
+                'vatSummary',
+                self.add_conditional_sub_element(self.mapping['vatSummary']),
+            )
 
+            elements = [
+                (vat_summary, 'vatPercentage', False, 'vatSummary'),
+                (vat_summary, 'vatAmount', False, 'vatSummary'),
+                (vat_summary, 'taxableAmount', False, 'vatSummary'),
+            ]
+            for element in elements:
+                self.insert_element(*element)
+
+        # Add the final elements to the invoice element
         elements = [
             (invoice, 'totalVatAmount'),
             (invoice, 'totalTaxableAmount'),
