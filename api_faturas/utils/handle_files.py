@@ -1,4 +1,5 @@
 import base64
+import mimetypes
 from datetime import datetime
 from pathlib import Path
 
@@ -50,3 +51,41 @@ class HandleFiles:
 
         # Move the file to the output folder
         file_to_move.replace(Path(output_path) / file)
+
+    def list_folder(path_folder: str) -> list[dict[str, str]]:
+        """
+        Lists the contents of the folder and identifies the extension and Content-Type
+         of each file.
+
+        Args:
+            path_folder: str) -> list[dict[str, str]]: (str or Path): Path to the folder
+            to be read.
+
+        Returns:
+            list: List of dictionaries containing 'filename', 'extension' and
+            'content_type'.
+        """
+        folder_content = []
+
+        # Convert the path to a Path object, if it is not already
+        path = Path(path_folder)
+
+        # Check if the path is a valid folder
+        if not path.is_dir():
+            return folder_content
+
+        # Iterates over the folder content
+        for item in path.iterdir():
+            # Only processes if it is a file
+            if item.is_file():
+                # Define the Content-Type using the file extension
+                content_type, _ = mimetypes.guess_type(item)
+
+                # Add the result to the list
+                folder_content.append({
+                    'file_name': item.stem,
+                    'suffix': item.suffix,
+                    'content_type': content_type if content_type else 'unknown',
+                })
+
+        return folder_content

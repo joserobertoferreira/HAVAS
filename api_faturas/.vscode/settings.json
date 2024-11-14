@@ -7,6 +7,7 @@
     "BPADDRESS",
     "BPANUM",
     "BPATYP",
+    "COSTCENTER",
     "CUSTOMERAVAILABLE",
     "dataframe",
     "descr",

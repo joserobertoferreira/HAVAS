@@ -11,16 +11,10 @@ def api_faturas() -> None:
     # Get the invoices to be processed and parse them to XML
     HandleInvoices.get_invoices()
 
-    return
-
     # Check if exists files to be processed
     fileHandler = HandleFiles(
         settings.BASE_DIR, settings.FOLDER_XML_IN, settings.FOLDER_XML_OUT
     )
-
-    xml_list = fileHandler.generate_xml('file.xml')
-
-    return
 
     xml_list = fileHandler.check_for_xml_files()
 

@@ -1,11 +1,13 @@
+import base64
 from datetime import date, datetime
 from decimal import Decimal
+from pathlib import Path
 from typing import Any, Dict, Optional
 
 
 class Conversions:
     @staticmethod
-    def convert_value(value: Any, precision: Optional[int]) -> Any:
+    def convert_value(value: Any, precision: int = 0) -> Any:
         if isinstance(value, str):
             return_value = Conversions._convert_str(value)
         elif isinstance(value, int):
@@ -84,3 +86,16 @@ class Conversions:
             query = query.replace('?', value, 1)  # Substituir um placeholder por vez
 
         return query
+
+    @staticmethod
+    def convert_file_to_base64(file_path: str, file_name: str) -> str:
+        file_attributes = Path(file_path / file_name)
+
+        base_string = ''
+
+        # Open the file in binary mode and read its content
+        with file_attributes.open('rb') as file:
+            content = file.read()
+            base_string = base64.b64encode(content).decode('utf-8')
+
+        return base_string

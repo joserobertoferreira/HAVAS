@@ -34,12 +34,12 @@
   "invoice": {
     "documentNumber": "{{invoice_num}}",
     "documentDate": "{{invoice_date}}",
-    "schemaVersion": "1.1",
-    "binaryDocumentAttachment": {
-      "name": "attachment_name",
-      "contentType": "application/pdf",
-      "content": "attachment_base64"
-    }
+    "schemaVersion": "1.1"
+  },
+  "binaryDocumentAttachment": {
+    "name": "{{invoice_num}}",
+    "contentType": "application/pdf",
+    "content": "{{attachment_base64}}"
   },
   "seller": {
     "id": {
@@ -137,7 +137,7 @@
         "attr_value": "FINANCIAL"
       }
     ],
-    "amount": "{{discount_amount}}"
+    "amount": "{{discount}}"
   },
   "comment": {
     "id": "1",

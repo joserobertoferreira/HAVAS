@@ -5,11 +5,14 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from typing import Any, Dict
 
+from config import settings
 from utils.comparisons import compare
 from utils.conversions import Conversions
+from utils.handle_files import HandleFiles
 
 NORMAL = 1
 WITH_TIME = 2
+ATTACH_PDF = 2
 
 
 class HandleXML:  # noqa: PLR0904
@@ -193,6 +196,30 @@ class HandleXML:  # noqa: PLR0904
 
         return ''
 
+    def return_base64_value(self, placeholder: str) -> str:  # noqa: PLR6301
+        """Return a generic value for the placeholder."""
+
+        base64_mapping = {
+            '{{attachment_base64}}': 'PDF_FILE_0',
+        }
+
+        field_name = base64_mapping.get(placeholder)
+
+        if field_name:
+            #            file_attributes = Path(self.data_cache.get(field_name))
+            return Conversions.convert_file_to_base64(
+                settings.FOLDER_XML_IN, 'FT-0132400008.pdf'
+            )
+            # file_attributes = Path(settings.FOLDER_XML_IN / 'FT-0132400008.pdf')
+
+            # # Open the file in binary mode and read its content
+            # with file_attributes.open('rb') as file:
+            #     content = file.read()
+            #     base_string = base64.b64encode(content).decode('utf-8')
+            #     return base_string
+
+        return ''
+
     def resolve_placeholder(self, placeholder: str) -> str:
         """Substitute placeholders with the corresponding value from the database
         or the current date.
@@ -271,6 +298,10 @@ class HandleXML:  # noqa: PLR0904
             '{{taxable_amt}}': lambda: self.return_line_value(placeholder, 2),
         }
 
+        base64_placeholders = {
+            '{{attachment_base64}}': lambda: self.return_base64_value(placeholder),
+        }
+
         return_value = None
 
         if placeholder in placeholder_actions:
@@ -290,6 +321,9 @@ class HandleXML:  # noqa: PLR0904
 
         if placeholder in vat_summary_placeholders:
             return_value = vat_summary_placeholders[placeholder]()
+
+        if placeholder in base64_placeholders:
+            return_value = base64_placeholders[placeholder]()
 
         if return_value is not None:
             return return_value
@@ -490,6 +524,14 @@ class HandleXML:  # noqa: PLR0904
         else:
             party_elem.text = self.process_mapping_value(party_id_config)
 
+    # Auxiliary function to add a Saphety element
+    def add_saphety_element(self, parent, saphety_type):
+        saphety_id_config = self.mapping[saphety_type]
+        saphety_elem = ET.SubElement(parent, saphety_type)
+
+        for key, value in saphety_id_config.items():
+            self.create_sub_element_from_mapping(saphety_elem, key, value)
+
     def insert_element(
         self,
         parent: ET.Element,
@@ -502,8 +544,8 @@ class HandleXML:  # noqa: PLR0904
             self.add_conditional_element(parent, tag, self.mapping[tag])
         elif parent_tag:
             self.add_party_element(parent, tag, id_sub_elem=parent_tag)
-        # elif saphety_tag:
-        #     self.add_saphety_element(parent, tag)
+        elif saphety_tag:
+            self.add_saphety_element(parent, tag)
         else:
             self.add_party_element(parent, tag)
 
@@ -534,6 +576,44 @@ class HandleXML:  # noqa: PLR0904
             },
         )
 
+        # Check if is necessary to add <binaryDocumentAttachment> element
+        attach_pdf = self.data_cache.get('SEND_METHOD_0')
+
+        if attach_pdf == ATTACH_PDF:
+            binary_document = self.create_sub_element(
+                invoice,
+                'binaryDocumentAttachment',
+                {
+                    'name': self.process_mapping_value(
+                        self.mapping['binaryDocumentAttachment']['name']
+                    ),
+                    'contentType': self.mapping['binaryDocumentAttachment'][
+                        'contentType'
+                    ],
+                },
+            )
+            binary_document.text = self.process_mapping_value(
+                self.mapping['binaryDocumentAttachment']['content']
+            )
+
+        attachments = HandleFiles.list_folder(settings.FOLDER_XML_IN / 'attachments')
+        # attachments = HandleFiles.list_folder(self.data_cache.get('ATT_PATH_0'))
+
+        if attachments:
+            for attachment in attachments:
+                binary_document = self.create_sub_element(
+                    invoice,
+                    'binaryDocumentAttachment',
+                    {
+                        'name': attachment.get('file_name'),
+                        'contentType': attachment.get('content_type'),
+                    },
+                )
+                binary_document.text = Conversions.convert_file_to_base64(
+                    settings.FOLDER_XML_IN / 'attachments',
+                    f'{attachment.get("file_name")}{attachment.get("suffix")}',
+                )
+
         # Add the <seller>, <buyer>, and <billTo> elements to element invoice
         elements = [(invoice, 'seller'), (invoice, 'buyer'), (invoice, 'billTo')]
         for element in elements:
@@ -550,8 +630,27 @@ class HandleXML:  # noqa: PLR0904
             self.mapping['additionalDate']['value']
         )
 
+        # Add the <reference> element inside the <invoice> element when the
+        # condition is met
+        cost_center = self.data_cache.get('COST_CENTER_0', '')
+
+        if len(cost_center) > 0:
+            self.create_sub_element(
+                invoice,
+                'reference',
+                {'type': 'COSTCENTER', 'referencedDocument': cost_center},
+            )
+
+        order = self.data_cache.get('REF_ORDER_0', '')
+
+        if len(order) > 0:
+            self.create_sub_element(
+                invoice,
+                'reference',
+                {'type': 'ORDER', 'referencedDocument': order},
+            )
+
         elements = [
-            (invoice, 'reference'),
             (invoice, 'currencyCode'),
             (invoice, 'discount'),
         ]
