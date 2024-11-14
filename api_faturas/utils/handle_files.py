@@ -2,6 +2,7 @@ import base64
 import mimetypes
 from datetime import datetime
 from pathlib import Path
+from typing import Any, Dict
 
 
 class HandleFiles:
@@ -52,6 +53,7 @@ class HandleFiles:
         # Move the file to the output folder
         file_to_move.replace(Path(output_path) / file)
 
+    @staticmethod
     def list_folder(path_folder: str) -> list[dict[str, str]]:
         """
         Lists the contents of the folder and identifies the extension and Content-Type
@@ -89,3 +91,34 @@ class HandleFiles:
                 })
 
         return folder_content
+
+    def create_message_files(self, messages: list[Dict[str, Any]]) -> None:
+        # Create the output folder with the current year and month
+        year_month_folder = datetime.now().strftime('%Y%m')
+        output_path = Path(self.folder_output) / year_month_folder
+
+        # Check if the folder exists
+        if not output_path.is_dir():
+            output_path.mkdir(parents=True, exist_ok=True)
+
+        for message in messages:
+            # Create a file with the message content
+            try:
+                file_name = message['ResultData']['Filename']
+                base64_data = message['ResultData']['Base64Data']
+                content_type = message['ResultData']['ContentType']
+
+                suffix = mimetypes.guess_extension(content_type) or '.bin'
+
+                file_data = base64.b64decode(base64_data)
+                file_path = output_path / f'{file_name}{suffix}'
+
+                with file_path.open('wb') as file:
+                    file.write(file_data)
+
+            except KeyError as e:
+                print(f'Missing key {e} in dictionary: {message}')
+            except base64.binascii.Error:
+                print(f'Invalid Base64 content in file {file_name}.')
+            except Exception as e:
+                print(f'An error occurred while processing {file_name}: {e}')
