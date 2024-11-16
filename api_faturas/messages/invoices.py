@@ -58,7 +58,7 @@ class HandleInvoices:
                     'DISCOUNT_0',
                 ],
                 where_clauses={
-                    'INVOICE_NUM_0': Condition('=', 'FT-01324/00003').as_tuple()
+                    'INVOICE_NUM_0': Condition('=', 'FT-01324/00008').as_tuple()
                 },
             )
 

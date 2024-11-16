@@ -7,7 +7,7 @@ from config import settings
 from database.database import Condition, DatabaseConnection
 
 
-class ProcessedMessages:
+class Messages:
     def __init__(self, base_url: str, authentication: Dict[str, Any]) -> None:
         self.service_url = f'https://{base_url}/ReceiveMessage'
         self.headers = {

@@ -21,9 +21,9 @@ class ListQueuedMessages:
 
         if json_response['IsValid']:
             # Reduz o número de IDs de mensagens
-            json_response['ResultData']['MessageIds'] = json_response['ResultData'][
-                'MessageIds'
-            ][:1]
+            # json_response['ResultData']['MessageIds'] = json_response['ResultData'][
+            #     'MessageIds'
+            # ][:1]
 
             return_message['Messages'] = json_response['ResultData']['MessageIds']
 

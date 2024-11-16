@@ -20,8 +20,6 @@ def api_faturas() -> None:
     if not xml_list:
         print('No files to be processed.')
 
-        # return
-
     # Generate the base64 strings
     for file, file_base64 in file_handler.generate_base64_strings(xml_list).items():
         # Get the authentication token
@@ -59,6 +57,12 @@ def api_faturas() -> None:
                 settings.SERVER_BASE_ADDRESS, token['headers'], message_list['Messages']
             )
             messages = download.download_messages()
+
+            # Marking the message as processed
+            for message in messages:
+                processed = MessageProcessorService(token).mark_as_processed(  # noqa: F841
+                    message['ResultData']
+                )
 
             # Logout from API
             auth_service.logout(token['Token'])

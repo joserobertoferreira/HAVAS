@@ -4,6 +4,12 @@
     "creationDateTime": "{{creation_date_time}}"
   },
   "sender": {
+    "attributes": [
+      {
+        "attribute": "xmlns",
+        "attr_value": ""
+      }
+    ],
     "id": {
       "attributes": [
         {
@@ -18,6 +24,12 @@
     }
   },
   "receiver": {
+    "attributes": [
+      {
+        "attribute": "xmlns",
+        "attr_value": ""
+      }
+    ],
     "id": {
       "attributes": [
         {
@@ -42,6 +54,12 @@
     "content": "{{attachment_base64}}"
   },
   "seller": {
+    "attributes": [
+      {
+        "attribute": "xmlns",
+        "attr_value": ""
+      }
+    ],
     "id": {
       "attributes": [
         {
@@ -70,6 +88,12 @@
     "socialCapital": "{{sell_soccap}}"
   },
   "buyer": {
+    "attributes": [
+      {
+        "attribute": "xmlns",
+        "attr_value": ""
+      }
+    ],
     "id": {
       "attributes": [
         {
@@ -96,6 +120,12 @@
     "vatNumber": "{{buyer_vat}}"
   },
   "billTo": {
+    "attributes": [
+      {
+        "attribute": "xmlns",
+        "attr_value": ""
+      }
+    ],
     "id": {
       "attributes": [
         {
@@ -129,12 +159,19 @@
     "type": "{{reference_type}}",
     "referenceDocumentId": "{{reference_value}}"
   },
-  "currencyCode": "{{currency_cod}}",
+  "currencyCode": {
+    "type": "",
+    "value": "{{currency_cod}}"
+  },
   "discount": {
     "attributes": [
       {
         "attribute": "type",
         "attr_value": "FINANCIAL"
+      },
+      {
+        "attribute": "xmlns",
+        "attr_value": ""
       }
     ],
     "amount": "{{discount}}"
@@ -143,10 +180,25 @@
     "id": "1",
     "value": "{{comment}}"
   },
-  "senderSoftwareCertificationNumber": "{{software_certification_number}}",
-  "senderSoftwareDocumentSignatureHash": "{{software_document_signature_hash}}",
-  "atCud": "{{at_cud}}",
+  "senderSoftwareCertificationNumber": {
+    "type": "",
+    "value": "{{software_certification_number}}"
+  },
+  "senderSoftwareDocumentSignatureHash": {
+    "type": "",
+    "value": "{{software_document_signature_hash}}"
+  },
+  "atCud": {
+    "type": "",
+    "value": "{{at_cud}}"
+  },
   "qrData": {
+    "attributes": [
+      {
+        "attribute": "xmlns",
+        "attr_value": ""
+      }
+    ],
     "qrText": "{{qr_text}}",
     "qrImage": {
       "attributes": [
@@ -175,7 +227,7 @@
     "value": "{{line_quant}}",
     "unitOfMeasure": "{{line_unit}}"
   },
-  "unitPrice": "{{line_unit_pr}}",
+  "netUnitPrice": "{{line_unit_pr}}",
   "vatPercentage": {
     "default": {
       "value": "{{vat_percent}}"
@@ -202,15 +254,28 @@
       "value": "",
       "attributes": {
         "exceptionReasonCode": "{{vat_rea_code}}",
-        "exceptionReason": "{{vat_reason}}"
+        "exceptionReason": "{{vat_reason}}",
+        "xmlns": ""
       }
     },
     "vatPercentage": "{{vat_percent}}",
     "vatAmount": "{{vat_amount}}",
     "taxableAmount": "{{taxable_amt}}"
   },
-  "totalVatAmount": "{{tot_vat_amt}}",
-  "totalTaxableAmount": "{{tot_tax_amt}}",
-  "totalNetAmount": "{{tot_tax_amt}}",
-  "totalPayableAmount": "{{total_amount}}"
+  "totalVatAmount": {
+    "type": "",
+    "value": "{{tot_vat_amt}}"
+  },
+  "totalTaxableAmount": {
+    "type": "",
+    "value": "{{tot_tax_amt}}"
+  },
+  "totalNetAmount": {
+    "type": "",
+    "value": "{{tot_tax_amt}}"
+  },
+  "totalPayableAmount": {
+    "type": "",
+    "value": "{{total_amount}}"
+  }
 }
