@@ -71,6 +71,9 @@ class Seller:
             )
         elif field_name in {'CTY_0', 'TEL_0', 'WEB_0', 'POSCOD_0'}:
             return_value = address.get(field_name, '')
+
+            if field_name == 'TEL_0' and len(return_value.strip()) == 0:
+                return_value = '.'
         else:
             return_value = Conversions.convert_value(address.get(field_name, ''), 0)
 

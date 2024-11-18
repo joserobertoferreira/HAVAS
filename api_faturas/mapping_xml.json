@@ -253,8 +253,8 @@
       "operator": "isNotEmpty",
       "value": "",
       "attributes": {
-        "exceptionReasonCode": "{{vat_rea_code}}",
-        "exceptionReason": "{{vat_reason}}",
+        "exemptionReasonCode": "{{vat_rea_code}}",
+        "exemptionReason": "{{vat_reason}}",
         "xmlns": ""
       }
     },
