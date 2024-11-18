@@ -46,6 +46,16 @@ class HandleXML(Placeholder, TagFactory):
 
         self.save_xml(root, output_file)
 
+    @staticmethod
+    def remove_empty_tag(element: ET.Element, tag: str, tag_name: str) -> None:
+        """Remove empty tags from the XML."""
+
+        for parent in element.iterfind(tag):
+            for sub_elem in parent.findall('contactInformation'):
+                for elem in sub_elem.findall(tag_name):
+                    if elem.text is None or len(elem.text.strip()) == 0:
+                        parent.remove(sub_elem)
+
     def add_sender_receiver(self, root):
         elements = [(root, 'sender'), (root, 'receiver')]
         for element in elements:
@@ -227,7 +237,13 @@ class HandleXML(Placeholder, TagFactory):
                 (line_item, 'quantity'),
                 (line_item, 'freeQuantity'),
                 (line_item, 'netUnitPrice'),
-                (line_item, 'vatPercentage', True),
+            ]
+            for element in elements:
+                self.insert_element(*element)
+
+            self.add_single_element(line_item, 'vatPercentage')
+
+            elements = [
                 (line_item, 'vatAmount'),
                 (line_item, 'netAmount'),
             ]
@@ -235,6 +251,8 @@ class HandleXML(Placeholder, TagFactory):
                 self.insert_element(*element)
 
     def add_vat_summary(self, invoice):
+        self.parent_tag = 'lineItem'
+
         for index_line, _ in enumerate(self.vat_summary_cache):
             self.line_number = index_line
             self.current_tag = 'vatSummary'
@@ -242,7 +260,7 @@ class HandleXML(Placeholder, TagFactory):
             vat_summary = self.create_sub_element(
                 invoice,
                 'vatSummary',
-                self.add_conditional_sub_element(self.mapping['vatSummary']),
+                self.add_conditional_element(),
             )
 
             elements = [

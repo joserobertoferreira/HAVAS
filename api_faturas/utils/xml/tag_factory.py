@@ -95,10 +95,25 @@ class TagFactory:
                 if isinstance(value, dict):
                     # Recursively handle nested dictionaries
                     self.create_sub_element_from_mapping(element, key, value)
+                # Create a sub-element for other simple values
+                elif self.is_special_case(tag, key):
+                    text = self.process_mapping_value(value)
+
+                    if len(text.strip()) > 0:
+                        sub_elem = ET.SubElement(element, key)
+                        sub_elem.text = text
                 else:
-                    # Create a sub-element for other simple values
                     sub_elem = ET.SubElement(element, key)
                     sub_elem.text = self.process_mapping_value(value)
+
+    @staticmethod
+    def is_special_case(tag: str, key: str) -> bool:
+        """Check if the tag and key combination is a special case."""
+        return (
+            (tag == 'contactInformation' and key in {'phone', 'email'})
+            or (tag == 'addressInformation' and key == 'city')
+            # or (tag == 'postalCode' and key in {'zip', 'area'})
+        )
 
     def process_direct_value(self, parent: ET.Element, tag: str, config: Any) -> None:
         """Process the case where config is a direct value, creating a simple element."""
@@ -126,33 +141,6 @@ class TagFactory:
 
         return {}
 
-    def add_conditional_element(self, parent, tag_name, config):
-        """Add a conditional XML tag based on a configuration with conditions."""
-
-        # Define the default value of the element based on the configuration
-        default_value = self.process_mapping_value(config['default']['value'])
-
-        # Check if there is a condition in the configuration
-        if 'condition' in config:
-            # Extract the field and value of the condition
-            condition = config['condition']
-            condition_field = self.resolve_placeholder(condition['field'])
-            operator = condition['operator']
-            condition_value = condition['value']
-
-            # Check if the condition is met
-            #            if condition_field == condition_value:
-            if compare(operator, condition_field, condition_value):
-                # Define os atributos do elemento com base na configuração da condição
-                attributes = self.process_mapping_value(condition['attributes'])
-                element = ET.SubElement(parent, tag_name, attributes)
-                element.text = default_value
-                return
-
-        # If the condition is not met, create the element without additional attributes
-        element = ET.SubElement(parent, tag_name)
-        element.text = default_value
-
     # Auxiliary function to add an element
     def add_element(self, parent, **kwargs):
         id_elem = kwargs.get('id_elem')
@@ -168,6 +156,19 @@ class TagFactory:
 
         return id_config, elem
 
+    def add_single_element(self, parent, party_type, **kwargs):
+        arguments = {
+            'id_elem': party_type,
+            'id_sub_elem': kwargs.get('id_sub_elem', None),
+            'atributes': kwargs.get('atributes', {}),
+        }
+        party_id_config, party_elem = self.add_element(parent, **arguments)
+
+        party_elem.text = self.process_mapping_value(party_id_config)
+
+        if party_type == 'vatPercentage':
+            self.process_atributes(party_elem, party_type)
+
     # Auxiliary function to add a party element
     def add_party_element(self, parent, party_type, **kwargs):
         arguments = {
@@ -182,6 +183,37 @@ class TagFactory:
                 self.create_sub_element_from_mapping(party_elem, key, value)
         else:
             party_elem.text = self.process_mapping_value(party_id_config)
+
+    def add_conditional_element(self) -> Dict[str, str]:
+        if self.current_tag == 'vatSummary':
+            return self.process_parent_atributes(self.current_tag)
+
+        return {}
+
+    # def add_conditional_element(self, parent, tag_name, config):
+    # Define the default value of the element based on the configuration
+    # default_value = self.process_mapping_value(config['default']['value'])
+
+    # # Check if there is a condition in the configuration
+    # if 'condition' in config:
+    #     # Extract the field and value of the condition
+    #     condition = config['condition']
+    #     condition_field = self.resolve_placeholder(condition['field'])
+    #     operator = condition['operator']
+    #     condition_value = condition['value']
+
+    #     # Check if the condition is met
+    #     #            if condition_field == condition_value:
+    #     if compare(operator, condition_field, condition_value):
+    #         # Define os atributos do elemento com base na configuração da condição
+    #         attributes = self.process_mapping_value(condition['attributes'])
+    #         element = ET.SubElement(parent, tag_name, attributes)
+    #         element.text = default_value
+    #         return
+
+    # # If the condition is not met, create the element without additional attributes
+    # element = ET.SubElement(parent, tag_name)
+    # element.text = default_value
 
     # Auxiliary function to add a Saphety element
     def add_saphety_element(self, parent, saphety_type):

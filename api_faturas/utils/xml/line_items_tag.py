@@ -19,6 +19,7 @@ class LineItems:
             '{{line_net_amt}}': 2,
             '{{vat_amount}}': 2,
             '{{taxable_amt}}': 2,
+            '{{vat_Percentage}}': 0,
         }
 
         # Get precision from the placeholder
@@ -26,6 +27,8 @@ class LineItems:
 
         # Get the field name from the placeholder
         field_name = placeholder.replace('{{', '').replace('}}', '').upper() + '_0'
+
+        return_value = ''
 
         if field_name:
             if tag == 'vatSummary':
@@ -38,6 +41,32 @@ class LineItems:
                     cache[index_line][field_name], precision
                 )
 
-                return str(return_value)
+            return str(return_value)
 
-        return ''
+        return return_value
+
+    def add_atributes(self, element, tag: str, index_line: int) -> None:
+        if tag == 'vatPercentage':
+            return_value = self.manage_line_items('{{vat_rea_code}}', tag, index_line)
+
+            if return_value:
+                return_reason = self.manage_line_items('{{vat_reason}}', tag, index_line)
+
+                element.set('vatExemptionReasonCode', return_value)
+                element.set('vatExemptionReason', return_reason)
+                element.set('xmlns', '')
+
+    def add_parent_atributes(self, tag: str, index_line: int) -> Dict[str, str]:
+        return_value = {}
+
+        if tag in {'vatSummary'}:
+            reason_code = self.manage_line_items('{{vat_rea_code}}', tag, index_line)
+
+            if reason_code:
+                return_value['exemptionReasonCode'] = reason_code
+                return_value['exemptionReason'] = self.manage_line_items(
+                    '{{vat_reason}}', tag, index_line
+                )
+                return_value['xmlns'] = ''
+
+        return return_value

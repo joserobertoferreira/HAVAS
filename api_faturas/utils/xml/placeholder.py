@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Dict
 
 from utils.conversions import Conversions
 from utils.xml.buyer_tag import Buyer
@@ -123,7 +124,7 @@ class Placeholder:
             qr_code = self.cache['qr_code']
             return qr_code.manage_qr_code(placeholder)
 
-        # Deal with the line items
+        # Deal with the line items and vat summary tags
         if self.parent_tag == 'lineItem':
             if 'line_items' not in self.cache:
                 self.cache['line_items'] = LineItems(
@@ -143,3 +144,27 @@ class Placeholder:
             return base64.return_base64_value(placeholder)
 
         return ''
+
+    def process_atributes(self, element, tag: str) -> None:
+        """Process the attributes of the tag."""
+        if tag in {'vatPercentage'}:
+            if 'line_items' not in self.cache:
+                self.cache['line_items'] = LineItems(
+                    self.lines_cache,
+                    self.vat_summary_cache,
+                )
+            line_items = self.cache['line_items']
+            line_items.add_atributes(element, tag, self.line_number)
+
+    def process_parent_atributes(self, tag: str) -> Dict[str, str]:
+        """Process the attributes of the parent tag."""
+        if tag in {'vatSummary'}:
+            if 'line_items' not in self.cache:
+                self.cache['line_items'] = LineItems(
+                    self.lines_cache,
+                    self.vat_summary_cache,
+                )
+            line_items = self.cache['line_items']
+            return line_items.add_parent_atributes(tag, self.line_number)
+
+        return {}

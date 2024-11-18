@@ -228,36 +228,10 @@
     "unitOfMeasure": "{{line_unit}}"
   },
   "netUnitPrice": "{{line_unit_pr}}",
-  "vatPercentage": {
-    "default": {
-      "value": "{{vat_percent}}"
-    },
-    "condition": {
-      "field": "{{vat_rea_code}}",
-      "operator": "isNotEmpty",
-      "value": "",
-      "attributes": {
-        "vatExemptionReasonCode": "{{vat_rea_code}}",
-        "vatExemptionReason": "{{vat_reason}}"
-      }
-    }
-  },
+  "vatPercentage": "{{vat_percent}}",
   "vatAmount": "{{line_vat_amt}}",
   "netAmount": "{{line_net_amt}}",
   "vatSummary": {
-    "default": {
-      "value": ""
-    },
-    "condition": {
-      "field": "{{vat_rea_code}}",
-      "operator": "isNotEmpty",
-      "value": "",
-      "attributes": {
-        "exemptionReasonCode": "{{vat_rea_code}}",
-        "exemptionReason": "{{vat_reason}}",
-        "xmlns": ""
-      }
-    },
     "vatPercentage": "{{vat_percent}}",
     "vatAmount": "{{vat_amount}}",
     "taxableAmount": "{{taxable_amt}}"
