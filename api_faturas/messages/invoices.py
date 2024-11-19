@@ -57,9 +57,9 @@ class HandleInvoices:
                     'TOTAL_AMOUNT_0',
                     'DISCOUNT_0',
                 ],
-                where_clauses={
-                    'INVOICE_NUM_0': Condition('=', 'FT-01324/00011').as_tuple()
-                },
+                # where_clauses={
+                #     'INVOICE_NUM_0': Condition('=', 'FT-01324/00011').as_tuple()
+                # },
             )
 
         # Check if the query was successful
@@ -150,7 +150,7 @@ class HandleInvoices:
 
                 xmlHandler.generate_xml(file_name)
 
-                break
+                # break
 
     def get_addresses(**kwargs) -> Dict[str, Any]:
         """This method receives a list of dictionaries with the data to be searched in the
