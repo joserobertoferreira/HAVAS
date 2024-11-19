@@ -67,6 +67,7 @@ class LineItems:
                 return_value['exemptionReason'] = self.manage_line_items(
                     '{{vat_reason}}', tag, index_line
                 )
-                return_value['xmlns'] = ''
+
+            return_value['xmlns'] = ''
 
         return return_value
