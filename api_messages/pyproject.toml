@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "api-messages"
+version = "0.1.0"
+description = "Buscar as mensagens processadas pela Saphety"
+authors = ["José Roberto Ferreira <joseroberto.ferreira@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+
+
+[tool.poetry.group.doc.dependencies]
+mkdocs-material = "^9.5.44"
+mkdocstrings = "^0.27.0"
+mkdocstrings-python = "^1.12.2"
+
+
+[tool.poetry.group.dev.dependencies]
+taskipy = "^1.14.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.taskipy.tasks]
+docs = "mkdocs serve"
+
+
+[tool.ruff]
+line-length = 90
+extend-exclude = ['migrations']
+
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'

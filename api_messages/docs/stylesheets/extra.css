@@ -1,0 +1,13 @@
+.center {
+  text-align: center;
+}
+
+.justify {
+  text-align: justify;
+}
+
+.docX3 {
+  text-align: justify;
+  line-height: 1.5;
+  margin-bottom: 1.2em;
+}

@@ -1,0 +1,60 @@
+site_name: EDI Sage X3
+
+nav:
+  - Início: index.md
+  - Ambiente: ambiente.md
+  - Integração: integracao.md
+  - Sobre: about.md
+
+theme:
+  name: material
+  language: pt
+  font:
+    text: Roboto
+    code: Operator Mono
+  features:
+    - navigation.tabs
+    - content.code.annotate
+  favicon: assets/favicon.svg
+  logo: assets/logoX3.svg
+  icon:
+    annotation: material/help-circle
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - tables
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.mark
+  - pymdownx.details
+  - admonition
+  - footnotes
+
+extra_css:
+  - stylesheets/extra.css
