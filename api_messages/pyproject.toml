@@ -7,6 +7,10 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.13"
+python-dotenv = "^1.0.1"
+requests = "^2.32.3"
+pyodbc = "^5.2.0"
+tzdata = "^2024.2"
 
 
 [tool.poetry.group.doc.dependencies]
@@ -18,9 +22,11 @@ mkdocstrings-python = "^1.12.2"
 [tool.poetry.group.dev.dependencies]
 taskipy = "^1.14.0"
 
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
 
 [tool.taskipy.tasks]
 docs = "mkdocs serve"

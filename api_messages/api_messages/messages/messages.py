@@ -1,38 +1,70 @@
+import json
+from typing import Any, Dict
+
+import requests
+from config import settings
+from database.database import Condition, DatabaseConnection
+
+
 class Messages:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, base_url: str, authentication: Dict[str, Any]) -> None:
+        self.service_url = f'https://{base_url}/ReceiveMessage'
+        self.headers = {
+            'Authorization': 'Bearer ' + authentication['Token'],
+            'Content-type': 'application/json',
+        }
+        self.receiver = 'urn:netdoc:qa'
+        self.message_id = authentication['CorrelationId']
 
-    def get_messages():
-        """Esta função é responsável por recuperar as mensagens da API e processá-las."""
+    def send_message(self, sender: str, file: str, fileBase64: Any) -> bool:
+        payload = {
+            'Sender': sender,
+            'Receiver': self.receiver,
+            'ContentType': 'application/xml',
+            'Base64Data': fileBase64,
+            'MessageId': self.message_id,
+            'Filename': f'{file}.xml',
+        }
 
-        # Check if exists messages to be retrieved
+        request_data = json.dumps(payload)
 
-        # # Get the authentication token
-        # auth_service = AuthenticationService()
-        # token = auth_service.login(settings.API_USER, settings.API_PASSWORD)
+        response = requests.post(
+            self.service_url, headers=self.headers, data=request_data
+        )
 
-        # if token:
-        #     # Get the message list
-        #     message_list = MessageProcessorService(token).get_messages()
+        json_response = json.loads(response.text)
 
-        #     if len(message_list['Errors']) == 0:
-        #         # Download the messages
-        #         download = DownloadMessages(
-        #             settings.SERVER_BASE_ADDRESS, token['headers'], message_list['Messages']
-        #         )
-        #         messages = download.download_messages()
+        return json_response['IsValid']
 
-        #         # Marking the message as processed
-        #         for message in messages:
-        #             processed = MessageProcessorService(token).mark_as_processed(  # noqa: F841
-        #                 message['ResultData']
-        #             )
+    @staticmethod
+    def update_database(file: str) -> bool:
+        with DatabaseConnection(
+            settings.DB_SERVER,
+            settings.DB_DATABASE,
+            settings.DB_USERNAME,
+            settings.DB_PASSWORD,
+        ) as db:
+            # Update table ZSINVOICEV
+            table_name = f'{settings.DB_SCHEMA}.ZSINVOICEV'
+            set_columns = {'ZSTATUS_0': 7}
+            where_clause = {'NUMX3_0': Condition('=', f'{file[:8]}/{file[8:]}')}
 
-        #         # Logout from API
-        #         auth_service.logout(token['Token'])
+            response = db.execute_update(
+                table_name,
+                set_columns,
+                where_clause,
+            )
 
-        #         # Process the downloaded messages
-        #         if len(messages) != 0:
-        #             file_handler.create_message_files(messages)
+            if response['status'] == 'success':
+                # Update table ZLOGFAT
+                table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
+                set_columns = {'STATUT_0': 7}
+                where_clause = {'SIHNUM_0': Condition('=', f'{file[:8]}/{file[8:]}')}
 
-        ...
+                response = db.execute_update(
+                    table_name,
+                    set_columns,
+                    where_clause,
+                )
+
+            return response['status'] == 'success'
