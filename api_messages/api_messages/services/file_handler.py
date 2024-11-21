@@ -24,3 +24,8 @@ class FileHandlerService:
 
     def create_message_files(self, messages: list[Dict[str, Any]]) -> None:
         self.file_handler.create_message_files(messages)
+
+    def delete_file(
+        self, work_path: str, file: str = '', delete_dir: bool = False
+    ) -> bool:
+        return self.file_handler.delete_file(work_path, file, delete_dir)

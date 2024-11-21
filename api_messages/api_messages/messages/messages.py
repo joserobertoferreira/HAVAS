@@ -7,14 +7,15 @@ from database.database import Condition, DatabaseConnection
 
 
 class Messages:
-    def __init__(self, base_url: str, authentication: Dict[str, Any]) -> None:
-        self.service_url = f'https://{base_url}/ReceiveMessage'
-        self.headers = {
-            'Authorization': 'Bearer ' + authentication['Token'],
-            'Content-type': 'application/json',
-        }
-        self.receiver = 'urn:netdoc:qa'
-        self.message_id = authentication['CorrelationId']
+    def __init__(self, base_url: str = '', authentication: Dict[str, Any] = {}) -> None:
+        if len(base_url) != 0:
+            self.service_url = f'https://{base_url}/ReceiveMessage'
+            self.headers = {
+                'Authorization': 'Bearer ' + authentication['Token'],
+                'Content-type': 'application/json',
+            }
+            self.receiver = 'urn:netdoc:qa'
+            self.message_id = authentication['CorrelationId']
 
     def send_message(self, sender: str, file: str, fileBase64: Any) -> bool:
         payload = {
@@ -68,3 +69,19 @@ class Messages:
                 )
 
             return response['status'] == 'success'
+
+    @staticmethod
+    def update_log(data_log: Dict[str, Any]) -> None:
+        with DatabaseConnection(
+            settings.DB_SERVER,
+            settings.DB_DATABASE,
+            settings.DB_USERNAME,
+            settings.DB_PASSWORD,
+        ) as db:
+            table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
+            response = db.execute_insert(table_name, data_log)
+
+            if response['status'] == 'success':
+                print(f'Log inserted for file {data_log["SIHNUM_0"]}.')
+            else:
+                print(f'Failed to insert log for file {data_log["SIHNUM_0"]}.')

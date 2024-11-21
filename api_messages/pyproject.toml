@@ -11,6 +11,7 @@ python-dotenv = "^1.0.1"
 requests = "^2.32.3"
 pyodbc = "^5.2.0"
 tzdata = "^2024.2"
+xmltodict = "^0.14.2"
 
 
 [tool.poetry.group.doc.dependencies]

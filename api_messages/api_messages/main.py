@@ -8,6 +8,22 @@ from services.message_processor import MessageProcessorService
 def api_messages():
     # Check if exists messages to be retrieved
 
+    # Read the xml message files and process them
+    file_handler = FileHandlerService(
+        settings.BASE_DIR, settings.FOLDER_XML_IN, settings.FOLDER_XML_OUT
+    )
+
+    status_list, errors_list = MessageProcessorService().process_messages(
+        file_handler, settings.FOLDER_XML_OUT
+    )
+
+    # Log the status and errors
+    MessageProcessorService(input_folder=settings.FOLDER_XML_OUT).log_status_and_errors(
+        status_list, errors_list
+    )
+
+    return
+
     # Get the authentication token
     auth_service = AuthenticationService()
     token = auth_service.login(settings.API_USER, settings.API_PASSWORD)
@@ -40,8 +56,13 @@ def api_messages():
                 file_handler.create_message_files(messages)
 
                 # Read the xml message files and process them
-                MessageProcessorService().process_messages(
+                status_list, errors_list = MessageProcessorService().process_messages(
                     file_handler, settings.FOLDER_XML_OUT
+                )
+
+                # Log the status and errors
+                MessageProcessorService().log_status_and_errors(
+                    settings.FOLDER_XML_OUT, status_list, errors_list
                 )
 
 

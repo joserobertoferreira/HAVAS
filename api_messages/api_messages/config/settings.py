@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Setup environment variables
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SERVER_BASE_ADDRESS = os.environ.get('SERVER_BASE_ADDRESS', '')
 
