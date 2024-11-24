@@ -1,9 +1,11 @@
 import json
+import uuid
 from typing import Any, Dict
 
 import requests
 from config import settings
 from database.database import Condition, DatabaseConnection
+from utils.handle_files import HandleFiles
 
 
 class Messages:
@@ -72,16 +74,36 @@ class Messages:
 
     @staticmethod
     def update_log(data_log: Dict[str, Any]) -> None:
-        with DatabaseConnection(
-            settings.DB_SERVER,
-            settings.DB_DATABASE,
-            settings.DB_USERNAME,
-            settings.DB_PASSWORD,
-        ) as db:
-            table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
-            response = db.execute_insert(table_name, data_log)
+        try:
+            with DatabaseConnection(
+                settings.DB_SERVER,
+                settings.DB_DATABASE,
+                settings.DB_USERNAME,
+                settings.DB_PASSWORD,
+            ) as db:
+                table_name = f'{settings.DB_SCHEMA}.ZSAPHLOG'
 
-            if response['status'] == 'success':
-                print(f'Log inserted for file {data_log["SIHNUM_0"]}.')
-            else:
-                print(f'Failed to insert log for file {data_log["SIHNUM_0"]}.')
+                current_date = HandleFiles.get_current_date_time()
+
+                payload = {
+                    'NUM_0': data_log['document_number'],
+                    'NUMLIG_0': 0,
+                    'STATUT_0': data_log['status'],
+                    'ERRORCODE_0': data_log['error_code'],
+                    'NOTE_0': data_log['error_note'],
+                    'CREDATTIM_0': current_date,
+                    'UPDDATTIM_0': current_date,
+                    'AUUID_0': uuid.uuid4(),
+                    'CREUSR_0': 'INTER',
+                    'UPDUSR_0': 'INTER',
+                }
+
+                response = db.execute_insert(table_name, payload)
+
+                if response['status'] == 'success':
+                    print(f'Log inserted for file {payload["NUM_0"]}.')
+                else:
+                    print(f'Failed to insert log for file {payload["NUM_0"]}.')
+        except Exception as e:
+            print(f'Error inserting log: {e}')
+            raise e

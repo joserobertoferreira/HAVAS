@@ -71,18 +71,20 @@ class ProcessedMessage:
 
                     if document_status:
                         document_number = document_status.get('@documentNumber', '')
-                        status = document_status.get('statusInformation', {}).get(
-                            'status', ''
-                        )
-                        error_code = status.get('documentError', {}).get('code', '')
-                        note = status.get('documentError', {}).get('note', '')
+                        status_information = document_status.get('statusInformation', {})
+
+                        status = status_information.get('status', '')
+                        document_error = status_information.get('documentError', {})
+
+                        error_code = document_error.get('code', '')
+                        error_note = document_error.get('note', '')
 
                         # Log the error
                         Messages.update_log({
                             'document_number': document_number,
                             'status': status,
                             'error_code': error_code,
-                            'note': note,
+                            'error_note': error_note,
                         })
 
     @staticmethod
@@ -99,16 +101,21 @@ class ProcessedMessage:
 
                     if document_status:
                         document_number = document_status.get('@documentNumber', '')
-                        status = document_status.get('statusInformation', {}).get(
-                            'status', ''
-                        )
-                        statut_code = status.get('documentError', {}).get('code', '')
-                        note = status.get('documentError', {}).get('note', '')
+                        status_information = document_status.get('statusInformation', {})
+
+                        status = status_information.get('status', '')
+                        document_error = status_information.get('documentError', {})
+
+                        error_code = document_error.get('code', '')
+                        error_note = document_error.get('note', '')
 
                         # Log the status
-                        Messages.update_log({
-                            'document_number': document_number,
-                            'status': status,
-                            'error_code': statut_code,
-                            'note': note,
-                        })
+                        try:
+                            Messages.update_log({
+                                'document_number': document_number,
+                                'status': status,
+                                'error_code': error_code,
+                                'note': error_note,
+                            })
+                        except Exception as e:
+                            print(f'Error logging status: {e}')

@@ -1,11 +1,16 @@
 {
   "cSpell.words": [
+    "AUUID",
+    "CREDATTIM",
+    "CREUSR",
     "DOCSTS",
     "EFAT",
+    "ERRORCODE",
     "HAVAS",
     "integracao",
     "MIGRACAO",
     "netdocs",
+    "NUMLIG",
     "pymdownx",
     "saphety",
     "Saphety",
@@ -14,7 +19,10 @@
     "STATUT",
     "statuts",
     "superfences",
+    "UPDDATTIM",
+    "UPDUSR",
     "ZLOGFAT",
+    "ZSAPHLOG",
     "ZSINVOICEV",
     "ZSTATUS"
   ]

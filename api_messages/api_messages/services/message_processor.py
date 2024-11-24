@@ -13,15 +13,7 @@ class MessageProcessorService:
         self, token: dict = {}, input_folder: str = '', output_folder: str = ''
     ) -> None:
         self.base_url = settings.SERVER_BASE_ADDRESS
-
-        if len(input_folder) != 0 and len(output_folder) != 0:
-            self.handle_xml = HandleXML(input_folder, output_folder)
-        else:
-            if len(input_folder) != 0:
-                self.handle_xml = HandleXML(input_folder)
-
-            if len(output_folder) != 0:
-                self.handle_xml = HandleXML(output_folder)
+        self.handle_xml = HandleXML(input_folder, output_folder)
 
         if len(token) != 0:
             self.handle_messages = Messages(self.base_url, token)

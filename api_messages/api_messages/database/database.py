@@ -29,7 +29,7 @@ class DatabaseConnection:
         if not server or not database or not username or not password:
             raise ValueError('All connection parameters must be provided.')
 
-    def connect(self):
+    def connect(self) -> Dict[str, str]:
         try:
             connection_string = self.build_connection_string(
                 self.server, self.database, self.username, self.password
@@ -39,7 +39,7 @@ class DatabaseConnection:
         except pyodbc.Error as e:
             return {'status': 'error', 'message': f'Error connecting to database: {e}'}
 
-    def disconnect(self):
+    def disconnect(self) -> Dict[str, str]:
         if self.connection:
             self.connection.close()
             return {'status': 'success', 'message': 'Connection closed'}
@@ -158,13 +158,16 @@ class DatabaseConnection:
         # Check if there is an active connection
         if not self.connection:
             try:
-                self.connect()
+                connection_status = self.connect()
             except pyodbc.Error:
-                return {
+                connection_status = {
                     'status': 'error',
                     'message': 'No active connection: {e}',
                     'data': None,
                 }
+
+            if connection_status['status'] == 'error':
+                return connection_status
 
         # Check if the SET columns and WHERE conditions are provided
         if not isinstance(set_columns, dict) or not isinstance(where_clauses, dict):

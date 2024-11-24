@@ -1,7 +1,7 @@
 import base64
 import mimetypes
 import shutil
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
 
@@ -198,3 +198,13 @@ class HandleFiles:
                 print(f'Invalid Base64 content in file {file_name}.')
             except Exception as e:
                 print(f'An error occurred while processing {file_name}: {e}')
+
+    @staticmethod
+    def get_current_date_time() -> str:
+        """Get the current date and time in ISO format."""
+        return (
+            datetime.now(timezone.utc)
+            .replace(microsecond=0)
+            .isoformat()
+            .replace('+00:00', '.000')
+        )
