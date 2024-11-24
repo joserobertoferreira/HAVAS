@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="../../xsl/xsd2Html.xsl"?>
+<!-- ================================================== -->
+<!-- ===== Legal Comercial Documents Components  ===== -->
+<!-- ================================================== -->
+<!--
+   Module of Legal Comercial Documents Components
+   Saphety
+   Version: 1.1
+   Last change: 2019/10/01
+
+   Copyright (C) SAPHETY (2019). All Rights Reserved.
+-->
+<xsd:schema xmlns="urn:netdocs:schemas:document" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msg="urn:netdocs:schemas:message" targetNamespace="urn:netdocs:schemas:document" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="1.1">
+	<!-- ========================= -->
+	<!-- ===== Includes & Imports   ===== -->
+	<!-- ========================= -->
+	<xsd:include schemaLocation="../common/ND-SystemDocumentsComponents-1.1.xsd"/>
+	<xsd:import namespace="urn:netdocs:schemas:message" schemaLocation="ND-Message-1.1.xsd"/>
+	<!-- ==================== -->
+	<!-- =====   Elements   ===== -->
+	<!-- ==================== -->
+	<xsd:element name="user" type="userType" substitutionGroup="msg:genericDocument"/>
+</xsd:schema>

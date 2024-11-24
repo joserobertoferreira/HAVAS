@@ -1,0 +1,1084 @@
+{
+  "@xmlns": "urn:netdocs:schemas:document",
+  "@xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+  "@xmlns:msg": "urn:netdocs:schemas:message",
+  "@targetNamespace": "urn:netdocs:schemas:document",
+  "@elementFormDefault": "unqualified",
+  "@attributeFormDefault": "unqualified",
+  "@version": "1.1",
+  "@finalDefault": [],
+  "@blockDefault": [],
+  "xsd:annotation": [
+    {
+      "xsd:documentation": [
+        {
+          "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+          "$": "Módulo com definições de tipos de dados para documentos de envio e receção de bens e serviços."
+        }
+      ]
+    }
+  ],
+  "xsd:include": [
+    {
+      "@schemaLocation": "../common/ND-BaseComponents-1.1.xsd"
+    }
+  ],
+  "xsd:simpleType": {
+    "@name": "shipmentDateEnumType",
+    "xsd:annotation": {
+      "xsd:documentation": [
+        "Tipos de datas relativas a entregas"
+      ]
+    },
+    "xsd:restriction": {
+      "@base": "documentDateEnumType",
+      "xsd:enumeration": [
+        {
+          "@value": "DELIVERY",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Data e hora de entrega"
+              }
+            ]
+          }
+        },
+        {
+          "@value": "DELIVERYREQUESTED",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Data e hora de entrega desejada"
+              }
+            ]
+          }
+        },
+        {
+          "@value": "DELIVERYLATEST",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Data e hora limite de entrega"
+              }
+            ]
+          }
+        },
+        {
+          "@value": "DEPARTURE",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Data e hora de envio"
+              }
+            ]
+          }
+        },
+        {
+          "@value": "EXPIRATION",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Data e hora de expiração"
+              }
+            ]
+          }
+        },
+        {
+          "@value": "ARRIVAL",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Data e hora de chegada"
+              }
+            ]
+          }
+        },
+        {
+          "@value": "LOADDATE",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Data e hora de carga"
+              }
+            ]
+          }
+        },
+        {
+          "@value": "UNLOADDATE",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Data e hora de descarga"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "xsd:complexType": [
+    {
+      "@name": "shipmentAdditionalDateType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Tipo de dados, baseado no xsd:dateTime, que permite identificar o tipo de informação de data e hora."
+          }
+        ]
+      },
+      "xsd:simpleContent": {
+        "xsd:extension": {
+          "@base": "xsd:dateTime",
+          "xsd:attribute": [
+            {
+              "@name": "type",
+              "@type": "shipmentDateEnumType",
+              "@use": "required",
+              "xsd:annotation": {
+                "xsd:documentation": [
+                  "Qualificador do tipo de data"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "@name": "shipmentTransportInformationType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@source": "pt",
+            "$": "Tipo de dados para informação de transporte"
+          }
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:element": [
+          {
+            "@name": "transportEquipmentId",
+            "@type": "xsd:string",
+            "@maxOccurs": "unbounded",
+            "@minOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Matrícula da viatura de transporte"
+              ]
+            }
+          },
+          {
+            "@name": "transportRouteId",
+            "@type": "xsd:string",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Identificação da rota de transporte"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "shipmentLineItemType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Tipo de dados genérico para linhas de artigos."
+          }
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:element": [
+          {
+            "@name": "sscc",
+            "@type": "ssccType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Serial Shipping Container Code"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "gtinCode",
+            "@type": "gtinCodeType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Global Trade Item Number (GTIN), antigamente denominado de código EAN"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "sellerItemCode",
+            "@type": "itemCodeType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Código do artigo ou serviço atribuido pelo vendedor"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "buyerItemCode",
+            "@type": "itemCodeType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Código do artigo ou serviço atribuido pelo comprador"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "description",
+            "@type": "descriptionType",
+            "@maxOccurs": 1,
+            "@minOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Descrição do artigo ou serviço."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "name",
+            "@type": "descriptionType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Nome do artigo ou serviço."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "comment",
+            "@type": "structuredDescriptionType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Comentário referente à linha do documento."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "quantity",
+            "@type": "quantityType",
+            "@maxOccurs": 1,
+            "@minOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Quantidade de artigos."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "packQuantity",
+            "@type": "quantityType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Quantidade de embalagens."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "quantityPerPackage",
+            "@type": "quantityPerPackageType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Quantidade contida por embalagem."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "packQuantityPerPallet",
+            "@type": "quantityType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Quantidade de embalagens por palete."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "quantityConversionFactor",
+            "@type": "quantityType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Regra JM = Factor de conversão da unidade de quantidade facturada, para a unidade base. No caso das quantidades serem expressas em unidades de base (EA, KGM), este campo vem preenchido com o valor 1, caso contrário deverá ter a quantidade correcta. Exemplo: se a quantidade facturada estiver expressa em caixas (BX) este campo deve conter a quantidade de unidades dentro da caixa."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "grossWeight",
+            "@type": "quantityType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Peso da mercadoria"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "volume",
+            "@type": "quantityType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Volume"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "additionalDate",
+            "@type": "shipmentAdditionalDateType",
+            "@minOccurs": 0,
+            "@maxOccurs": "unbounded",
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Informação de tipo data e hora presentes no documento, com exepção da data do documento. Por exemplo, data de entrega."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "unitPrice",
+            "@type": "nonNegativeDecimalType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Preço unitário sem imposto e deduzido dos descontos de linha e cabeçalho.\n\t\t\t\t\tCaso não preencha este valor, para a AT, será enviado o valor '0.00'"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "taxableUnitPrice",
+            "@type": "nonNegativeDecimalType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Preço unitário tributável. Caso não preencha este valor, para a AT, será enviado o valor '0.00'"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "vatPercentage",
+            "@type": "vatPercentageType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Percentagem de IVA. Se for  0 deverá se indicada a razão da isenção"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "itemDeliveryInformation",
+            "@type": "itemDeliveryInformationType",
+            "@minOccurs": 0,
+            "@maxOccurs": "unbounded",
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Informção para entrega do artigo. Para quando há entrega em diferentes locais."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "vatAmount",
+            "@type": "lineVatAmountType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Valor do IVA da Linha."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "taxableAmount",
+            "@type": "nonNegativeDecimalType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Montante tributável da linha"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "grossAmount",
+            "@type": "lineGrossAmountType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Montante ilíquido da linha"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "payableAmount",
+            "@type": "lineGrossAmountType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Montante a pagar da linha"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "batchNumber",
+            "@type": "batchNumberInformationType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Informação relativa ao Lote"
+              ]
+            }
+          },
+          {
+            "@name": "reference",
+            "@type": "referenceType",
+            "@minOccurs": 0,
+            "@maxOccurs": "unbounded",
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Referências a outros documentos."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "shipTo",
+            "@type": "companyInformationType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Local de entrega"
+              ]
+            }
+          }
+        ]
+      },
+      "xsd:attribute": [
+        {
+          "@name": "number",
+          "@type": "xsd:long",
+          "@use": "optional",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Número da linha."
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "@name": "shipmentPackagingType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Tipo de dados genérico para packaging."
+          }
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:element": [
+          {
+            "@name": "packType",
+            "@type": "nonEmptyString",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "tipo de embalagem (ex: BX = Caixa)"
+                }
+              ]
+            }
+          },
+          {
+            "@name": "packQuantity",
+            "@type": "quantityType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Quantidade de embalagens."
+                }
+              ]
+            }
+          },
+          {
+            "@name": "sscc",
+            "@type": "ssccType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false
+          }
+        ]
+      }
+    },
+    {
+      "@name": "shipmentType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Tipo de dados de suporte a documentos de envio de bens e serviços"
+          }
+        ]
+      },
+      "xsd:complexContent": {
+        "xsd:extension": {
+          "@base": "documentType",
+          "xsd:sequence": {
+            "@maxOccurs": 1,
+            "@minOccurs": 1,
+            "xsd:element": [
+              {
+                "@name": "seller",
+                "@type": "billingCompanyInformationType",
+                "@maxOccurs": 1,
+                "@minOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Vendedor ou fornecedor dos artigos ou serviços"
+                  ]
+                }
+              },
+              {
+                "@name": "buyer",
+                "@type": "billableCompanyInformationType",
+                "@maxOccurs": 1,
+                "@minOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Comprador dos artigos ou serviços"
+                  ]
+                }
+              },
+              {
+                "@name": "billTo",
+                "@type": "billableCompanyInformationType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Entidade a ser facturada"
+                  ]
+                }
+              },
+              {
+                "@name": "shipTo",
+                "@type": "nonBillableCompanyInformationType",
+                "@maxOccurs": 1,
+                "@minOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Local de entrega das mercadorias"
+                  ]
+                }
+              },
+              {
+                "@name": "shipFrom",
+                "@type": "nonBillableCompanyInformationType",
+                "@maxOccurs": 1,
+                "@minOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Local de partida das mercadorias"
+                  ]
+                }
+              },
+              {
+                "@name": "dispatcher",
+                "@type": "nonBillableCompanyInformationType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Despachante"
+                  ]
+                }
+              },
+              {
+                "@name": "carrier",
+                "@type": "nonBillableCompanyInformationType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Transportador"
+                  ]
+                }
+              },
+              {
+                "@name": "additionalDate",
+                "@type": "shipmentAdditionalDateType",
+                "@minOccurs": 0,
+                "@maxOccurs": "unbounded",
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Informação de tipo data e hora presentes no documento, com exepção da data do documento. Por exemplo, data de entrega."
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "reference",
+                "@type": "referenceType",
+                "@minOccurs": 0,
+                "@maxOccurs": "unbounded",
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Referências a outros documentos."
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "currencyCode",
+                "@type": "currencyCodeType",
+                "@minOccurs": 0,
+                "@maxOccurs": "unbounded",
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Código da moeda ISO 4217 Alpha 3."
+                  ]
+                }
+              },
+              {
+                "@name": "senderSoftwareCertificationNumber",
+                "@type": "xsd:string",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Número do certificado do ERP atribuído pela DGCI."
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "senderSoftwareDocumentSignatureHash",
+                "@type": "signatureHashSubsetType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Número correspondente à 1º, 11º, 21ª e 31ª do hash da assinatura"
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "legalAuthorityShipmentCode",
+                "@type": "xsd:string",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Código de transporte atribuído pela DGCI."
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "transportInformation",
+                "@type": "shipmentTransportInformationType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Dados relativos ao transporte das mercadorias"
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "packaging",
+                "@type": "shipmentPackagingType",
+                "@minOccurs": 0,
+                "@maxOccurs": "unbounded",
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Detalhe de packaging"
+                  ]
+                }
+              },
+              {
+                "@name": "comment",
+                "@type": "structuredDescriptionType",
+                "@minOccurs": 0,
+                "@maxOccurs": "unbounded",
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Comentários e observações globais ao documento."
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "legalNotice",
+                "@type": "descriptionType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "legal notice"
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "lineItem",
+                "@type": "shipmentLineItemType",
+                "@maxOccurs": "unbounded",
+                "@minOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Detalhe de artigos ou serviços"
+                  ]
+                }
+              },
+              {
+                "@name": "vatSummary",
+                "@type": "vatSummaryType",
+                "@minOccurs": 0,
+                "@maxOccurs": "unbounded",
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Resumo do IVA, por taxa, aplicados ao documento."
+                  ]
+                }
+              },
+              {
+                "@name": "totalGrossWeight",
+                "@type": "quantityType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Peso total da mercadoria"
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "totalVolume",
+                "@type": "quantityType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Volume total da mercadoria"
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "totalPallets",
+                "@type": "nonNegativeDecimalType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Número total de paletes"
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "totalVatAmount",
+                "@type": "vatAmountType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    "Montante total de IVA."
+                  ]
+                }
+              },
+              {
+                "@name": "totalTaxableAmount",
+                "@type": "vatAmountType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Montante total tributável do IVA."
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "totalGrossAmount",
+                "@type": "nonNegativeDecimalType",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Somatório dos montantes brutos das linhas"
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "totalPayableAmount",
+                "@type": "amountWithText",
+                "@minOccurs": 0,
+                "@maxOccurs": 1,
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Montante total a pagar"
+                    }
+                  ]
+                }
+              },
+              {
+                "@name": "emailNotification",
+                "@type": "emailNotificationType",
+                "@minOccurs": 0,
+                "@maxOccurs": "unbounded",
+                "@nillable": false,
+                "xsd:annotation": {
+                  "xsd:documentation": [
+                    {
+                      "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                      "$": "Notificações"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "xsd:attribute": [
+            {
+              "@name": "scope",
+              "@type": "desadvScopeEnumType",
+              "@use": "optional",
+              "xsd:annotation": {
+                "xsd:documentation": [
+                  {
+                    "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                    "$": "Usado para qualificar o âmbito documento."
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

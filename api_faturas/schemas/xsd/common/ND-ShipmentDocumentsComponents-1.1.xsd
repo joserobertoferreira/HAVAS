@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ================================================== -->
+<!-- ===== Comercial Documents Components  ===== -->
+<!-- ================================================== -->
+<!--
+   Module of Legal Comercial Documents Components
+   Saphety
+   Version: 1.1
+   Last change: 2019/10/01
+
+   Copyright (C) SAPHETY (2019). All Rights Reserved.
+-->
+<xsd:schema xmlns="urn:netdocs:schemas:document" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msg="urn:netdocs:schemas:message" targetNamespace="urn:netdocs:schemas:document" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="1.1">
+	<xsd:annotation>
+		<xsd:documentation xml:lang="pt">
+			Módulo com definições de tipos de dados para documentos de envio e receção de bens e serviços.
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:include schemaLocation="../common/ND-BaseComponents-1.1.xsd"/>
+	<xsd:simpleType name="shipmentDateEnumType">
+		<xsd:annotation>
+			<xsd:documentation>Tipos de datas relativas a entregas</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="documentDateEnumType">
+			<xsd:enumeration value="DELIVERY">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Data e hora de entrega</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DELIVERYREQUESTED">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Data e hora de entrega desejada</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DELIVERYLATEST">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Data e hora limite de entrega</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="DEPARTURE">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Data e hora de envio</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="EXPIRATION">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Data e hora de expiração</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="ARRIVAL">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Data e hora de chegada</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="LOADDATE">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Data e hora de carga</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="UNLOADDATE">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Data e hora de descarga</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="shipmentAdditionalDateType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="pt">Tipo de dados, baseado no xsd:dateTime, que permite identificar o tipo de informação de data e hora.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:dateTime">
+				<xsd:attribute name="type" type="shipmentDateEnumType" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Qualificador do tipo de data</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="shipmentTransportInformationType">
+		<xsd:annotation>
+			<xsd:documentation source="pt">Tipo de dados para informação de transporte</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="transportEquipmentId" type="xsd:string" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Matrícula da viatura de transporte</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="transportRouteId" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Identificação da rota de transporte</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="shipmentLineItemType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="pt">Tipo de dados genérico para linhas de artigos.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="sscc" type="ssccType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Serial Shipping Container Code</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="gtinCode" type="gtinCodeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Global Trade Item Number (GTIN), antigamente denominado de código EAN</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sellerItemCode" type="itemCodeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Código do artigo ou serviço atribuido pelo vendedor</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="buyerItemCode" type="itemCodeType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Código do artigo ou serviço atribuido pelo comprador</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="description" type="descriptionType">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Descrição do artigo ou serviço.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="name" type="descriptionType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Nome do artigo ou serviço.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="comment" type="structuredDescriptionType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Comentário referente à linha do documento.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="quantity" type="quantityType">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Quantidade de artigos.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="packQuantity" type="quantityType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Quantidade de embalagens.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="quantityPerPackage" type="quantityPerPackageType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Quantidade contida por embalagem.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="packQuantityPerPallet" type="quantityType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Quantidade de embalagens por palete.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="quantityConversionFactor" type="quantityType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Regra JM = Factor de conversão da unidade de quantidade facturada, para a unidade base. No caso das quantidades serem expressas em unidades de base (EA, KGM), este campo vem preenchido com o valor 1, caso contrário deverá ter a quantidade correcta. Exemplo: se a quantidade facturada estiver expressa em caixas (BX) este campo deve conter a quantidade de unidades dentro da caixa.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="grossWeight" type="quantityType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Peso da mercadoria</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="volume" type="quantityType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Volume</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="additionalDate" type="shipmentAdditionalDateType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Informação de tipo data e hora presentes no documento, com exepção da data do documento. Por exemplo, data de entrega.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="unitPrice" type="nonNegativeDecimalType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Preço unitário sem imposto e deduzido dos descontos de linha e cabeçalho.
+					Caso não preencha este valor, para a AT, será enviado o valor '0.00'</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="taxableUnitPrice" type="nonNegativeDecimalType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Preço unitário tributável. Caso não preencha este valor, para a AT, será enviado o valor '0.00'</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="vatPercentage" type="vatPercentageType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Percentagem de IVA. Se for  0 deverá se indicada a razão da isenção</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="itemDeliveryInformation" type="itemDeliveryInformationType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Informção para entrega do artigo. Para quando há entrega em diferentes locais.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="vatAmount" type="lineVatAmountType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Valor do IVA da Linha.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="taxableAmount" type="nonNegativeDecimalType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Montante tributável da linha</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="grossAmount" type="lineGrossAmountType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Montante ilíquido da linha</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="payableAmount" type="lineGrossAmountType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Montante a pagar da linha</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="batchNumber" type="batchNumberInformationType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Informação relativa ao Lote</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="reference" type="referenceType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Referências a outros documentos.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="shipTo" type="companyInformationType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Local de entrega</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="number" type="xsd:long" use="optional">
+			<xsd:annotation>
+				<xsd:documentation xml:lang="pt">Número da linha.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="shipmentPackagingType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="pt">Tipo de dados genérico para packaging.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="packType" type="nonEmptyString" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">tipo de embalagem (ex: BX = Caixa)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="packQuantity" type="quantityType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="pt">Quantidade de embalagens.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sscc" type="ssccType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="shipmentType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="pt">Tipo de dados de suporte a documentos de envio de bens e serviços</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="documentType">
+				<xsd:sequence>
+					<xsd:element name="seller" type="billingCompanyInformationType">
+						<xsd:annotation>
+							<xsd:documentation>Vendedor ou fornecedor dos artigos ou serviços</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="buyer" type="billableCompanyInformationType">
+						<xsd:annotation>
+							<xsd:documentation>Comprador dos artigos ou serviços</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="billTo" type="billableCompanyInformationType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Entidade a ser facturada</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="shipTo" type="nonBillableCompanyInformationType">
+						<xsd:annotation>
+							<xsd:documentation>Local de entrega das mercadorias</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="shipFrom" type="nonBillableCompanyInformationType">
+						<xsd:annotation>
+							<xsd:documentation>Local de partida das mercadorias</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="dispatcher" type="nonBillableCompanyInformationType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Despachante</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="carrier" type="nonBillableCompanyInformationType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Transportador</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="additionalDate" type="shipmentAdditionalDateType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Informação de tipo data e hora presentes no documento, com exepção da data do documento. Por exemplo, data de entrega.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="reference" type="referenceType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Referências a outros documentos.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="currencyCode" type="currencyCodeType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Código da moeda ISO 4217 Alpha 3.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="senderSoftwareCertificationNumber" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Número do certificado do ERP atribuído pela DGCI.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="senderSoftwareDocumentSignatureHash" type="signatureHashSubsetType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Número correspondente à 1º, 11º, 21ª e 31ª do hash da assinatura</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="legalAuthorityShipmentCode" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Código de transporte atribuído pela DGCI.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="transportInformation" type="shipmentTransportInformationType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Dados relativos ao transporte das mercadorias</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="packaging" type="shipmentPackagingType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Detalhe de packaging</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="comment" type="structuredDescriptionType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Comentários e observações globais ao documento.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="legalNotice" type="descriptionType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">legal notice</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="lineItem" type="shipmentLineItemType" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Detalhe de artigos ou serviços</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="vatSummary" type="vatSummaryType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Resumo do IVA, por taxa, aplicados ao documento.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="totalGrossWeight" type="quantityType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Peso total da mercadoria</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="totalVolume" type="quantityType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Volume total da mercadoria</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="totalPallets" type="nonNegativeDecimalType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Número total de paletes</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="totalVatAmount" type="vatAmountType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Montante total de IVA.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="totalTaxableAmount" type="vatAmountType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Montante total tributável do IVA.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="totalGrossAmount" type="nonNegativeDecimalType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Somatório dos montantes brutos das linhas</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="totalPayableAmount" type="amountWithText" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Montante total a pagar</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="emailNotification" type="emailNotificationType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Notificações</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="scope" type="desadvScopeEnumType" use="optional">
+					<xsd:annotation>
+						<xsd:documentation xml:lang="pt">Usado para qualificar o âmbito documento.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

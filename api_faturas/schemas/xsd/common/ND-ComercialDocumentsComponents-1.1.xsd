@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ================================================== -->
+<!-- ===== Comercial Documents Components  ===== -->
+<!-- ================================================== -->
+<!--
+   Module of Legal Comercial Documents Components
+   Saphety
+   Version: 1.1
+   Last change: 2019/10/01
+
+   Copyright (C) SAPHETY (2019). All Rights Reserved.
+-->
+<xsd:schema xmlns="urn:netdocs:schemas:document" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msg="urn:netdocs:schemas:message" targetNamespace="urn:netdocs:schemas:document" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="1.1">
+	<xsd:annotation>
+		<xsd:documentation xml:lang="pt">
+			Módulo com definições de tipos de dados para documentos sem validade legal, como por exemplo a Encomenda.
+		</xsd:documentation>
+	</xsd:annotation>
+	<!-- ================== -->
+	<!-- ===== Include   ===== -->
+	<!-- ================== -->
+	<xsd:include schemaLocation="../common/ND-BaseComponents-1.1.xsd"/>
+	<!-- ======================== -->
+	<!-- =====  Complex Types ====== -->
+	<!-- ======================== -->
+	<xsd:complexType name="orderType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="pt">Tipo de dados para suporta a ordem de compra (encomenda).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="documentWithBaseEntitiesHeaderBodySummary">
+				<xsd:attribute name="orderTypeCode" type="orderTypeEnumType">
+					<xsd:annotation>
+						<xsd:documentation>Tipo de encomenda.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="desAdvType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="pt">Tipo de dados de suporte à guia de remessa.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="desAdvWithBaseEntitiesHeaderBodySummary">
+				<xsd:attribute name="documentType" type="documentTypeEnumType">
+					<xsd:annotation>
+						<xsd:documentation>Tipo de documento a partir de onde a guia foi formada</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="recAdvType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="pt">Tipo de dados de suporte ao aviso de expedição</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="recAdvWithBaseEntitiesHeaderBody">
+				<xsd:attribute name="documentType" type="documentTypeEnumType">
+					<xsd:annotation>
+						<xsd:documentation>Tipo de documento a partir de onde o aviso foi formado</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="orderResponseType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="pt">Tipo de dados para suporta a resposta à ordem de compra (Resposta à Encomenda).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="orderType">
+				<xsd:annotation>
+					<xsd:documentation>A resposta à encomenda deriva da encomenda.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="documentStatusType">
+		<xsd:annotation>
+			<xsd:documentation>Elemento representante da mensagem de estado.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="documentType">
+				<xsd:sequence>
+					<xsd:element name="originalDocumentReference" type="detailedDocumentReferenceType">
+						<xsd:annotation>
+							<xsd:documentation>Dados do documento original para referênciação. Todos os elementos e atributos por debaixo deste elemento devem conter a informação do documento referênciado.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="statusInformation" type="documentStatusInformationType">
+						<xsd:annotation>
+							<xsd:documentation>Informação do estado do documento original</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="legalAuthorityApprovalCode" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="pt">Código atribuído pela DGCI. No caso das guias de remessa, pode ser devolvido o código de transporte.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="despatchAdviceType">
+		<xsd:annotation>
+			<xsd:documentation>Elemento representante do guia de remessa</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="desAdvType">
+				<xsd:annotation>
+					<xsd:documentation>A Guia de remessa deriva em parte da estrutura fatura</xsd:documentation>
+				</xsd:annotation>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="receiptAdviceType">
+		<xsd:annotation>
+			<xsd:documentation>Elemento representante do aviso de expedição</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="recAdvType">
+				<xsd:annotation>
+					<xsd:documentation>O aviso de expedição deriva em parte da estrutura fatura</xsd:documentation>
+				</xsd:annotation>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="priCatType">
+		<xsd:annotation>
+			<xsd:documentation>Elemento representante do catalogo de preços</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="priCatWithBaseEntitiesHeaderBody">
+				<xsd:attribute name="priCatTypeCode" type="orderTypeEnumType">
+					<xsd:annotation>
+						<xsd:documentation>Informação de preços</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

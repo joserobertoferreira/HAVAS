@@ -1,0 +1,47 @@
+{
+  "@xmlns": "urn:netdocs:schemas:document",
+  "@xmlns:msg": "urn:netdocs:schemas:message",
+  "@xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+  "@targetNamespace": "urn:netdocs:schemas:document",
+  "@elementFormDefault": "unqualified",
+  "@attributeFormDefault": "unqualified",
+  "@version": "1.1",
+  "@finalDefault": [],
+  "@blockDefault": [],
+  "xsd:annotation": [
+    {
+      "xsd:documentation": [
+        {
+          "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+          "$": "Módulo que define a estrutura da guia de transporte."
+        }
+      ]
+    }
+  ],
+  "xsd:include": [
+    {
+      "@schemaLocation": "../common/ND-ShipmentDocumentsComponents-1.1.xsd"
+    }
+  ],
+  "xsd:import": [
+    {
+      "@namespace": "urn:netdocs:schemas:message",
+      "@schemaLocation": "ND-Message-1.1.xsd"
+    }
+  ],
+  "xsd:element": {
+    "@name": "wayBill",
+    "@type": "shipmentType",
+    "@substitutionGroup": "msg:genericDocument",
+    "@abstract": false,
+    "@nillable": false,
+    "xsd:annotation": {
+      "xsd:documentation": [
+        {
+          "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+          "$": "Schema para guia de transporte."
+        }
+      ]
+    }
+  }
+}

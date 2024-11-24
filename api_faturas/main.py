@@ -1,5 +1,4 @@
 from config import settings
-from messages.invoices import HandleInvoices
 from services.authentication import AuthenticationService
 from services.file_handler import FileHandlerService
 from services.message_processor import MessageProcessorService
@@ -7,7 +6,7 @@ from services.message_processor import MessageProcessorService
 
 def api_faturas() -> None:
     # Get the invoices to be processed and parse them to XML
-    HandleInvoices.get_invoices()
+    # HandleInvoices.get_invoices()
 
     # # Check if exists files to be processed
     file_handler = FileHandlerService(
@@ -18,6 +17,11 @@ def api_faturas() -> None:
 
     if not xml_list:
         print('No files to be processed.')
+
+    # Validate the XML files
+    for file in xml_list:
+        if not file_handler.validate_xml(file):
+            print(f'File {file} is not valid.')
 
     # Generate the base64 strings
     for file, file_base64 in file_handler.generate_base64_strings(xml_list).items():
@@ -59,7 +63,7 @@ def api_faturas() -> None:
 
     #         # Marking the message as processed
     #         for message in messages:
-    #             processed = MessageProcessorService(token).mark_as_processed(  # noqa: F841
+    #             processed = MessageProcessorService(token).mark_as_processed( # noqa: F841
     #                 message['ResultData']
     #             )
 

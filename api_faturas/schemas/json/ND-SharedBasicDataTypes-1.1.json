@@ -1,0 +1,3313 @@
+{
+  "@xmlns": "urn:netdocs:schemas:document",
+  "@xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+  "@targetNamespace": "urn:netdocs:schemas:document",
+  "@elementFormDefault": "unqualified",
+  "@attributeFormDefault": "unqualified",
+  "@version": "1.1",
+  "@finalDefault": [],
+  "@blockDefault": [],
+  "xsd:annotation": [
+    {
+      "xsd:documentation": [
+        {
+          "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+          "$": "Módulo para conter os tipos de dados partilhados entre diferentes namespaces.\n\t\t\tNão está qualificado com namespace para poder ser integrado em outros namespaces, sem ter de se criar prefixos adicionais."
+        }
+      ]
+    }
+  ],
+  "xsd:simpleType": [
+    {
+      "@name": "allDecimalType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Número decimal positivo, com valor mínimo de 0.000"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:decimal",
+        "xsd:fractionDigits": {
+          "@value": 3,
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "decimalType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Número decimal positivo"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:decimal"
+      }
+    },
+    {
+      "@name": "nonNegativeDecimalType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Número decimal positivo, com valor mínimo de 0.000"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:decimal",
+        "xsd:minInclusive": {
+          "@value": "0.000",
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "nonNegativeDecimalType2FractionDigits",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Número decimal positivo ou null com 2 casas decimais"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:decimal",
+        "xsd:minInclusive": {
+          "@value": "0.00",
+          "@fixed": false
+        },
+        "xsd:fractionDigits": {
+          "@value": 2,
+          "@fixed": true
+        }
+      }
+    },
+    {
+      "@name": "nonNegativeIntegerType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Número inteiro positivo, com valor mínimo de 0"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:integer",
+        "xsd:minInclusive": {
+          "@value": "0",
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "base64Type",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Tipo de dados para conter informação codificada em base64. Normalmente utiliza-se para transmitir informação binária, que deve ser previamente codificada em base64."
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:base64Binary",
+        "xsd:minLength": {
+          "@value": 1,
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "contentTypeType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Tipo de dados para especificar o tipo de conteúdo de um ficheiro. O schema só verifica o formato, não verifica se se trata de um tipo válido ou não. Derão ser usados Content Types válidos. Exemplos válidos: text/plain application/pdf image/jpeg ."
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:string",
+        "xsd:minLength": {
+          "@value": 1,
+          "@fixed": false
+        },
+        "xsd:pattern": {
+          "@value": "[a-z]+/[a-z\\.\\-\\+]+"
+        }
+      }
+    },
+    {
+      "@name": "countryCodeType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Código de país. Deve-se colocar aqui um código ISO 3166-1 alpha 2 válido."
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "countryCodeTypeEnum"
+      }
+    },
+    {
+      "@name": "cityType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Nome de cidade"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "nonEmptyString",
+        "xsd:maxLength": {
+          "@value": 50,
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "languageCodeType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "LanguageCode"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:string",
+        "xsd:minLength": {
+          "@value": 2,
+          "@fixed": false
+        },
+        "xsd:maxLength": {
+          "@value": 2,
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "phoneContactType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Número de telefone"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "nonEmptyString",
+        "xsd:maxLength": {
+          "@value": 20,
+          "@fixed": false
+        },
+        "xsd:pattern": {
+          "@value": "((\\+\\d{1,3}(-| )?\\(?\\d\\)?(-| )?\\d{1,5})|(\\(?\\d{2,6}\\)?))(-| )?(\\d{3,4})(-| )?(\\d{4})(( x| ext)\\d{1,5}){0,1}"
+        }
+      }
+    },
+    {
+      "@name": "emailContactType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Formato para endereços de email"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "nonEmptyString",
+        "xsd:maxLength": {
+          "@value": 100,
+          "@fixed": false
+        },
+        "xsd:pattern": {
+          "@value": "([a-zA-Z0-9_\\-\\.\\+])+@(([0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5])|((([a-zA-Z0-9\\-])+\\.)+([a-zA-Z\\-])+))"
+        }
+      }
+    },
+    {
+      "@name": "addressType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Morada"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "nonEmptyString",
+        "xsd:maxLength": {
+          "@value": 200,
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "entityNameType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Nome de entidade"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "nonEmptyString",
+        "xsd:maxLength": {
+          "@value": 100,
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "entityNickNameType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Nome curto da entidade"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "entityNameType",
+        "xsd:maxLength": {
+          "@value": 35,
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "nonEmptyString",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Tipo de dados para texto não vazia"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:string",
+        "xsd:minLength": {
+          "@value": 1,
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "allowedEmptyString",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Tipo de dados para texto não vazia"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:string",
+        "xsd:minLength": {
+          "@value": 0,
+          "@fixed": false
+        }
+      }
+    },
+    {
+      "@name": "descriptionType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Descrições"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "allowedEmptyString"
+      }
+    },
+    {
+      "@name": "entityIdTypeEnumType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Possíveis tipos de identificadores de entidades."
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:NMTOKEN",
+        "xsd:enumeration": [
+          {
+            "@value": "GLN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Global Location Number - Código atribuido pela GS1 (antiga EAN)"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "BUYERASSIGNED",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Identificador atribuido pelo comprador"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "SELLERASSIGNED",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Identificador atribuido pelo comprador"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "VAT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "NIF - Número de identificação fiscal"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "OTHER",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Outro tipo de identificação"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "URN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Uniform Resource Name"
+                },
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "en",
+                  "$": "Uniform Resource Name"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "NETDOCSID",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Identificador interno do Netdocs"
+                },
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "en",
+                  "$": "Netdocs internal identification"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "CODE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Codigo interno Entidade na Saphety"
+                },
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "en",
+                  "$": "Entity internal code under Saphety"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "countryCodeTypeEnum",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Lista de códigos ISO 3166-1 Alpha 2"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:NMTOKEN",
+        "xsd:enumeration": [
+          {
+            "@value": "AD",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Andorra"
+              ]
+            }
+          },
+          {
+            "@value": "AE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "United Arab Emirates"
+              ]
+            }
+          },
+          {
+            "@value": "AF",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Afghanistan"
+              ]
+            }
+          },
+          {
+            "@value": "AG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Antigua and Barbuda"
+              ]
+            }
+          },
+          {
+            "@value": "AI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Anguilla"
+              ]
+            }
+          },
+          {
+            "@value": "AL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Albania"
+              ]
+            }
+          },
+          {
+            "@value": "AM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Armenia"
+              ]
+            }
+          },
+          {
+            "@value": "AN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Netherlands Antilles"
+              ]
+            }
+          },
+          {
+            "@value": "AO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Angola"
+              ]
+            }
+          },
+          {
+            "@value": "AQ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Antarctica"
+              ]
+            }
+          },
+          {
+            "@value": "AR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Argentina"
+              ]
+            }
+          },
+          {
+            "@value": "AS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "American Samoa"
+              ]
+            }
+          },
+          {
+            "@value": "AT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Austria"
+              ]
+            }
+          },
+          {
+            "@value": "AU",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Australia"
+              ]
+            }
+          },
+          {
+            "@value": "AW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Aruba"
+              ]
+            }
+          },
+          {
+            "@value": "AX",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Åland Islands"
+              ]
+            }
+          },
+          {
+            "@value": "AZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Azerbaijan"
+              ]
+            }
+          },
+          {
+            "@value": "BA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Bosnia and Herzegovina"
+              ]
+            }
+          },
+          {
+            "@value": "BB",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Barbados"
+              ]
+            }
+          },
+          {
+            "@value": "BD",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Bangladesh"
+              ]
+            }
+          },
+          {
+            "@value": "BE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Belgium"
+              ]
+            }
+          },
+          {
+            "@value": "BF",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Burkina Faso"
+              ]
+            }
+          },
+          {
+            "@value": "BG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Bulgaria"
+              ]
+            }
+          },
+          {
+            "@value": "BH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Bahrain"
+              ]
+            }
+          },
+          {
+            "@value": "BI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Burundi"
+              ]
+            }
+          },
+          {
+            "@value": "BJ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Benin"
+              ]
+            }
+          },
+          {
+            "@value": "BM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Bermuda"
+              ]
+            }
+          },
+          {
+            "@value": "BN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Brunei Darussalam"
+              ]
+            }
+          },
+          {
+            "@value": "BO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Bolivia"
+              ]
+            }
+          },
+          {
+            "@value": "BR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Brazil"
+              ]
+            }
+          },
+          {
+            "@value": "BS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Bahamas"
+              ]
+            }
+          },
+          {
+            "@value": "BT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Bhutan"
+              ]
+            }
+          },
+          {
+            "@value": "BV",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Bouvet Island"
+              ]
+            }
+          },
+          {
+            "@value": "BW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Botswana"
+              ]
+            }
+          },
+          {
+            "@value": "BY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Belarus"
+              ]
+            }
+          },
+          {
+            "@value": "BZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Belize"
+              ]
+            }
+          },
+          {
+            "@value": "CA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Canada"
+              ]
+            }
+          },
+          {
+            "@value": "CC",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Cocos Keeling Islands"
+              ]
+            }
+          },
+          {
+            "@value": "CD",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Congo, The Democratic Republic Of The"
+              ]
+            }
+          },
+          {
+            "@value": "CF",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Central African Republic"
+              ]
+            }
+          },
+          {
+            "@value": "CG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Congo, Republic of the"
+              ]
+            }
+          },
+          {
+            "@value": "CH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Switzerland"
+              ]
+            }
+          },
+          {
+            "@value": "CI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Côte d''Ivoire"
+              ]
+            }
+          },
+          {
+            "@value": "CK",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Cook Islands"
+              ]
+            }
+          },
+          {
+            "@value": "CL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Chile"
+              ]
+            }
+          },
+          {
+            "@value": "CM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Cameroon"
+              ]
+            }
+          },
+          {
+            "@value": "CN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "China, mainland"
+              ]
+            }
+          },
+          {
+            "@value": "CO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Colombia"
+              ]
+            }
+          },
+          {
+            "@value": "CR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Costa Rica"
+              ]
+            }
+          },
+          {
+            "@value": "CS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Serbia and Montenegro"
+              ]
+            }
+          },
+          {
+            "@value": "CU",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Cuba"
+              ]
+            }
+          },
+          {
+            "@value": "CV",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Cape Verde"
+              ]
+            }
+          },
+          {
+            "@value": "CW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Curaçao"
+              ]
+            }
+          },
+          {
+            "@value": "CX",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Christmas Island"
+              ]
+            }
+          },
+          {
+            "@value": "CY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Cyprus"
+              ]
+            }
+          },
+          {
+            "@value": "CZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Czech Republic"
+              ]
+            }
+          },
+          {
+            "@value": "DE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Germany"
+              ]
+            }
+          },
+          {
+            "@value": "DJ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Djibouti"
+              ]
+            }
+          },
+          {
+            "@value": "DK",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Denmark"
+              ]
+            }
+          },
+          {
+            "@value": "DM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Dominica"
+              ]
+            }
+          },
+          {
+            "@value": "DO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Dominican Republic"
+              ]
+            }
+          },
+          {
+            "@value": "DZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Algeria"
+              ]
+            }
+          },
+          {
+            "@value": "EC",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Ecuador"
+              ]
+            }
+          },
+          {
+            "@value": "EE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Estonia"
+              ]
+            }
+          },
+          {
+            "@value": "EG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Egypt"
+              ]
+            }
+          },
+          {
+            "@value": "EH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Western Sahara"
+              ]
+            }
+          },
+          {
+            "@value": "ER",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Eritrea"
+              ]
+            }
+          },
+          {
+            "@value": "ES",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Spain"
+              ]
+            }
+          },
+          {
+            "@value": "ET",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Ethiopia"
+              ]
+            }
+          },
+          {
+            "@value": "FI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Finland"
+              ]
+            }
+          },
+          {
+            "@value": "FJ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Fiji"
+              ]
+            }
+          },
+          {
+            "@value": "FK",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Falkland Islands"
+              ]
+            }
+          },
+          {
+            "@value": "FM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Micronesia, Federated States of"
+              ]
+            }
+          },
+          {
+            "@value": "FO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Faroe Islands"
+              ]
+            }
+          },
+          {
+            "@value": "FR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "France"
+              ]
+            }
+          },
+          {
+            "@value": "GA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Gabon"
+              ]
+            }
+          },
+          {
+            "@value": "GB",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "United Kingdom"
+              ]
+            }
+          },
+          {
+            "@value": "GD",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Grenada"
+              ]
+            }
+          },
+          {
+            "@value": "GE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Georgia"
+              ]
+            }
+          },
+          {
+            "@value": "GF",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "French Guiana"
+              ]
+            }
+          },
+          {
+            "@value": "GH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Ghana"
+              ]
+            }
+          },
+          {
+            "@value": "GI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Gibraltar"
+              ]
+            }
+          },
+          {
+            "@value": "GL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Greenland"
+              ]
+            }
+          },
+          {
+            "@value": "GM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Gambia"
+              ]
+            }
+          },
+          {
+            "@value": "GN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Guinea"
+              ]
+            }
+          },
+          {
+            "@value": "GP",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Guadeloupe"
+              ]
+            }
+          },
+          {
+            "@value": "GQ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Equatorial Guinea"
+              ]
+            }
+          },
+          {
+            "@value": "GR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Greece"
+              ]
+            }
+          },
+          {
+            "@value": "GS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "South Georgia and the South Sandwich Islands"
+              ]
+            }
+          },
+          {
+            "@value": "GT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Guatemala"
+              ]
+            }
+          },
+          {
+            "@value": "GU",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Guam"
+              ]
+            }
+          },
+          {
+            "@value": "GW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Guinea-Bissau"
+              ]
+            }
+          },
+          {
+            "@value": "GY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Guyana"
+              ]
+            }
+          },
+          {
+            "@value": "HK",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Hong Kong"
+              ]
+            }
+          },
+          {
+            "@value": "HM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Heard Island and McDonald Islands"
+              ]
+            }
+          },
+          {
+            "@value": "HN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Honduras"
+              ]
+            }
+          },
+          {
+            "@value": "HR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Croatia"
+              ]
+            }
+          },
+          {
+            "@value": "HT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Haiti"
+              ]
+            }
+          },
+          {
+            "@value": "HU",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Hungary"
+              ]
+            }
+          },
+          {
+            "@value": "ID",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Indonesia"
+              ]
+            }
+          },
+          {
+            "@value": "IE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Ireland"
+              ]
+            }
+          },
+          {
+            "@value": "IL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Israel"
+              ]
+            }
+          },
+          {
+            "@value": "IN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "India"
+              ]
+            }
+          },
+          {
+            "@value": "IO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "British Indian Ocean Territory"
+              ]
+            }
+          },
+          {
+            "@value": "IQ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Iraq"
+              ]
+            }
+          },
+          {
+            "@value": "IR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Iran, Islamic Republic of"
+              ]
+            }
+          },
+          {
+            "@value": "IS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Iceland"
+              ]
+            }
+          },
+          {
+            "@value": "IT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Italy"
+              ]
+            }
+          },
+          {
+            "@value": "JM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Jamaica"
+              ]
+            }
+          },
+          {
+            "@value": "JO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Jordan"
+              ]
+            }
+          },
+          {
+            "@value": "JP",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Japan"
+              ]
+            }
+          },
+          {
+            "@value": "KE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Kenya"
+              ]
+            }
+          },
+          {
+            "@value": "KG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Kyrgyzstan"
+              ]
+            }
+          },
+          {
+            "@value": "KH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Cambodia"
+              ]
+            }
+          },
+          {
+            "@value": "KI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Kiribati"
+              ]
+            }
+          },
+          {
+            "@value": "KM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Comoros"
+              ]
+            }
+          },
+          {
+            "@value": "KN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Saint Kitts and Nevis"
+              ]
+            }
+          },
+          {
+            "@value": "KP",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Korea, Democratic People''s Republic of"
+              ]
+            }
+          },
+          {
+            "@value": "KR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Korea, Republic of"
+              ]
+            }
+          },
+          {
+            "@value": "KW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Kuwait"
+              ]
+            }
+          },
+          {
+            "@value": "KY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Cayman Islands"
+              ]
+            }
+          },
+          {
+            "@value": "KZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Kazakhstan"
+              ]
+            }
+          },
+          {
+            "@value": "LA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Lao People''s Democratic Republic"
+              ]
+            }
+          },
+          {
+            "@value": "LB",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Lebanon"
+              ]
+            }
+          },
+          {
+            "@value": "LC",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Saint Lucia"
+              ]
+            }
+          },
+          {
+            "@value": "LI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Liechtenstein"
+              ]
+            }
+          },
+          {
+            "@value": "LK",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Sri Lanka"
+              ]
+            }
+          },
+          {
+            "@value": "LR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Liberia"
+              ]
+            }
+          },
+          {
+            "@value": "LS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Lesotho"
+              ]
+            }
+          },
+          {
+            "@value": "LT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Lithuania"
+              ]
+            }
+          },
+          {
+            "@value": "LU",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Luxembourg"
+              ]
+            }
+          },
+          {
+            "@value": "LV",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Latvia"
+              ]
+            }
+          },
+          {
+            "@value": "LY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Libyan Arab Jamahiriya"
+              ]
+            }
+          },
+          {
+            "@value": "MA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Morocco"
+              ]
+            }
+          },
+          {
+            "@value": "MC",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Monaco"
+              ]
+            }
+          },
+          {
+            "@value": "MD",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Moldova, Republic of"
+              ]
+            }
+          },
+          {
+            "@value": "MF",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Saint Martin"
+              ]
+            }
+          },
+          {
+            "@value": "MG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Madagascar"
+              ]
+            }
+          },
+          {
+            "@value": "MH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Marshall Islands"
+              ]
+            }
+          },
+          {
+            "@value": "MK",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Macedonia, The Former Yugoslav Republic of"
+              ]
+            }
+          },
+          {
+            "@value": "ML",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Mali"
+              ]
+            }
+          },
+          {
+            "@value": "MM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Myanmar"
+              ]
+            }
+          },
+          {
+            "@value": "MN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Mongolia"
+              ]
+            }
+          },
+          {
+            "@value": "MO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Macao"
+              ]
+            }
+          },
+          {
+            "@value": "MP",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Northern Mariana Islands"
+              ]
+            }
+          },
+          {
+            "@value": "MQ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Martinique"
+              ]
+            }
+          },
+          {
+            "@value": "MR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Mauritania"
+              ]
+            }
+          },
+          {
+            "@value": "MS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Montserrat"
+              ]
+            }
+          },
+          {
+            "@value": "MT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Malta"
+              ]
+            }
+          },
+          {
+            "@value": "MU",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Mauritius"
+              ]
+            }
+          },
+          {
+            "@value": "MV",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Maldives"
+              ]
+            }
+          },
+          {
+            "@value": "MW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Malawi"
+              ]
+            }
+          },
+          {
+            "@value": "MX",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Mexico"
+              ]
+            }
+          },
+          {
+            "@value": "MY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Malaysia"
+              ]
+            }
+          },
+          {
+            "@value": "MZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Mozambique"
+              ]
+            }
+          },
+          {
+            "@value": "NA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Namibia"
+              ]
+            }
+          },
+          {
+            "@value": "NC",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "New Caledonia"
+              ]
+            }
+          },
+          {
+            "@value": "NE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Niger"
+              ]
+            }
+          },
+          {
+            "@value": "NF",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Norfolk Island"
+              ]
+            }
+          },
+          {
+            "@value": "NG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Nigeria"
+              ]
+            }
+          },
+          {
+            "@value": "NI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Nicaragua"
+              ]
+            }
+          },
+          {
+            "@value": "NL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Netherlands"
+              ]
+            }
+          },
+          {
+            "@value": "NO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Norway"
+              ]
+            }
+          },
+          {
+            "@value": "NP",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Nepal"
+              ]
+            }
+          },
+          {
+            "@value": "NR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Nauru"
+              ]
+            }
+          },
+          {
+            "@value": "NU",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Niue"
+              ]
+            }
+          },
+          {
+            "@value": "NZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "New Zealand"
+              ]
+            }
+          },
+          {
+            "@value": "OM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Oman"
+              ]
+            }
+          },
+          {
+            "@value": "PA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Panama"
+              ]
+            }
+          },
+          {
+            "@value": "PE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Peru"
+              ]
+            }
+          },
+          {
+            "@value": "PF",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "French Polynesia"
+              ]
+            }
+          },
+          {
+            "@value": "PG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Papua New Guinea"
+              ]
+            }
+          },
+          {
+            "@value": "PH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Philippines"
+              ]
+            }
+          },
+          {
+            "@value": "PK",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Pakistan"
+              ]
+            }
+          },
+          {
+            "@value": "PL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Poland"
+              ]
+            }
+          },
+          {
+            "@value": "PM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Saint-Pierre and Miquelon"
+              ]
+            }
+          },
+          {
+            "@value": "PN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Pitcairn"
+              ]
+            }
+          },
+          {
+            "@value": "PR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Puerto Rico"
+              ]
+            }
+          },
+          {
+            "@value": "PS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Palestinian Territory, Occupied"
+              ]
+            }
+          },
+          {
+            "@value": "PT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Portugal"
+              ]
+            }
+          },
+          {
+            "@value": "PW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Palau"
+              ]
+            }
+          },
+          {
+            "@value": "PY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Paraguay"
+              ]
+            }
+          },
+          {
+            "@value": "QA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Qatar"
+              ]
+            }
+          },
+          {
+            "@value": "RE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Réunion"
+              ]
+            }
+          },
+          {
+            "@value": "RS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Serbia"
+              ]
+            }
+          },
+          {
+            "@value": "RO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Romania"
+              ]
+            }
+          },
+          {
+            "@value": "RU",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Russian Federation"
+              ]
+            }
+          },
+          {
+            "@value": "RW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Rwanda"
+              ]
+            }
+          },
+          {
+            "@value": "SA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Saudi Arabia"
+              ]
+            }
+          },
+          {
+            "@value": "SB",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Solomon Islands"
+              ]
+            }
+          },
+          {
+            "@value": "SC",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Seychelles"
+              ]
+            }
+          },
+          {
+            "@value": "SD",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Sudan"
+              ]
+            }
+          },
+          {
+            "@value": "SE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Sweden"
+              ]
+            }
+          },
+          {
+            "@value": "SG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Singapore"
+              ]
+            }
+          },
+          {
+            "@value": "SH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Saint Helena"
+              ]
+            }
+          },
+          {
+            "@value": "SI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Slovenia"
+              ]
+            }
+          },
+          {
+            "@value": "SJ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Svalbard and Jan Mayen"
+              ]
+            }
+          },
+          {
+            "@value": "SK",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Slovakia"
+              ]
+            }
+          },
+          {
+            "@value": "SL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Sierra Leone"
+              ]
+            }
+          },
+          {
+            "@value": "SM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "San Marino"
+              ]
+            }
+          },
+          {
+            "@value": "SN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Senegal"
+              ]
+            }
+          },
+          {
+            "@value": "SO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Somalia"
+              ]
+            }
+          },
+          {
+            "@value": "SR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Suriname"
+              ]
+            }
+          },
+          {
+            "@value": "ST",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "São Tomé and Príncipe"
+              ]
+            }
+          },
+          {
+            "@value": "SV",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "El Salvador"
+              ]
+            }
+          },
+          {
+            "@value": "SY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Syrian Arab Republic"
+              ]
+            }
+          },
+          {
+            "@value": "SZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Swaziland"
+              ]
+            }
+          },
+          {
+            "@value": "TC",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Turks and Caicos Islands"
+              ]
+            }
+          },
+          {
+            "@value": "TD",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Chad"
+              ]
+            }
+          },
+          {
+            "@value": "TF",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "French Southern Territories"
+              ]
+            }
+          },
+          {
+            "@value": "TG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Togo"
+              ]
+            }
+          },
+          {
+            "@value": "TH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Thailand"
+              ]
+            }
+          },
+          {
+            "@value": "TJ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Tajikistan"
+              ]
+            }
+          },
+          {
+            "@value": "TK",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Tokelau"
+              ]
+            }
+          },
+          {
+            "@value": "TL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Timor-Leste"
+              ]
+            }
+          },
+          {
+            "@value": "TM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Turkmenistan"
+              ]
+            }
+          },
+          {
+            "@value": "TN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Tunisia"
+              ]
+            }
+          },
+          {
+            "@value": "TO",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Tonga"
+              ]
+            }
+          },
+          {
+            "@value": "TR",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Turkey"
+              ]
+            }
+          },
+          {
+            "@value": "TT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Trinidad and Tobago"
+              ]
+            }
+          },
+          {
+            "@value": "TV",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Tuvalu"
+              ]
+            }
+          },
+          {
+            "@value": "TW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Taiwan Republic of China"
+              ]
+            }
+          },
+          {
+            "@value": "TZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Tanzania, United Republic Of"
+              ]
+            }
+          },
+          {
+            "@value": "UA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Ukraine"
+              ]
+            }
+          },
+          {
+            "@value": "UG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Uganda"
+              ]
+            }
+          },
+          {
+            "@value": "UM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "United States Minor Outlying Islands"
+              ]
+            }
+          },
+          {
+            "@value": "US",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "United States"
+              ]
+            }
+          },
+          {
+            "@value": "UY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Uruguay"
+              ]
+            }
+          },
+          {
+            "@value": "UZ",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Uzbekistan"
+              ]
+            }
+          },
+          {
+            "@value": "VA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "HOLY SEE VATICAN CITY STATE"
+              ]
+            }
+          },
+          {
+            "@value": "VC",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Saint Vincent and the Grenadines"
+              ]
+            }
+          },
+          {
+            "@value": "VE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Venezuela"
+              ]
+            }
+          },
+          {
+            "@value": "VG",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Virgin Islands, British"
+              ]
+            }
+          },
+          {
+            "@value": "VI",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Virgin Islands, U.S."
+              ]
+            }
+          },
+          {
+            "@value": "VN",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Viet Nam"
+              ]
+            }
+          },
+          {
+            "@value": "VU",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Vanuatu"
+              ]
+            }
+          },
+          {
+            "@value": "WF",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Wallis and Futuna"
+              ]
+            }
+          },
+          {
+            "@value": "WS",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Samoa"
+              ]
+            }
+          },
+          {
+            "@value": "YE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Yemen"
+              ]
+            }
+          },
+          {
+            "@value": "YT",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Mayotte"
+              ]
+            }
+          },
+          {
+            "@value": "ZA",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "South Africa"
+              ]
+            }
+          },
+          {
+            "@value": "ZM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Zambia"
+              ]
+            }
+          },
+          {
+            "@value": "ZW",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Zimbabwe"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "sharedDocumentEnumType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipos de documento"
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:NMTOKEN",
+        "xsd:enumeration": [
+          {
+            "@value": "INVOICE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Factura comercial"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "CREDITNOTE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Nota de crédito"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "DEBITNOTE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Nota de débito"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "ORDER",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Encomenda"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "ORDERRESPONSE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Resposta à encomenda"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "DESPATCHADVICE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Guia de remessa"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "RECEIPTADVICE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Guia de recepção"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "VOUCHER",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Voucher"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "UBS-docDP",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "UBS printinterface document"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "UBS-printinterface",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "UBS printinterface message"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "ENTITY",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Entidade"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "USER",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Utilizador"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "CONSUMER",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Utilizador do tipo consumidor final"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "ATTACH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Anexo ao documento"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "EPALINVOICEFLATFILE",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Ficheiro de facturas da Epal"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "UBSCONSUMERREGISTRATIONREQUEST",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Pedido de registo de consumidores do UBS"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "WAYBILL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Guia de Transporte"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "OTHER",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Para tipos de documentos não conecidos à partida. Deve ser evitada a sua utilização"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "SERIAL-NUMBER",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Referência Interna de ERP de terceiros"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "UBL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "formato original do documento"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "sharedDocumentInAttachEnumType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipos de documento que podem ser anexados a documentos principais"
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "sharedDocumentEnumType",
+        "xsd:enumeration": [
+          {
+            "@value": "VOUCHER",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Voucher"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "ATTACH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Anexo ao documento"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "UBL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "formato original do documento"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "regulatorEnumType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Possíveis tipos de entidades reguladoras."
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:NMTOKEN",
+        "xsd:enumeration": {
+          "@value": "INFARMED",
+          "xsd:annotation": {
+            "xsd:documentation": [
+              {
+                "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                "$": "Nome da entidade reguladora"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "@name": "regulatorCodeEnumType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Possíveis tipos de códigos utilizados pelas entidades reguladoras"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:NMTOKEN",
+        "xsd:enumeration": [
+          {
+            "@value": "CDM",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Infarmed - Código de Dispositivos Médicos"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "CMUH",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Infarmed - Código Medicamento Uso Humano"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "CPC",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Infarmed - Código Produtos Cosméticos"
+                }
+              ]
+            }
+          },
+          {
+            "@value": "CPL",
+            "xsd:annotation": {
+              "xsd:documentation": [
+                {
+                  "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                  "$": "Infarmed - Código Processo Licenciamentos"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "attachDocumentType",
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Tipo de attachment document"
+          }
+        ]
+      },
+      "xsd:restriction": {
+        "@base": "xsd:string",
+        "xsd:minLength": {
+          "@value": 1,
+          "@fixed": false
+        },
+        "xsd:pattern": {
+          "@value": "(true|false)"
+        }
+      }
+    }
+  ],
+  "xsd:complexType": [
+    {
+      "@name": "postCodeType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Código postal suportando os seguintes formatos: \n\t\t#####\n\t\t####\n\t\t### ##\n\t\t####-###\n\t\t##-###\n\t\tX-####\n\t\tXX## #XX\n\t\tXX# #XX\n\t\tX#X #X#\n\t\tX## XXX#\n        X## ****\n        D6W ****\n\t\t(#=número; X=Letra; *=número ou letra)\n\t\tUK postcode\n\t\tNL postcode"
+          }
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:element": [
+          {
+            "@name": "zip",
+            "@maxOccurs": 1,
+            "@minOccurs": 1,
+            "@nillable": false,
+            "xsd:simpleType": {
+              "xsd:restriction": {
+                "@base": "nonEmptyString",
+                "xsd:minLength": {
+                  "@value": 1,
+                  "@fixed": false
+                },
+                "xsd:maxLength": {
+                  "@value": 10,
+                  "@fixed": false
+                },
+                "xsd:pattern": {
+                  "@value": "([0-9]{4}\\-[A-Z]{0,3})|([0-9]{3} [0-9]{2}|[0-9]{2}\\-[0-9]{3}|[0-9]{5}|[0-9]{4}|[0-9]{4}\\-[0-9]{3}|(\\d{4} [A-Z]{2})|([A-Z]{2}[0-9]{2})|([A-Z]{1}\\d{1}[A-Z]{1} \\d{1}[A-Z]{1}\\d{1})|([0-9]{1}[A-Z]{2})|(\\d{4} [A-Z]{2} \\d{2})|((([A-PR-UWYZ][0-9][0-9A-HJKS-UW]?)|([A-PR-UWYZ][A-HK-Y][0-9][0-9ABEHMNPRV-Y]?))\\s{0,2}[0-9]([ABD-HJLNP-UW-Z]{2}))|(GIR\\s{0,2}0AA))|([0-9]{6})|(D[0-9]{2})|(D[0-9]{1})|([0-9]{5}\\-[0-9]{3})|([A-Z]-\\d{4})|(\\d{4,4}|\\d{4,4}.\\d{4,4})|([0-9]{3})|([A-Z]\\d{2} [A-Z]{3}\\d)|([A-Z][0-9]{2} [A-Za-z0-9]{4}|D6W [A-Za-z0-9]{4})"
+                }
+              }
+            }
+          },
+          {
+            "@name": "area",
+            "@maxOccurs": 1,
+            "@minOccurs": 1,
+            "@nillable": false,
+            "xsd:simpleType": {
+              "xsd:restriction": {
+                "@base": "nonEmptyString",
+                "xsd:maxLength": {
+                  "@value": 50,
+                  "@fixed": false
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "entityIdType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Identificador de entidades."
+        ]
+      },
+      "xsd:simpleContent": {
+        "xsd:extension": {
+          "@base": "nonEmptyString",
+          "xsd:attribute": [
+            {
+              "@name": "entityIdTypeCoded",
+              "@type": "entityIdTypeEnumType",
+              "@use": "required",
+              "xsd:annotation": {
+                "xsd:documentation": [
+                  {
+                    "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                    "$": "Tipo de identificador da entidade"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "@name": "extensionType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipo de dados para criar pontos de extensão."
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:any": {
+          "@namespace": "##any",
+          "@processContents": "lax",
+          "@minOccurs": 0,
+          "@maxOccurs": "unbounded"
+        }
+      }
+    },
+    {
+      "@name": "binaryAttachmentType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipo de dados para conter anexos binários. O conteúdo deste elemento deve estar codificado em Base64"
+        ]
+      },
+      "xsd:simpleContent": {
+        "xsd:extension": {
+          "@base": "base64Type",
+          "xsd:attribute": [
+            {
+              "@name": "name",
+              "@type": "descriptionType",
+              "@use": "optional",
+              "xsd:annotation": {
+                "xsd:documentation": [
+                  {
+                    "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                    "$": "O nome do ficheiro."
+                  }
+                ]
+              }
+            },
+            {
+              "@name": "contentType",
+              "@type": "contentTypeType",
+              "@use": "required",
+              "xsd:annotation": {
+                "xsd:documentation": [
+                  {
+                    "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                    "$": "O tipo de conteúdo segundo as definições de MIME. Identifica o formato do ficheiro binário anexado. Exemplos válidos: text/plain application/pdf image/jpeg"
+                  }
+                ]
+              }
+            },
+            {
+              "@name": "documentNumber",
+              "@type": "xsd:string",
+              "@use": "optional",
+              "xsd:annotation": {
+                "xsd:documentation": [
+                  "Número do documento anexado, caso se aplique"
+                ]
+              }
+            },
+            {
+              "@name": "documentTypeCode",
+              "@type": "sharedDocumentInAttachEnumType",
+              "@use": "optional",
+              "xsd:annotation": {
+                "xsd:documentation": [
+                  "Identificação do tipo do documento anexado."
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "@name": "binaryDocumentType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipo de dados para conter anexos binários. O conteúdo deste elemento deve estar codificado em Base64"
+        ]
+      },
+      "xsd:simpleContent": {
+        "xsd:extension": {
+          "@base": "base64Type",
+          "xsd:attribute": [
+            {
+              "@name": "name",
+              "@type": "descriptionType",
+              "@use": "optional",
+              "xsd:annotation": {
+                "xsd:documentation": [
+                  {
+                    "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                    "$": "O nome do ficheiro."
+                  }
+                ]
+              }
+            },
+            {
+              "@name": "contentType",
+              "@type": "contentTypeType",
+              "@use": "required",
+              "xsd:annotation": {
+                "xsd:documentation": [
+                  {
+                    "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+                    "$": "O tipo de conteúdo segundo as definições de MIME. Identifica o formato do ficheiro binário anexado. Exemplos válidos: text/plain application/pdf image/jpeg"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "@name": "addressInformationType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipo de dados para moradas completas."
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:element": [
+          {
+            "@name": "address",
+            "@type": "addressType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Rua/Avenida"
+              ]
+            }
+          },
+          {
+            "@name": "otherAddres",
+            "@type": "addressType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Complemento da morada (Edificio, Lugar, etc...)"
+              ]
+            }
+          },
+          {
+            "@name": "city",
+            "@type": "cityType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Nome da cidade."
+              ]
+            }
+          },
+          {
+            "@name": "postalCode",
+            "@type": "postCodeType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Código postal."
+              ]
+            }
+          },
+          {
+            "@name": "countryCode",
+            "@type": "countryCodeType",
+            "@maxOccurs": 1,
+            "@minOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Código do país segundo ISO 3166-1 alpha 2"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "contactInformationType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipo de dados para contactos."
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:element": [
+          {
+            "@name": "phone",
+            "@type": "phoneContactType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Número de telefone"
+              ]
+            }
+          },
+          {
+            "@name": "fax",
+            "@type": "phoneContactType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Número de fax."
+              ]
+            }
+          },
+          {
+            "@name": "email",
+            "@type": "emailContactType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Endereço de email."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "companyInformationType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipo de dados para dados de empresa/parceiro."
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:element": [
+          {
+            "@name": "id",
+            "@type": "entityIdType",
+            "@maxOccurs": "unbounded",
+            "@minOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Identificação da empresa."
+              ]
+            }
+          },
+          {
+            "@name": "name",
+            "@type": "entityNameType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Nome da empresa"
+              ]
+            }
+          },
+          {
+            "@name": "addressInformation",
+            "@type": "addressInformationType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Morada completa"
+              ]
+            }
+          },
+          {
+            "@name": "contactInformation",
+            "@type": "contactInformationType",
+            "@minOccurs": 0,
+            "@maxOccurs": "unbounded",
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Contactos."
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@name": "documentLocationType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          {
+            "@{http://www.w3.org/XML/1998/namespace}lang": "pt",
+            "$": "Informação de localização do documento"
+          }
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:element": [
+          {
+            "@name": "locationURL",
+            "@type": "xsd:anyURI",
+            "@nillable": false,
+            "@maxOccurs": 1,
+            "@minOccurs": 1
+          },
+          {
+            "@name": "description",
+            "@type": "nonEmptyString",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false
+          }
+        ]
+      }
+    },
+    {
+      "@name": "baseDocumentType",
+      "@abstract": true,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipo de dados de onde derivam todos os tipos de documentos. Não pode ser instânciado directamente."
+        ]
+      }
+    },
+    {
+      "@name": "emailNotificationType",
+      "@abstract": false,
+      "@mixed": false,
+      "xsd:annotation": {
+        "xsd:documentation": [
+          "Tipo de dados para notificações email."
+        ]
+      },
+      "xsd:sequence": {
+        "@maxOccurs": 1,
+        "@minOccurs": 1,
+        "xsd:element": [
+          {
+            "@name": "email",
+            "@type": "emailContactType",
+            "@maxOccurs": 1,
+            "@minOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Endereço de email."
+              ]
+            }
+          },
+          {
+            "@name": "attachDocument",
+            "@type": "attachDocumentType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Enviar documento em anexon (true | false)"
+              ]
+            }
+          },
+          {
+            "@name": "languageCode",
+            "@type": "languageCodeType",
+            "@minOccurs": 0,
+            "@maxOccurs": 1,
+            "@nillable": false,
+            "xsd:annotation": {
+              "xsd:documentation": [
+                "Idioma."
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

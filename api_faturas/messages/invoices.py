@@ -65,7 +65,7 @@ class HandleInvoices:
         # Check if the query was successful
         if result_query['status'] == 'success':
             # Get the path of the json mapping file
-            mapping_file_path = Path(settings.BASE_DIR / 'mapping_xml.json')
+            mapping_file_path = Path(settings.MAPPING_JSON_FOLDER / 'mapping_xml.json')
 
             # Process the invoices
             result_data = result_query['data']

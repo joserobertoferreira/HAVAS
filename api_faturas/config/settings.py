@@ -16,6 +16,10 @@ API_PASSWORD = os.environ.get('API_PASSWORD', 'admin')
 
 FOLDER_XML_IN = os.environ.get('FOLDER_XML_IN', BASE_DIR / 'uploads')
 FOLDER_XML_OUT = os.environ.get('FOLDER_XML_OUT', BASE_DIR / 'downloads')
+FOLDER_XML_ERROR = os.environ.get('FOLDER_XML_ERROR', BASE_DIR / 'errors')
+
+MAPPING_JSON_FOLDER = BASE_DIR / 'schemas' / 'json'
+MAPPING_XSD_FOLDER = BASE_DIR / 'schemas' / 'xsd' / 'maindoc'
 
 SENDER = os.environ.get('SENDER', 'admin')
 RECEIVER = os.environ.get('RECEIVER', 'urn:netdoc:qa')
