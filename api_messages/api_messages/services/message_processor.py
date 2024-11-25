@@ -60,11 +60,12 @@ class MessageProcessorService:
     def process_messages(file_services: FileHandlerService, work_path: str) -> Any:
         return ProcessedMessage.process_messages(file_services, work_path)
 
+    @staticmethod
     def log_status_and_errors(
-        self, status_list: list[str], errors_list: list[str]
+        xml_handler: HandleXML, status_list: list[str], errors_list: list[str]
     ) -> None:
         if errors_list:
-            ProcessedMessage.log_errors(self.handle_xml, errors_list)
+            ProcessedMessage.log_document(xml_handler, errors_list, 'documentError')
 
         if status_list:
-            ProcessedMessage.log_status(self.handle_xml, status_list)
+            ProcessedMessage.log_document(xml_handler, status_list, 'information')

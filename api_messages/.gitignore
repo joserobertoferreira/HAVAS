@@ -188,5 +188,6 @@ pyrightconfig.json
 __localcode
 static/
 media/
+archive/
 
 # End of https://www.toptal.com/developers/gitignore/api/python

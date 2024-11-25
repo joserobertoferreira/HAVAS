@@ -87,11 +87,11 @@ class Messages:
 
                 payload = {
                     'NUM_0': data_log['document_number'],
-                    'NUMLIG_0': 0,
+                    'NUMLIG_0': data_log['info_index'],
                     'STATUT_0': data_log['status'],
-                    'ERRORCODE_0': data_log['error_code'],
-                    'NOTE_0': data_log['error_note'],
-                    'CREDATTIM_0': current_date,
+                    'ERRORCODE_0': data_log['info_code'],
+                    'NOTE_0': data_log['info_note'],
+                    'CREDATTIM_0': data_log['document_date'],
                     'UPDDATTIM_0': current_date,
                     'AUUID_0': uuid.uuid4(),
                     'CREUSR_0': 'INTER',

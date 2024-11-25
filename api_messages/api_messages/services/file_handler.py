@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Any, Dict
 
 from utils.handle_files import HandleFiles
@@ -19,8 +20,14 @@ class FileHandlerService:
     def generate_base64_strings(self, xml_list: list) -> dict:
         return self.file_handler.generate_base64_strings(xml_list)
 
-    def move_file(self, file: str) -> None:
-        self.file_handler.move_file(file)
+    def move_file(
+        self,
+        file: str,
+        input_folder: str | Path = None,
+        output_folder: str | Path = None,
+        month_folder: bool = False,
+    ) -> None:
+        self.file_handler.move_file(file, input_folder, output_folder, month_folder)
 
     def create_message_files(self, messages: list[Dict[str, Any]]) -> None:
         self.file_handler.create_message_files(messages)

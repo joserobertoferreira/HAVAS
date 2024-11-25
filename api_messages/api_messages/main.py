@@ -3,26 +3,11 @@ from messages.download import DownloadMessages
 from services.authentication import AuthenticationService
 from services.file_handler import FileHandlerService
 from services.message_processor import MessageProcessorService
+from utils.handle_files import HandleFiles
 
 
 def api_messages():
     # Check if exists messages to be retrieved
-
-    # Read the xml message files and process them
-    file_handler = FileHandlerService(
-        settings.BASE_DIR, settings.FOLDER_XML_IN, settings.FOLDER_XML_OUT
-    )
-
-    status_list, errors_list = MessageProcessorService().process_messages(
-        file_handler, settings.FOLDER_XML_OUT
-    )
-
-    # Log the status and errors
-    MessageProcessorService(input_folder=settings.FOLDER_XML_OUT).log_status_and_errors(
-        status_list, errors_list
-    )
-
-    return
 
     # Get the authentication token
     auth_service = AuthenticationService()
@@ -56,14 +41,26 @@ def api_messages():
                 file_handler.create_message_files(messages)
 
                 # Read the xml message files and process them
-                status_list, errors_list = MessageProcessorService().process_messages(
+                message = MessageProcessorService()
+
+                status_list, errors_list, put_away_files = message.process_messages(
                     file_handler, settings.FOLDER_XML_OUT
                 )
 
                 # Log the status and errors
-                MessageProcessorService().log_status_and_errors(
-                    settings.FOLDER_XML_OUT, status_list, errors_list
+                message.handle_xml.folder_input = settings.FOLDER_XML_OUT
+
+                message.log_status_and_errors(
+                    message.handle_xml, status_list, errors_list
                 )
+
+                # Move to archive folder
+                for xml_file in status_list + errors_list + put_away_files:
+                    HandleFiles.move_file(
+                        xml_file,
+                        settings.FOLDER_XML_OUT,
+                        settings.FOLDER_XML_OUT / 'archive',
+                    )
 
 
 if __name__ == '__main__':

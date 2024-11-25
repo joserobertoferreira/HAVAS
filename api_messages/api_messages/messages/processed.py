@@ -45,6 +45,7 @@ class ProcessedMessage:
 
         status_files = []
         errors_files = []
+        put_away_files = []
 
         # Check if exists files to be processed
         xml_list = file_services.check_for_xml_files(work_path)
@@ -54,19 +55,24 @@ class ProcessedMessage:
                 status_files.append(xml_file)
             elif 'DOCSTS_ERROR' in xml_file:
                 errors_files.append(xml_file)
+            else:
+                put_away_files.append(xml_file)
 
-        return status_files, errors_files
+        return status_files, errors_files, put_away_files
 
     @staticmethod
-    def log_errors(xml_handler: object, errors_list: list[str]) -> None:
+    def log_document(
+        xml_handler: object, document_list: list[str], document_type: str
+    ) -> None:
         # Process the errors files
-        for error in errors_list:
-            errors = xml_handler.convert_xml_to_dict(error)
+        for document in document_list:
+            documents = xml_handler.convert_xml_to_dict(document)
 
-            if errors:
-                message = errors.get('msg:message', {})
+            if documents:
+                message = documents.get('msg:message', {})
 
                 if message:
+                    document_date = message.get('@creationDateTime', '')
                     document_status = message.get('doc:documentStatus', {})
 
                     if document_status:
@@ -74,48 +80,21 @@ class ProcessedMessage:
                         status_information = document_status.get('statusInformation', {})
 
                         status = status_information.get('status', '')
-                        document_error = status_information.get('documentError', {})
+                        document_info = status_information.get(document_type, {})
 
-                        error_code = document_error.get('code', '')
-                        error_note = document_error.get('note', '')
+                        if isinstance(document_info, dict):
+                            document_info = [document_info]
 
-                        # Log the error
-                        Messages.update_log({
-                            'document_number': document_number,
-                            'status': status,
-                            'error_code': error_code,
-                            'error_note': error_note,
-                        })
+                        for index, info in enumerate(document_info):
+                            info_code = info.get('code', '')
+                            info_note = info.get('note', '')
 
-    @staticmethod
-    def log_status(xml_handler: object, status_list: list[str]) -> None:
-        # Process the status files
-        for statut in status_list:
-            statuts = xml_handler.convert_xml_to_dict(statut)
-
-            if statuts:
-                message = statuts.get('msg:message', {})
-
-                if message:
-                    document_status = message.get('doc:documentStatus', {})
-
-                    if document_status:
-                        document_number = document_status.get('@documentNumber', '')
-                        status_information = document_status.get('statusInformation', {})
-
-                        status = status_information.get('status', '')
-                        document_error = status_information.get('documentError', {})
-
-                        error_code = document_error.get('code', '')
-                        error_note = document_error.get('note', '')
-
-                        # Log the status
-                        try:
+                            # Log each information separately
                             Messages.update_log({
                                 'document_number': document_number,
+                                'document_date': document_date,
                                 'status': status,
-                                'error_code': error_code,
-                                'note': error_note,
+                                'info_code': info_code,
+                                'info_note': info_note,
+                                'info_index': index,
                             })
-                        except Exception as e:
-                            print(f'Error logging status: {e}')

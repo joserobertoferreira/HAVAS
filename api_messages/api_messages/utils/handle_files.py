@@ -109,13 +109,27 @@ class HandleFiles:
             print(f'An error occurred while deleting the file: {e}')
             return False
 
-    def move_file(self, file: str) -> None:
+    def move_file(
+        file: str,
+        input_folder: str | Path = None,
+        output_folder: str | Path = None,
+        month_folder: bool = False,
+    ) -> None:
         # Get the full path of the file to move
-        file_to_move = Path(self.folder_input) / file
+        # if not input_folder:
+        #     file_to_move = Path(self.folder_input) / file
+        # else:
+        file_to_move = Path(input_folder) / file
 
-        # Create the output folder with the current year and month
-        year_month_folder = datetime.now().strftime('%Y%m')
-        output_path = Path(self.folder_output) / year_month_folder
+        # if not output_folder:
+        #     output_path = Path(self.folder_output)
+        # else:
+        output_path = Path(output_folder)
+
+        if month_folder:
+            # Create the output folder with the current year and month
+            year_month_folder = datetime.now().strftime('%Y%m')
+            output_path /= year_month_folder
 
         # Check if the folder exists
         if not output_path.is_dir():
@@ -182,12 +196,12 @@ class HandleFiles:
             try:
                 file_name = message['ResultData']['Filename']
                 base64_data = message['ResultData']['Base64Data']
-                content_type = message['ResultData']['ContentType']
+                # content_type = message['ResultData']['ContentType']
 
-                suffix = mimetypes.guess_extension(content_type) or '.bin'
+                # suffix = mimetypes.guess_extension(content_type) or '.bin'
 
                 file_data = base64.b64decode(base64_data)
-                file_path = output_path / f'{file_name}{suffix}'
+                file_path = output_path / file_name
 
                 with file_path.open('wb') as file:
                     file.write(file_data)
