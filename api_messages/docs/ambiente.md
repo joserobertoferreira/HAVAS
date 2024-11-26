@@ -7,12 +7,14 @@ Os ficheiros deverão ser separados por ; (ponto-e-vírgula) e possuir a extens�
 
 ## Dossier X3
 
-Os ficheiros serão depositados no dossier _MIGRAÇÃO_, que está no caminho `D:\Sage\SAGEX3V12\Folders\MIGRACAO`
+{{ folders.dossier }}
+
+Os ficheiros serão depositados no dossier _{{ folders.dossier }}_, que está no caminho `D:\Sage\SAGEX3V12\Folders\{{ folders.dossier }}`
 
 As pastas utilizadas para a integração serão:
 
-````
-D:\Sage\SAGEX3V12\Folders\MIGRACAO
+```
+D:\Sage\SAGEX3V12\Folders\{{ folders.dossier }}
 +---HAVAS
 |   +---ANEXOS
 |   |   +---202407
@@ -49,8 +51,8 @@ D:\Sage\SAGEX3V12\Folders\MIGRACAO
 |           +---202411
 |                   FT-0132400003.xml
 |                   FT-0132400008.xml
-|                   FT-0132400011.xml```
-````
+|                   FT-0132400011.xml
+```
 
 ### Pasta ANEXOS
 

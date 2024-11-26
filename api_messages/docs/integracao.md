@@ -3,7 +3,7 @@
 <p class="docX3">A integração acontecerá de forma automática através da execução das tarefas batch do X3.</p>
 
 <p class="docX3">Para garantir que a execução das funções aconteça de forma ordenada, foram criadas 8 assinaturas de execução. Cada
-uma delas é executada no intervalo de 30 minutos e chamam o grupo de tarefas ZINTEDI.</p>
+uma delas é executada no intervalo de {{ folders.intervalo }} minutos e chamam o grupo de tarefas ZINTEDI.</p>
 
 <p class="docX3">O grupo ZINTEDI é formado pelas tarefas:</p>
 
@@ -26,6 +26,10 @@ O ficheiro deve possuir 3 blocos, sendo 2 deles obrigatórios e 1 opcional.
 Os blocos obrigatórios são o de cabeçalho, identificado pela letra **A** e o de linhas, identificado pela letra **L**.
 
 O bloco opcional refere-se aos elementos de faturação e caso existam deverão ser identificados pela letra **R**.
+
+!!! tip "Sobre os indicadores"
+
+    Os indicadores devem respeitar sempre a seguinte ordem: A - L - R.
 
 ### Estrutura
 

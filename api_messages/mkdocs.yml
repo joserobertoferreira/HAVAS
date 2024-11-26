@@ -56,5 +56,13 @@ markdown_extensions:
   - admonition
   - footnotes
 
+plugins:
+  - macros
+
+extra:
+  folders:
+    dossier: MIGRACAO
+    intervalo: 5
+
 extra_css:
   - stylesheets/extra.css
