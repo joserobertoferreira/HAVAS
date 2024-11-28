@@ -40,7 +40,7 @@ class Messages:
         return json_response['IsValid']
 
     @staticmethod
-    def update_database(file: str) -> bool:
+    def update_invoice(document_number: str) -> bool:
         with DatabaseConnection(
             settings.DB_SERVER,
             settings.DB_DATABASE,
@@ -49,8 +49,8 @@ class Messages:
         ) as db:
             # Update table ZSINVOICEV
             table_name = f'{settings.DB_SCHEMA}.ZSINVOICEV'
-            set_columns = {'ZSTATUS_0': 7}
-            where_clause = {'NUMX3_0': Condition('=', f'{file[:8]}/{file[8:]}')}
+            set_columns = {'ZSTATUS_0': 8}
+            where_clause = {'NUMX3_0': Condition('=', document_number)}
 
             response = db.execute_update(
                 table_name,
@@ -62,7 +62,7 @@ class Messages:
                 # Update table ZLOGFAT
                 table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
                 set_columns = {'STATUT_0': 7}
-                where_clause = {'SIHNUM_0': Condition('=', f'{file[:8]}/{file[8:]}')}
+                where_clause = {'SIHNUM_0': Condition('=', document_number)}
 
                 response = db.execute_update(
                     table_name,
@@ -101,6 +101,9 @@ class Messages:
                 response = db.execute_insert(table_name, payload)
 
                 if response['status'] == 'success':
+                    if data_log['status'] == 'ACCEPTED':
+                        Messages.update_invoice(data_log['document_number'])
+
                     print(f'Log inserted for file {payload["NUM_0"]}.')
                 else:
                     print(f'Failed to insert log for file {payload["NUM_0"]}.')
