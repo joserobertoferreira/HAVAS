@@ -62,10 +62,16 @@ class MessageProcessorService:
 
     @staticmethod
     def log_status_and_errors(
-        xml_handler: HandleXML, status_list: list[str], errors_list: list[str]
+        xml_handler: HandleXML,
+        status_list: list[str],
+        errors_list: list[str],
+        sent_list: list[str],
     ) -> None:
-        if errors_list:
-            ProcessedMessage.log_document(xml_handler, errors_list, 'documentError')
+        if sent_list:
+            ProcessedMessage.log_document(xml_handler, sent_list, 'documentSent')
 
         if status_list:
             ProcessedMessage.log_document(xml_handler, status_list, 'information')
+
+        if errors_list:
+            ProcessedMessage.log_document(xml_handler, errors_list, 'documentError')

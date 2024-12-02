@@ -43,19 +43,27 @@ def api_messages():
                 # Read the xml message files and process them
                 message = MessageProcessorService()
 
-                status_list, errors_list, put_away_files = message.process_messages(
-                    file_handler, settings.FOLDER_XML_OUT
-                )
+                lists = message.process_messages(file_handler, settings.FOLDER_XML_OUT)
+
+                for key, value in lists.items():
+                    if key == 'status':
+                        status_list = value
+                    elif key == 'errors':
+                        errors_list = value
+                    elif key == 'sent':
+                        sent_list = value
+                    elif key == 'put_away':
+                        put_away_files = value
 
                 # Log the status and errors
                 message.handle_xml.folder_input = settings.FOLDER_XML_OUT
 
                 message.log_status_and_errors(
-                    message.handle_xml, status_list, errors_list
+                    message.handle_xml, status_list, errors_list, sent_list
                 )
 
                 # Move to archive folder
-                for xml_file in status_list + errors_list + put_away_files:
+                for xml_file in status_list + errors_list + sent_list + put_away_files:
                     HandleFiles.move_file(
                         xml_file,
                         settings.FOLDER_XML_OUT,
