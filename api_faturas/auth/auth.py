@@ -3,6 +3,8 @@ from typing import Any, Dict
 
 import requests
 
+SERVER_ERROR_CODE = 500
+
 
 class Auth:
     def __init__(self, base_url: str) -> None:
@@ -36,6 +38,9 @@ class Auth:
 
         response = requests.get(service_url, headers=headers)
 
-        json_response = json.loads(response.text)
+        if response.status_code < SERVER_ERROR_CODE:
+            json_response = json.loads(response.text)
 
-        return json_response['ResultCode']
+            return json_response['ResultCode']
+
+        return 0

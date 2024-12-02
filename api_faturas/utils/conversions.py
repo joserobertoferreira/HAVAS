@@ -89,13 +89,14 @@ class Conversions:
 
     @staticmethod
     def convert_file_to_base64(file_path: str, file_name: str) -> str:
-        file_attributes = Path(file_path / file_name)
+        file_attributes = Path(file_path) / file_name
 
         base_string = ''
 
         # Open the file in binary mode and read its content
-        with file_attributes.open('rb') as file:
-            content = file.read()
-            base_string = base64.b64encode(content).decode('utf-8')
+        if file_attributes.is_file():
+            with file_attributes.open('rb') as file:
+                content = file.read()
+                base_string = base64.b64encode(content).decode('utf-8')
 
         return base_string

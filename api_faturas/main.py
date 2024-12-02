@@ -1,4 +1,5 @@
 from config import settings
+from messages.invoices import HandleInvoices
 from services.authentication import AuthenticationService
 from services.file_handler import FileHandlerService
 from services.message_processor import MessageProcessorService
@@ -6,7 +7,7 @@ from services.message_processor import MessageProcessorService
 
 def api_faturas() -> None:
     # Get the invoices to be processed and parse them to XML
-    # HandleInvoices.get_invoices()
+    HandleInvoices.get_invoices()
 
     # # Check if exists files to be processed
     file_handler = FileHandlerService(
@@ -19,9 +20,9 @@ def api_faturas() -> None:
         print('No files to be processed.')
 
     # Validate the XML files
-    for file in xml_list:
-        if not file_handler.validate_xml(file):
-            print(f'File {file} is not valid.')
+    # for file in xml_list:
+    #     if not file_handler.validate_xml(file):
+    #         print(f'File {file} is not valid.')
 
     # Generate the base64 strings
     for file, file_base64 in file_handler.generate_base64_strings(xml_list).items():
@@ -43,36 +44,6 @@ def api_faturas() -> None:
             if sent_message:
                 message_service.update_database(file)
                 file_handler.move_file(f'{file}.xml')
-
-    # Check if exists messages to be retrieved
-
-    # # Get the authentication token
-    # auth_service = AuthenticationService()
-    # token = auth_service.login(settings.API_USER, settings.API_PASSWORD)
-
-    # if token:
-    #     # Get the message list
-    #     message_list = MessageProcessorService(token).get_messages()
-
-    #     if len(message_list['Errors']) == 0:
-    #         # Download the messages
-    #         download = DownloadMessages(
-    #             settings.SERVER_BASE_ADDRESS, token['headers'], message_list['Messages']
-    #         )
-    #         messages = download.download_messages()
-
-    #         # Marking the message as processed
-    #         for message in messages:
-    #             processed = MessageProcessorService(token).mark_as_processed( # noqa: F841
-    #                 message['ResultData']
-    #             )
-
-    #         # Logout from API
-    #         auth_service.logout(token['Token'])
-
-    #         # Process the downloaded messages
-    #         if len(messages) != 0:
-    #             file_handler.create_message_files(messages)
 
 
 if __name__ == '__main__':

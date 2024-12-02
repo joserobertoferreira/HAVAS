@@ -1,6 +1,5 @@
 from typing import Any, Dict
 
-from config import settings
 from utils.conversions import Conversions
 
 
@@ -11,8 +10,7 @@ class SerializeXML:
     ):
         self.invoice = invoice
 
-    @staticmethod
-    def return_base64_value(placeholder: str) -> str:
+    def return_base64_value(self, placeholder: str) -> str:
         """Return a generic value for the placeholder."""
 
         base64_mapping = {
@@ -22,16 +20,10 @@ class SerializeXML:
         field_name = base64_mapping.get(placeholder)
 
         if field_name:
-            #            file_attributes = Path(self.data_cache.get(field_name))
+            full_filename = self.invoice.get(field_name)
             return Conversions.convert_file_to_base64(
-                settings.FOLDER_XML_IN, 'FT-0132400008.pdf'
+                file_path=full_filename.rpartition('\\')[0],
+                file_name=full_filename.rpartition('\\')[-1],
             )
-            # file_attributes = Path(settings.FOLDER_XML_IN / 'FT-0132400008.pdf')
-
-            # # Open the file in binary mode and read its content
-            # with file_attributes.open('rb') as file:
-            #     content = file.read()
-            #     base_string = base64.b64encode(content).decode('utf-8')
-            #     return base_string
 
         return ''
