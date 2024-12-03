@@ -16,7 +16,7 @@
 			Módulo com definições de tipos de dados para documentos de envio e receção de bens e serviços.
 		</xsd:documentation>
 	</xsd:annotation>
-	<xsd:include schemaLocation="D:/Python/Sage/Havas/api_faturas/schemas/xsd/common/ND-BaseComponents-1.1.xsd"/>
+	<xsd:include schemaLocation="../common/ND-BaseComponents-1.1.xsd"/>
 	<xsd:simpleType name="shipmentDateEnumType">
 		<xsd:annotation>
 			<xsd:documentation>Tipos de datas relativas a entregas</xsd:documentation>

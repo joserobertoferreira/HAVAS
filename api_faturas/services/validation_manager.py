@@ -1,7 +1,7 @@
 import os
 
 from utils.json.json_validator import JSONValidator
-from utils.xml.xml_parser import XMLParser
+from utils.xml.xsd_parser import XMLParser
 
 
 class ValidationManager:

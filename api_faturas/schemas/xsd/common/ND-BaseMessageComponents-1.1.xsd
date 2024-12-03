@@ -10,7 +10,7 @@
 
    Copyright (C) SAPHETY (2019). All Rights Reserved.
 -->
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="urn:netdocs:schemas:message" targetNamespace="urn:netdocs:schemas:message" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="1.1">
+<xsd:schema xmlns="urn:netdocs:schemas:message" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:netdocs:schemas:message" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="1.1">
 	<xsd:annotation>
 		<xsd:documentation xml:lang="pt">
 			Módulo com definições de tipos de dados comuns ao nível das mensagens.
@@ -19,7 +19,7 @@
 	<!-- ================== -->
 	<!-- ===== Includes   ===== -->
 	<!-- ================== -->
-	<xsd:include schemaLocation="D:/Python/Sage/Havas/api_faturas/schemas/xsd/common/ND-SharedBasicDataTypes_Message-1.1.xsd"/>
+	<xsd:include schemaLocation="../common/ND-SharedBasicDataTypes_Message-1.1.xsd"/>
 	<!-- =================== -->
 	<!-- ===== Elements   ===== -->
 	<!-- =================== -->
