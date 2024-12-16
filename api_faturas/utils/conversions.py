@@ -51,6 +51,21 @@ class Conversions:
             return Decimal(0)
 
     @staticmethod
+    def convert_to_datetime(
+        value: str, format: str = '%Y-%m-%dT%H:%M:%S.%f', default: bool = False
+    ) -> datetime:
+        try:
+            return datetime.strptime(value, format)
+        except ValueError as e:
+            print(e)
+
+            if default:
+                default = datetime(1900, 1, 1)
+                return datetime.strptime(default, format)
+
+            return None
+
+    @staticmethod
     def _convert_list(value: list) -> list:
         return [Conversions.convert_value(item) for item in value]
 
@@ -100,3 +115,18 @@ class Conversions:
                 base_string = base64.b64encode(content).decode('utf-8')
 
         return base_string
+
+    @staticmethod
+    def is_number(value):
+        try:
+            # Try to convert the value to a number (int or float)
+            float_value = float(value)
+
+            # Check if the converted number is an integer or decimal
+            if float_value.is_integer():
+                return 'integer'
+            else:
+                return 'decimal'
+        except ValueError:
+            # Return None if it's not possible to convert
+            return None

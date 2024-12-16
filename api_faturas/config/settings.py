@@ -19,7 +19,12 @@ FOLDER_XML_OUT = os.environ.get('FOLDER_XML_OUT', BASE_DIR / 'downloads')
 FOLDER_XML_ERROR = os.environ.get('FOLDER_XML_ERROR', BASE_DIR / 'errors')
 
 MAPPING_JSON_FOLDER = BASE_DIR / 'schemas' / 'json'
-MAPPING_XSD_FOLDER = BASE_DIR / 'schemas' / 'xsd' / 'maindoc'
+MAPPING_XML_VALIDATOR = (
+    BASE_DIR / 'schemas' / 'json' / 'validators' / 'validation_xml.json'
+)
+MAPPING_ENUM_VALIDATOR = (
+    BASE_DIR / 'schemas' / 'json' / 'validators' / 'validation_enum.json'
+)
 
 SENDER = os.environ.get('SENDER', 'admin')
 RECEIVER = os.environ.get('RECEIVER', 'urn:netdoc:qa')

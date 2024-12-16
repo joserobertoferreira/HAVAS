@@ -1,15 +1,27 @@
 import base64
 import mimetypes
-from datetime import datetime
+import shutil
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
 
+from utils.xml.validate_xml import ValidateXML
+
 
 class HandleFiles:
-    def __init__(self, base_folder: str, folder_input: str, folder_output: str):
+    def __init__(
+        self,
+        base_folder: str,
+        folder_input: str,
+        folder_output: str,
+        mapping_validator: str,
+        mapping_enumerator: str,
+    ):
         self.base_folder = base_folder
         self.folder_input = folder_input
         self.folder_output = folder_output
+        self.mapping_validator = mapping_validator
+        self.mapping_enumerator = mapping_enumerator
 
     def check_for_xml_files(self) -> list[str]:
         work_path = Path(self.folder_input)
@@ -37,6 +49,59 @@ class HandleFiles:
                 base64_strings[file_attributes.stem] = base_string
 
         return base64_strings
+
+    @staticmethod
+    def delete_file(
+        folder_input: str, file: str = '', is_directory: bool = False
+    ) -> bool:
+        """
+        Delete all files in a folder. Optionally, remove the folder itself.
+
+        Parameters:
+        folder_input (Path ou str): Path to the folder to be cleaned.
+        file (str): File to be deleted.
+        is_directory (bool): If True, the folder will also be removed after
+        deleting the files.
+
+        Returns:
+        bool: True if the operation was successful, False otherwise.
+        """
+        try:
+            # Convert the path to a Path object, if it is not already
+            path = Path(folder_input)
+
+            # Check if the path is a valid folder
+            if not path.exists() or not path.is_dir():
+                print(f'The folder {path} does not exist or is not a folder.')
+                return False
+
+            file_deleted = False
+
+            # If the file was passed, delete the file
+            if len(file) > 0:
+                if file == '*':
+                    for item in path.iterdir():
+                        if item.is_file():
+                            item.unlink()
+
+                    file_deleted = not any(path.iterdir())
+                else:
+                    file_path = path / file
+                    if file_path.is_file():
+                        file_path.unlink()
+
+                    file_deleted = not file_path.exists()
+
+            # Check if the folder should be removed
+            if is_directory:
+                shutil.rmtree(path)
+
+                file_deleted = path.is_dir()
+
+            return file_deleted
+        except Exception as e:
+            print(f'An error occurred while deleting the file: {e}')
+            return False
 
     def move_file(self, file: str) -> None:
         # Get the full path of the file to move
@@ -122,3 +187,19 @@ class HandleFiles:
                 print(f'Invalid Base64 content in file {file_name}.')
             except Exception as e:
                 print(f'An error occurred while processing {file_name}: {e}')
+
+    def validate_xml(self, file: str) -> bool:
+        # Validate o XML
+        mapper = ValidateXML(file, self.mapping_validator, self.mapping_enumerator)
+
+        return mapper.process_xml()
+
+    @staticmethod
+    def get_current_date_time() -> str:
+        """Get the current date and time in ISO format."""
+        return (
+            datetime.now(timezone.utc)
+            .replace(microsecond=0)
+            .isoformat()
+            .replace('+00:00', '.000')
+        )

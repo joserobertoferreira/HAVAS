@@ -1,0 +1,666 @@
+{
+  "message": {
+    "attributes": [
+      {
+        "id": {
+          "data_type": "string",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Código único, atribuído pelo emissor, que deve identificar univocamente cada mensagem"
+        },
+        "creationDateTime": {
+          "data_type": "datetime",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Data e hora de criação da mensagem no formato UTC (yyyy-MM-dd'T'HH:mm:ss.SSS'Z')"
+        }
+      }
+    ],
+    "sender": {
+      "id": {
+        "attributes": [
+          {
+            "entityIdTypeCoded": {
+              "data_type": "entityIdTypeEnumType",
+              "required": true,
+              "message": "Campo obrigatório",
+              "documentation": "Tipo de identificador da entidade"
+            }
+          }
+        ],
+        "value": {
+          "data_type": "string",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Código que identifica o emissor da fatura"
+        }
+      },
+      "addressInformation": {
+        "countryCode": {
+          "data_type": "countryCodeTypeEnum",
+          "required": false,
+          "message": "",
+          "documentation": "Código do país segundo ISO 3166-1 alpha 2"
+        }
+      }
+    },
+    "receiver": {
+      "id": {
+        "attributes": [
+          {
+            "entityIdTypeCoded": {
+              "data_type": "entityIdTypeEnumType",
+              "required": true,
+              "message": "Campo obrigatório",
+              "documentation": "Tipo de identificador da entidade"
+            }
+          }
+        ],
+        "value": {
+          "data_type": "string",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Código que identifica o emissor da fatura"
+        }
+      },
+      "addressInformation": {
+        "countryCode": {
+          "data_type": "countryCodeTypeEnum",
+          "required": false,
+          "message": "",
+          "documentation": "Código do país segundo ISO 3166-1 alpha 2"
+        }
+      }
+    }
+  },
+  "invoice": {
+    "attributes": [
+      {
+        "documentNumber": {
+          "data_type": "string",
+          "required": false,
+          "message": "",
+          "documentation": "Número do documento"
+        },
+        "documentDate": {
+          "data_type": "date",
+          "required": true,
+          "message": "Data do documento é obrigatória",
+          "documentation": "Data do documento"
+        }
+      }
+    ],
+    "seller": {
+      "id": {
+        "attributes": [
+          {
+            "entityIdTypeCoded": {
+              "data_type": "entityIdTypeEnumType",
+              "required": true,
+              "message": "Campo obrigatório",
+              "documentation": "Tipo de identificador da entidade"
+            }
+          }
+        ],
+        "value": {
+          "data_type": "string",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Código que identifica o emissor da fatura"
+        }
+      },
+      "name": {
+        "data_type": "nonEmptyString",
+        "required": false,
+        "maxLength": 100,
+        "message": "Campo obrigatório",
+        "documentation": "Nome do emissor"
+      },
+      "addressInformation": {
+        "address": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 200,
+          "message": "Campo obrigatório",
+          "documentation": "Endereço do emissor"
+        },
+        "city": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 50,
+          "message": "Campo obrigatório",
+          "documentation": "Cidade do emissor"
+        },
+        "postalCode": {
+          "zip": {
+            "data_type": "nonEmptyString",
+            "required": false,
+            "minLength": 1,
+            "maxLength": 10,
+            "pattern": "([0-9]{4}\\-[A-Z]{0,3})|([0-9]{3} [0-9]{2}|[0-9]{2}\\-[0-9]{3}|[0-9]{5}|[0-9]{4}|[0-9]{4}\\-[0-9]{3}|(\\d{4} [A-Z]{2})|([A-Z]{2}[0-9]{2})|([A-Z]{1}\\d{1}[A-Z]{1} \\d{1}[A-Z]{1}\\d{1})|([0-9]{1}[A-Z]{2})|(\\d{4} [A-Z]{2} \\d{2})|((([A-PR-UWYZ][0-9][0-9A-HJKS-UW]?)|([A-PR-UWYZ][A-HK-Y][0-9][0-9ABEHMNPRV-Y]?))\\s{0,2}[0-9]([ABD-HJLNP-UW-Z]{2}))|(GIR\\s{0,2}0AA))|([0-9]{6})|(D[0-9]{2})|(D[0-9]{1})|([0-9]{5}\\-[0-9]{3})|([A-Z]-\\d{4})|(\\d{4,4}|\\d{4,4}.\\d{4,4})|([0-9]{3})",
+            "message": "Código postal inválido",
+            "documentation": "Código postal"
+          },
+          "area": {
+            "data_type": "nonEmptyString",
+            "required": false,
+            "maxLength": 50,
+            "message": "",
+            "documentation": "Área do emissor"
+          }
+        },
+        "countryCode": {
+          "data_type": "countryCodeTypeEnum",
+          "required": false,
+          "message": "",
+          "documentation": "Código de país. Deve-se colocar aqui um código ISO 3166-1 alpha 2 válido"
+        }
+      },
+      "contactInformation": {
+        "phone": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 20,
+          "pattern": "((\\+\\d{1,3}(-| )?\\(?\\d\\)?(-| )?\\d{1,5})|(\\(?\\d{2,6}\\)?))(-| )?(\\d{3,4})(-| )?(\\d{4})(( x| ext)\\d{1,5}){0,1}",
+          "message": "Telefone inválido",
+          "documentation": "Número de telefone"
+        }
+      },
+      "vatNumber": {
+        "data_type": "string",
+        "required": true,
+        "minLength": 1,
+        "maxLength": 50,
+        "message": "",
+        "documentation": "Tipo de dados para números de contribuinte"
+      },
+      "commercialRegistrationNumber": {
+        "data_type": "nonEmptyString",
+        "required": false,
+        "maxLength": 50,
+        "message": "",
+        "documentation": "Número de registo comercial"
+      },
+      "commercialRegistrationLocation": {
+        "data_type": "nonEmptyString",
+        "required": false,
+        "maxLength": 50,
+        "message": "",
+        "documentation": "Conservatória do registo comercial"
+      },
+      "socialCapital": {
+        "data_type": "nonEmptyString",
+        "required": false,
+        "maxLength": 50,
+        "message": "",
+        "documentation": "Capital social"
+      }
+    },
+    "buyer": {
+      "id": {
+        "attributes": [
+          {
+            "entityIdTypeCoded": {
+              "data_type": "entityIdTypeEnumType",
+              "required": true,
+              "message": "Campo obrigatório",
+              "documentation": "Tipo de identificador da entidade"
+            }
+          }
+        ],
+        "value": {
+          "data_type": "string",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Código que identifica o emissor da fatura"
+        }
+      },
+      "name": {
+        "data_type": "nonEmptyString",
+        "required": false,
+        "maxLength": 100,
+        "message": "Campo obrigatório",
+        "documentation": "Nome do emissor"
+      },
+      "addressInformation": {
+        "address": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 200,
+          "message": "Campo obrigatório",
+          "documentation": "Endereço do emissor"
+        },
+        "city": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 50,
+          "message": "Campo obrigatório",
+          "documentation": "Cidade do emissor"
+        },
+        "postalCode": {
+          "zip": {
+            "data_type": "nonEmptyString",
+            "required": false,
+            "minLength": 1,
+            "maxLength": 10,
+            "pattern": "([0-9]{4}\\-[A-Z]{0,3})|([0-9]{3} [0-9]{2}|[0-9]{2}\\-[0-9]{3}|[0-9]{5}|[0-9]{4}|[0-9]{4}\\-[0-9]{3}|(\\d{4} [A-Z]{2})|([A-Z]{2}[0-9]{2})|([A-Z]{1}\\d{1}[A-Z]{1} \\d{1}[A-Z]{1}\\d{1})|([0-9]{1}[A-Z]{2})|(\\d{4} [A-Z]{2} \\d{2})|((([A-PR-UWYZ][0-9][0-9A-HJKS-UW]?)|([A-PR-UWYZ][A-HK-Y][0-9][0-9ABEHMNPRV-Y]?))\\s{0,2}[0-9]([ABD-HJLNP-UW-Z]{2}))|(GIR\\s{0,2}0AA))|([0-9]{6})|(D[0-9]{2})|(D[0-9]{1})|([0-9]{5}\\-[0-9]{3})|([A-Z]-\\d{4})|(\\d{4,4}|\\d{4,4}.\\d{4,4})|([0-9]{3})",
+            "message": "Código postal inválido",
+            "documentation": "Código postal"
+          },
+          "area": {
+            "data_type": "nonEmptyString",
+            "required": false,
+            "maxLength": 50,
+            "message": "",
+            "documentation": "Área do emissor"
+          }
+        },
+        "countryCode": {
+          "data_type": "countryCodeTypeEnum",
+          "required": false,
+          "message": "",
+          "documentation": "Código de país. Deve-se colocar aqui um código ISO 3166-1 alpha 2 válido"
+        }
+      },
+      "contactInformation": {
+        "phone": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 20,
+          "pattern": "((\\+\\d{1,3}(-| )?\\(?\\d\\)?(-| )?\\d{1,5})|(\\(?\\d{2,6}\\)?))(-| )?(\\d{3,4})(-| )?(\\d{4})(( x| ext)\\d{1,5}){0,1}",
+          "message": "Telefone inválido",
+          "documentation": "Número de telefone"
+        },
+        "email": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 100,
+          "pattern": "([a-zA-Z0-9_\\-\\.\\+])+@(([0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5])|((([a-zA-Z0-9\\-])+\\.)+([a-zA-Z\\-])+))",
+          "message": "Email inválido",
+          "documentation": "Formato para endereços de email"
+        }
+      },
+      "vatNumber": {
+        "data_type": "string",
+        "required": true,
+        "minLength": 1,
+        "maxLength": 50,
+        "message": "",
+        "documentation": "Tipo de dados para números de contribuinte"
+      }
+    },
+    "billTo": {
+      "id": {
+        "attributes": [
+          {
+            "entityIdTypeCoded": {
+              "data_type": "entityIdTypeEnumType",
+              "required": true,
+              "message": "Campo obrigatório",
+              "documentation": "Tipo de identificador da entidade"
+            }
+          }
+        ],
+        "value": {
+          "data_type": "string",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Código que identifica o emissor da fatura"
+        }
+      },
+      "name": {
+        "data_type": "nonEmptyString",
+        "required": false,
+        "maxLength": 100,
+        "message": "Campo obrigatório",
+        "documentation": "Nome do emissor"
+      },
+      "addressInformation": {
+        "address": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 200,
+          "message": "Campo obrigatório",
+          "documentation": "Endereço do emissor"
+        },
+        "city": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 50,
+          "message": "Campo obrigatório",
+          "documentation": "Cidade do emissor"
+        },
+        "postalCode": {
+          "zip": {
+            "data_type": "nonEmptyString",
+            "required": false,
+            "minLength": 1,
+            "maxLength": 10,
+            "pattern": "([0-9]{4}\\-[A-Z]{0,3})|([0-9]{3} [0-9]{2}|[0-9]{2}\\-[0-9]{3}|[0-9]{5}|[0-9]{4}|[0-9]{4}\\-[0-9]{3}|(\\d{4} [A-Z]{2})|([A-Z]{2}[0-9]{2})|([A-Z]{1}\\d{1}[A-Z]{1} \\d{1}[A-Z]{1}\\d{1})|([0-9]{1}[A-Z]{2})|(\\d{4} [A-Z]{2} \\d{2})|((([A-PR-UWYZ][0-9][0-9A-HJKS-UW]?)|([A-PR-UWYZ][A-HK-Y][0-9][0-9ABEHMNPRV-Y]?))\\s{0,2}[0-9]([ABD-HJLNP-UW-Z]{2}))|(GIR\\s{0,2}0AA))|([0-9]{6})|(D[0-9]{2})|(D[0-9]{1})|([0-9]{5}\\-[0-9]{3})|([A-Z]-\\d{4})|(\\d{4,4}|\\d{4,4}.\\d{4,4})|([0-9]{3})",
+            "message": "Código postal inválido",
+            "documentation": "Código postal"
+          },
+          "area": {
+            "data_type": "nonEmptyString",
+            "required": false,
+            "maxLength": 50,
+            "message": "",
+            "documentation": "Área do emissor"
+          }
+        },
+        "countryCode": {
+          "data_type": "countryCodeTypeEnum",
+          "required": false,
+          "message": "",
+          "documentation": "Código de país. Deve-se colocar aqui um código ISO 3166-1 alpha 2 válido"
+        }
+      },
+      "contactInformation": {
+        "phone": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 20,
+          "pattern": "((\\+\\d{1,3}(-| )?\\(?\\d\\)?(-| )?\\d{1,5})|(\\(?\\d{2,6}\\)?))(-| )?(\\d{3,4})(-| )?(\\d{4})(( x| ext)\\d{1,5}){0,1}",
+          "message": "Telefone inválido",
+          "documentation": "Número de telefone"
+        },
+        "email": {
+          "data_type": "nonEmptyString",
+          "required": false,
+          "maxLength": 100,
+          "pattern": "([a-zA-Z0-9_\\-\\.\\+])+@(([0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5])|((([a-zA-Z0-9\\-])+\\.)+([a-zA-Z\\-])+))",
+          "message": "Email inválido",
+          "documentation": "Formato para endereços de email"
+        }
+      },
+      "vatNumber": {
+        "data_type": "string",
+        "required": true,
+        "minLength": 1,
+        "maxLength": 50,
+        "message": "",
+        "documentation": "Tipo de dados para números de contribuinte"
+      }
+    }
+  },
+  "additionalDate": {
+    "attributes": [
+      {
+        "type": {
+          "data_type": "documentDateEnumType",
+          "required": false,
+          "message": "",
+          "documentation": "Tipos de datas relativas ao documento"
+        }
+      }
+    ],
+    "value": {
+      "data_type": "datetime",
+      "required": false,
+      "message": "",
+      "documentation": "Data adicional"
+    }
+  },
+  "reference": {
+    "attributes": [
+      {
+        "type": {
+          "data_type": "referenceEnumType",
+          "required": true,
+          "message": "",
+          "documentation": "Tipos de referência"
+        },
+        "referenceDocumentId": {
+          "data_type": "string",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Número do documento referenciado"
+        }
+      }
+    ]
+  },
+  "currencyCode": {
+    "data_type": "currencyCodeEnumType",
+    "required": true,
+    "message": "Campo obrigatório",
+    "documentation": "Código de moeda"
+  },
+  "discount": {
+    "attributes": [
+      {
+        "type": {
+          "data_type": "discountTypeEnumType",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Tipo de desconto"
+        },
+        "value": {
+          "data_type": "decimal",
+          "required": true,
+          "message": "Campo obrigatório",
+          "documentation": "Valor do desconto"
+        }
+      }
+    ]
+  },
+  "comment": {
+    "attributes": [
+      {
+        "id": {
+          "data_type": "string",
+          "required": false,
+          "message": "Campo obrigatório",
+          "documentation": "Código único, atribuído pelo emissor, que deve identificar univocamente cada mensagem"
+        }
+      }
+    ],
+    "value": {
+      "data_type": "string",
+      "required": false,
+      "message": "",
+      "documentation": "Usar este campo no caso de ser necessário identificar os comentários"
+    }
+  },
+  "senderSoftwareCertificationNumber": {
+    "data_type": "string",
+    "required": false,
+    "message": "",
+    "documentation": "Número do certificado do ERP atribuído pela DGCI."
+  },
+  "senderSoftwareDocumentSignatureHash": {
+    "data_type": "string",
+    "required": false,
+    "message": "",
+    "maxLength": 4,
+    "documentation": "Número correspondente à 1º, 11º, 21ª e 31ª do hash da assinatura"
+  },
+  "atCud": {
+    "data_type": "string",
+    "required": true,
+    "message": "",
+    "documentation": "Código único de documento"
+  },
+  "qrData": {
+    "qrText": {
+      "data_type": "string",
+      "required": false,
+      "message": "",
+      "documentation": "Informação do QRCode"
+    },
+    "qrImage": {
+      "attributes": [
+        {
+          "name": {
+            "data_type": "string",
+            "required": false,
+            "message": "",
+            "documentation": ""
+          },
+          "contentType": {
+            "data_type": "string",
+            "required": false,
+            "message": "",
+            "pattern": "image/(jpeg|png|gif|bmp|tiff|webp|svg\\+xml|jpg|svg)",
+            "documentation": "Tipo de dados para especificar o tipo de conteúdo de um ficheiro"
+          }
+        }
+      ],
+      "value": {
+        "data_type": "nonEmptyString",
+        "required": true,
+        "message": "",
+        "documentation": "String que representa a imagem do QRCode"
+      }
+    }
+  },
+  "lineItem": {
+    "attributes": [
+      {
+        "number": {
+          "data_type": "integer",
+          "required": true,
+          "message": "Número da linha é obrigatório",
+          "documentation": ""
+        }
+      }
+    ],
+    "sellerItemCode": {
+      "data_type": "nonEmptyString",
+      "required": true,
+      "message": "",
+      "documentation": "Código do artigo ou serviço atribuído pelo vendedor"
+    },
+    "description": {
+      "data_type": "nonEmptyString",
+      "required": true,
+      "message": "",
+      "documentation": "Descrição do artigo ou serviço"
+    },
+    "quantity": {
+      "value": {
+        "data_type": "integer",
+        "required": true,
+        "message": "",
+        "documentation": "Quantidade"
+      },
+      "unitOfMeasure": {
+        "data_type": "nonEmptyString",
+        "required": true,
+        "message": "Unidade de medida é obrigatória",
+        "maxLength": 50,
+        "documentation": "Unidade de medida"
+      }
+    },
+    "freeQuantity": {
+      "value": {
+        "data_type": "integer",
+        "required": true,
+        "message": "",
+        "documentation": "Quantidade"
+      },
+      "unitOfMeasure": {
+        "data_type": "nonEmptyString",
+        "required": true,
+        "message": "Unidade de medida é obrigatória",
+        "maxLength": 50,
+        "documentation": "Unidade de medida"
+      }
+    },
+    "netUnitPrice": {
+      "data_type": "decimal",
+      "required": true,
+      "message": "",
+      "documentation": "Preço unitário líquido"
+    },
+    "vatPercentage": {
+      "attributes": [
+        {
+          "vatExemptionReasonCode": {
+            "data_type": "string",
+            "required": true,
+            "message": "Código justificativo da isenção de imposto",
+            "documentation": ""
+          },
+          "vatExemptionReason": {
+            "data_type": "string",
+            "required": true,
+            "message": "Texto justificativo da isenção de imposto",
+            "documentation": ""
+          }
+        }
+      ],
+      "value": {
+        "data_type": "decimal",
+        "required": true,
+        "message": "",
+        "documentation": "Percentagem de IVA"
+      }
+    },
+    "vatAmount": {
+      "data_type": "decimal",
+      "required": true,
+      "message": "",
+      "documentation": "Montante líquido da linha"
+    }
+  },
+  "vatSummary": {
+    "attributes": [
+      {
+        "exemptionReasonCode": {
+          "data_type": "string",
+          "required": true,
+          "message": "Código justificativo da isenção de imposto",
+          "documentation": ""
+        },
+        "exemptionReason": {
+          "data_type": "string",
+          "required": true,
+          "message": "Texto justificativo da isenção de imposto",
+          "documentation": ""
+        }
+      }
+    ],
+    "vatPercentage": {
+      "data_type": "decimal",
+      "required": true,
+      "message": "",
+      "documentation": "Percentagem de IVA"
+    },
+    "vatAmount": {
+      "data_type": "decimal",
+      "required": true,
+      "message": "",
+      "documentation": "Montante de imposto"
+    },
+    "taxableAmount": {
+      "data_type": "decimal",
+      "required": true,
+      "message": "",
+      "documentation": "Base de incidência do imposto"
+    }
+  },
+  "totalVatAmount": {
+    "data_type": "decimal",
+    "required": true,
+    "message": "",
+    "documentation": "Tipo de dados para montante de IVA"
+  },
+  "totalTaxableAmount": {
+    "data_type": "decimal",
+    "required": true,
+    "message": "",
+    "documentation": "Base de incidência do imposto"
+  },
+  "totalNetAmount": {
+    "data_type": "decimal",
+    "required": true,
+    "message": "",
+    "documentation": "Montante líquido"
+  },
+  "totalPayableAmount": {
+    "data_type": "decimal",
+    "required": true,
+    "message": "",
+    "documentation": "Montante total a pagar"
+  }
+}
