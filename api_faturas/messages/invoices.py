@@ -57,9 +57,7 @@ class HandleInvoices:
                     'TOTAL_AMOUNT_0',
                     'DISCOUNT_0',
                 ],
-                # where_clauses={
-                #     'INVOICE_NUM_0': Condition('=', 'FT-01424/00046').as_tuple()
-                # },
+                where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00011')},
             )
 
         # Check if the query was successful
@@ -192,9 +190,9 @@ class HandleInvoices:
                         'WEB_0',
                     ],
                     where_clauses={
-                        'BPATYP_0': Condition('=', address_type).as_tuple(),
-                        'BPANUM_0': Condition('=', entity).as_tuple(),
-                        'BPAADD_0': Condition('=', address).as_tuple(),
+                        'BPATYP_0': Condition('=', address_type),
+                        'BPANUM_0': Condition('=', entity),
+                        'BPAADD_0': Condition('=', address),
                     },
                 )
 
@@ -230,8 +228,8 @@ class HandleInvoices:
                     'IMGQRC_0',
                 ],
                 where_clauses={
-                    'DOCTYP_0': Condition('=', invoice_type).as_tuple(),
-                    'DOCNUM_0': Condition('=', invoice_number).as_tuple(),
+                    'DOCTYP_0': Condition('=', invoice_type),
+                    'DOCNUM_0': Condition('=', invoice_number),
                 },
             )
 
@@ -270,7 +268,7 @@ class HandleInvoices:
                     'VAT_REASON_0',
                 ],
                 where_clauses={
-                    'INVOICE_NUM_0': Condition('=', invoice_number).as_tuple(),
+                    'INVOICE_NUM_0': Condition('=', invoice_number),
                 },
             )
 
@@ -304,7 +302,7 @@ class HandleInvoices:
                     'VAT_REASON_0',
                 ],
                 where_clauses={
-                    'INVOICE_NUM_0': Condition('=', invoice_number).as_tuple(),
+                    'INVOICE_NUM_0': Condition('=', invoice_number),
                 },
             )
 

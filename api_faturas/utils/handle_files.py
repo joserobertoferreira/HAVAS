@@ -5,23 +5,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
 
-from utils.xml.validate_xml import ValidateXML
-
 
 class HandleFiles:
-    def __init__(
-        self,
-        base_folder: str,
-        folder_input: str,
-        folder_output: str,
-        mapping_validator: str,
-        mapping_enumerator: str,
-    ):
+    def __init__(self, base_folder: str, folder_input: str, folder_output: str):
         self.base_folder = base_folder
         self.folder_input = folder_input
         self.folder_output = folder_output
-        self.mapping_validator = mapping_validator
-        self.mapping_enumerator = mapping_enumerator
 
     def check_for_xml_files(self) -> list[str]:
         work_path = Path(self.folder_input)
@@ -187,12 +176,6 @@ class HandleFiles:
                 print(f'Invalid Base64 content in file {file_name}.')
             except Exception as e:
                 print(f'An error occurred while processing {file_name}: {e}')
-
-    def validate_xml(self, file: str) -> bool:
-        # Validate o XML
-        mapper = ValidateXML(file, self.mapping_validator, self.mapping_enumerator)
-
-        return mapper.process_xml()
 
     @staticmethod
     def get_current_date_time() -> str:

@@ -4,6 +4,8 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+from dateutil import parser
+
 
 class Conversions:
     @staticmethod
@@ -51,19 +53,69 @@ class Conversions:
             return Decimal(0)
 
     @staticmethod
-    def convert_to_datetime(
-        value: str, format: str = '%Y-%m-%dT%H:%M:%S.%f', default: bool = False
-    ) -> datetime:
+    def convert_to_datetime(value: str, default: bool = False) -> datetime:
+        """
+        Convert a string to a datetime object in ISO UTC format.
+
+        Parameters:
+            value (str): String to be converted.
+            default (bool): Defines whether to return datetime(1900, 1, 1) in ISO UTC
+              format in case of error.
+
+        Returns:
+            str: The converted date in ISO UTC format, or datetime(1900, 1, 1) in case of
+              error (if default=True).
+        """
         try:
-            return datetime.strptime(value, format)
-        except ValueError as e:
-            print(e)
+            # First, try to convert directly to ISO format.
+            return parser.isoparse(value)
+        except (ValueError, TypeError):
+            pass
 
-            if default:
-                default = datetime(1900, 1, 1)
-                return datetime.strptime(default, format)
+        try:
+            # Try a generic conversion using dateutil.parser.parse.
+            return parser.parse(value)
+        except (ValueError, TypeError):
+            pass
 
-            return None
+        # If the string is empty or no conversion was possible.
+        if not value or default:
+            return datetime(1900, 1, 1)
+
+        # If no conversion is possible and default=False, return None.
+        return None
+
+    @staticmethod
+    def convert_to_date(value: str, default: bool = False) -> date:
+        """
+        Convert a string to a date object.
+
+        Parameters:
+            value (str): String to be converted.
+            default (bool): Defines whether to return date(1900, 1, 1) in case of error.
+
+        Returns:
+            date: The converted date object or date(1900, 1, 1) in case of error
+              (if default=True).
+        """
+        try:
+            # First, try to convert directly to ISO format and extract the date.
+            return parser.isoparse(value).date()
+        except (ValueError, TypeError):
+            pass
+
+        try:
+            # Try a generic conversion using dateutil.parser.parse and extract the date.
+            return parser.parse(value).date()
+        except (ValueError, TypeError):
+            pass
+
+        # If the string is empty or no conversion was possible.
+        if not value or default:
+            return date(1900, 1, 1)
+
+        # If no conversion is possible and default=False, return None.
+        return None
 
     @staticmethod
     def _convert_list(value: list) -> list:

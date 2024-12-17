@@ -110,10 +110,19 @@ class DatabaseConnection:
                     for row in cursor.fetchall()
                 ]
 
+                if not results:
+                    return {
+                        'status': 'success',
+                        'message': 'No results found',
+                        'records': len(results),
+                        'data': None,
+                    }
+
                 return {
                     'status': 'success',
                     'message': 'Query executed successfully',
                     'columns': columns_names,
+                    'records': len(results),
                     'data': results,
                 }
         except pyodbc.Error as e:

@@ -3,6 +3,7 @@ from messages.invoices import HandleInvoices
 from services.authentication import AuthenticationService
 from services.file_handler import FileHandlerService
 from services.message_processor import MessageProcessorService
+from utils.xml.validate_xml import ValidateXML
 
 
 def api_faturas() -> None:
@@ -11,11 +12,7 @@ def api_faturas() -> None:
 
     # # Check if exists files to be processed
     file_handler = FileHandlerService(
-        settings.BASE_DIR,
-        settings.FOLDER_XML_IN,
-        settings.FOLDER_XML_OUT,
-        settings.MAPPING_XML_VALIDATOR,
-        settings.MAPPING_ENUM_VALIDATOR,
+        settings.BASE_DIR, settings.FOLDER_XML_IN, settings.FOLDER_XML_OUT
     )
 
     xml_list = file_handler.check_for_xml_files()
@@ -24,8 +21,13 @@ def api_faturas() -> None:
         print('No files to be processed.')
 
     # Validate the XML files
+
     for file in xml_list[:]:
-        if not file_handler.validate_xml(file):
+        mapper = ValidateXML(
+            file, settings.MAPPING_XML_VALIDATOR, settings.MAPPING_ENUM_VALIDATOR
+        )
+        if not mapper.process_xml():
+            file_handler.delete_file(settings.FOLDER_XML_IN, file)
             xml_list.remove(file)
             print(f'File {file} is not valid.')
 

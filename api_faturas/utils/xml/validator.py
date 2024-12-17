@@ -5,7 +5,8 @@ from pathlib import Path
 
 from config import settings
 from database.database import Condition, DatabaseConnection
-from utils.conversions import Conversions, HandleFiles
+from utils.conversions import Conversions
+from utils.handle_files import HandleFiles
 
 
 class ValidatorData:
@@ -45,10 +46,10 @@ class ValidatorData:
             file_name = file.stem
 
             # Delete previous errors if exists
-            table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
+            table_name = f'{settings.DB_SCHEMA}.ZSAPHLOG'
             where_clause = {
-                'SIHNUM_0': Condition('=', f'{file_name[:8]}/{file_name[8:]}').as_tuple(),
-                'STATUT_0': Condition('=', 'ERROR').as_tuple(),
+                'NUM_0': Condition('=', f'{file_name[:8]}/{file_name[8:]}'),
+                'NUMLIG_0': Condition('>', 0),
             }
 
             db.execute_delete(table_name, where_clause)
@@ -67,26 +68,28 @@ class ValidatorData:
             settings.DB_PASSWORD,
         ) as db:
             document_number = f'{file.stem[:8]}/{file.stem[8:]}'
-            next_number = 0
+            records = 0
 
             # Read the last error number
             result_query = db.execute_query(
-                table=f'{settings.DB_SCHEMA}.ZLOGFAT',
+                table=f'{settings.DB_SCHEMA}.ZSAPHLOG',
                 columns=['NUMLIG_0'],
-                where_clauses={
-                    'SIHNUM_0': Condition('=', document_number).as_tuple(),
-                },
+                where_clauses={'NUM_0': Condition('=', document_number)},
                 order_by=('NUMLIG_0 DESC', 1),
             )
 
             # Check if the query was successful
             if result_query['status'] == 'success':
-                next_number = int(result_query['data'])
+                records = result_query.get('records', 0)
 
-            next_number += 1
+                if records > 0:
+                    for row in result_query['data']:
+                        records = row.get('NUMLIG_0', 0)
+
+            records += 1
 
             # Update table ZLOGFAT
-            table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
+            table_name = f'{settings.DB_SCHEMA}.ZSAPHLOG'
 
             if parent_process:
                 update_string = f'{parent_process} -> {process}: {message}'
@@ -97,7 +100,7 @@ class ValidatorData:
 
             payload = {
                 'NUM_0': document_number,
-                'NUMLIG_0': str(next_number),
+                'NUMLIG_0': records,
                 'STATUT_0': 'ERROR',
                 'ERRORCODE_0': 'VALIDATION',
                 'NOTE_0': update_string,
@@ -142,8 +145,8 @@ class Validator:
             'integer': lambda v: Validator._try_cast(v, int),
             'decimal': lambda v: Validator._try_cast(v, float),
             'boolean': lambda v: v in {'true', 'false', True, False},
-            'date': lambda v: Validator._try_date(v, '%Y-%m-%d'),
-            'datetime': lambda v: Validator._try_date(v, '%Y-%m-%dT%H:%M:%S.%f'),
+            'date': Validator._try_date,
+            'datetime': Validator._try_datetime,
             'enum': lambda v: v in self.config.get('enum', []),
             'pattern': lambda v: Validator._try_regex(v, self.config.get('pattern')),
         }
@@ -179,10 +182,16 @@ class Validator:
             return False
 
     @staticmethod
-    def _try_date(value, date_format):
-        date_time = Conversions.convert_to_datetime(value, date_format, default=False)
+    def _try_datetime(value):
+        converted_date = Conversions.convert_to_datetime(value)
 
-        return isinstance(date_time, (date, datetime)) and bool(date_time)
+        return isinstance(converted_date, datetime) and bool(converted_date)
+
+    @staticmethod
+    def _try_date(value):
+        converted_date = Conversions.convert_to_date(value)
+
+        return isinstance(converted_date, date) and bool(converted_date)
 
     @staticmethod
     def _try_regex(value, pattern):

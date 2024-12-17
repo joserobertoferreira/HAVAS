@@ -45,10 +45,12 @@ class Messages:
             settings.DB_USERNAME,
             settings.DB_PASSWORD,
         ) as db:
+            document_number = f'{file[:8]}/{file[8:]}'
+
             # Update table ZSINVOICEV
             table_name = f'{settings.DB_SCHEMA}.ZSINVOICEV'
             set_columns = {'ZSTATUS_0': 7}
-            where_clause = {'NUMX3_0': Condition('=', f'{file[:8]}/{file[8:]}')}
+            where_clause = {'NUMX3_0': Condition('=', document_number)}
 
             response = db.execute_update(
                 table_name,
@@ -57,10 +59,15 @@ class Messages:
             )
 
             if response['status'] == 'success':
-                # Update table ZLOGFAT
+                # Update record table ZLOGFAT
                 table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
                 set_columns = {'STATUT_0': 7}
-                where_clause = {'SIHNUM_0': Condition('=', f'{file[:8]}/{file[8:]}')}
+                where_clause = (
+                    {
+                        'NUM_0': Condition('=', document_number),
+                        'NUMLIG_0': Condition('=', 0),
+                    },
+                )
 
                 response = db.execute_update(
                     table_name,

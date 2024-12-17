@@ -4,17 +4,8 @@ from utils.handle_files import HandleFiles
 
 
 class FileHandlerService:
-    def __init__(
-        self,
-        base_dir: str,
-        folder_in: str,
-        folder_out: str,
-        mapping_validator: str,
-        mapping_enumerator: str,
-    ):
-        self.file_handler = HandleFiles(
-            base_dir, folder_in, folder_out, mapping_validator, mapping_enumerator
-        )
+    def __init__(self, base_dir: str, folder_in: str, folder_out: str):
+        self.file_handler = HandleFiles(base_dir, folder_in, folder_out)
 
     def check_for_xml_files(self) -> list:
         return self.file_handler.check_for_xml_files()
@@ -30,3 +21,8 @@ class FileHandlerService:
 
     def validate_xml(self, file: str) -> bool:
         return self.file_handler.validate_xml(file)
+
+    def delete_file(
+        self, work_path: str, file: str = '', delete_dir: bool = False
+    ) -> bool:
+        return self.file_handler.delete_file(work_path, file, delete_dir)
