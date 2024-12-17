@@ -40,7 +40,7 @@ class ProcessedMessage:
 
         return json_response['IsValid']
 
-    def process_messages(file_services: object, work_path: str) -> Dict[list[Any]]:
+    def process_messages(file_services: object, work_path: str) -> Dict[str, list[Any]]:
         """Process the downloaded messages"""
 
         status_files = []
