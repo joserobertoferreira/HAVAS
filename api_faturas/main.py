@@ -52,7 +52,7 @@ def api_faturas() -> None:
 
             # If the message was sent, update database and move the file to the output folder  # noqa: E501
             if sent_message:
-                message_service.update_database(file)
+                message_service.update_database(file, 7)
                 file_handler.move_file(f'{file}.xml')
 
 

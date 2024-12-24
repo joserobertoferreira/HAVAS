@@ -18,6 +18,7 @@ FOLDER_XML_IN = os.environ.get('FOLDER_XML_IN', BASE_DIR / 'uploads')
 FOLDER_XML_OUT = os.environ.get('FOLDER_XML_OUT', BASE_DIR / 'downloads')
 FOLDER_XML_ERROR = os.environ.get('FOLDER_XML_ERROR', BASE_DIR / 'errors')
 
+NO_SEND_XML = '3'
 MAPPING_JSON_FOLDER = BASE_DIR / 'schemas' / 'json'
 MAPPING_XML_VALIDATOR = (
     BASE_DIR / 'schemas' / 'json' / 'validators' / 'validation_xml.json'

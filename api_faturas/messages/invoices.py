@@ -3,6 +3,8 @@ from typing import Any, Dict
 
 from config import settings
 from database.database import Condition, DatabaseConnection
+from messages.messages import Messages
+from services.file_handler import FileHandlerService
 from utils.xml.handle_xml import HandleXML
 
 
@@ -57,7 +59,7 @@ class HandleInvoices:
                     'TOTAL_AMOUNT_0',
                     'DISCOUNT_0',
                 ],
-                where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00011')},
+                where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00020')},
             )
 
         # Check if the query was successful
@@ -67,32 +69,6 @@ class HandleInvoices:
 
             # Process the invoices
             result_data = result_query['data']
-            # result_data: DataFrame = result_query['data'] - Pandas
-
-            # Extract the columns headers from the dataframe - Pandas
-            # result_headers = result_data.columns.tolist()
-
-            # for row in result_data.itertuples(index=False): - Pandas
-            #     file_name = (
-            #         Path(settings.FOLDER_XML_IN) / str(row.INVOICE_NUM_0).replace('/', '')  # noqa: E501
-            #         + '.xml'
-            #     )
-
-            #     # Read QR Code table from Portugal
-            #     qr_code = HandleInvoices.get_qr_code(
-            #         str(row.INVOICE_TYP_0), str(row.INVOICE_NUM_0)
-            #     )
-
-            #     # Read invoice lines
-            #     invoice_lines = HandleInvoices.get_invoice_lines(str(row.INVOICE_NUM_0))
-
-            #     xmlHandler = HandleXML(
-            #         mapping_file_path,
-            #         result_headers,
-            #         row._asdict(),
-            #         qr_code,
-            #         invoice_lines,
-            #     )
 
             # Loop through the invoices
             for record in result_data:
@@ -102,6 +78,7 @@ class HandleInvoices:
                 seller_address = str(record.get('SITE_ADDRESS_0', ''))
                 buyer = str(record.get('BUYER_CODE_0', ''))
                 buyer_address = str(record.get('BUYER_ADDR_0', ''))
+                send_method = str(record.get('SEND_METHOD_0', ''))
 
                 file_name = (
                     f'{Path(settings.FOLDER_XML_IN) / invoice_number.replace("/", "")}'
@@ -109,13 +86,13 @@ class HandleInvoices:
                 )
 
                 # Read QR Code table from Portugal
-                qr_code = HandleInvoices.get_qr_code(invoice_type, invoice_number)
+                # qr_code = HandleInvoices.get_qr_code(invoice_type, invoice_number)
 
                 # Read invoice lines
-                invoice_lines = HandleInvoices.get_invoice_lines(invoice_number)
+                # invoice_lines = HandleInvoices.get_invoice_lines(invoice_number)
 
                 # Read VAT summary table
-                vat_summary = HandleInvoices.get_vat_summary(invoice_number)
+                # vat_summary = HandleInvoices.get_vat_summary(invoice_number)
 
                 # Read the addresses referenced in the invoice
                 seller_address = HandleInvoices.get_addresses(
@@ -138,15 +115,24 @@ class HandleInvoices:
                     'mapping_file_path': mapping_file_path,
                     'field_headers': result_query['columns'],
                     'db_record': record,
-                    'db_qrcode': qr_code,
-                    'db_lines': invoice_lines,
-                    'db_vat_summary': vat_summary,
+                    'db_qrcode': HandleInvoices.get_qr_code(invoice_type, invoice_number),
+                    'db_lines': HandleInvoices.get_invoice_lines(invoice_number),
+                    'db_vat_summary': HandleInvoices.get_vat_summary(invoice_number),
                     'db_addresses': seller_address,
                 }
 
                 xmlHandler = HandleXML(**xml_parameters)
 
                 xmlHandler.generate_xml(file_name)
+
+                if send_method == settings.NO_SEND_XML:
+                    if Messages.update_database(f'{invoice_number.replace("/", "")}', 8):
+                        file_handler = FileHandlerService(
+                            settings.BASE_DIR,
+                            settings.FOLDER_XML_IN,
+                            settings.FOLDER_XML_OUT,
+                        )
+                        file_handler.move_file(f'{invoice_number.replace("/", "")}.xml')
 
                 # break
 

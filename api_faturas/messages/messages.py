@@ -5,6 +5,7 @@ import requests
 
 from config import settings
 from database.database import Condition, DatabaseConnection
+from utils.handle_files import HandleFiles
 
 
 class Messages:
@@ -38,7 +39,7 @@ class Messages:
         return json_response['IsValid']
 
     @staticmethod
-    def update_database(file: str) -> bool:
+    def update_database(file: str, value: int) -> bool:
         with DatabaseConnection(
             settings.DB_SERVER,
             settings.DB_DATABASE,
@@ -47,9 +48,11 @@ class Messages:
         ) as db:
             document_number = f'{file[:8]}/{file[8:]}'
 
+            current_date = HandleFiles.get_current_date_time()
+
             # Update table ZSINVOICEV
             table_name = f'{settings.DB_SCHEMA}.ZSINVOICEV'
-            set_columns = {'ZSTATUS_0': 7}
+            set_columns = {'ZSTATUS_0': value, 'UPDDATTIM_0': current_date}
             where_clause = {'NUMX3_0': Condition('=', document_number)}
 
             response = db.execute_update(
@@ -61,13 +64,11 @@ class Messages:
             if response['status'] == 'success':
                 # Update record table ZLOGFAT
                 table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
-                set_columns = {'STATUT_0': 7}
-                where_clause = (
-                    {
-                        'NUM_0': Condition('=', document_number),
-                        'NUMLIG_0': Condition('=', 0),
-                    },
-                )
+                set_columns = {'STATUT_0': value, 'UPDDATTIM_0': current_date}
+                where_clause = {
+                    'SIHNUM_0': Condition('=', document_number),
+                    'NUMLIG_0': Condition('=', 0),
+                }
 
                 response = db.execute_update(
                     table_name,

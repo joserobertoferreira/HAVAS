@@ -52,8 +52,8 @@ class DatabaseConnection:
         table: str,
         columns: Optional[list[str]] = None,
         where_clauses: Optional[Dict[str, Tuple[str, Any]]] = None,
-        group_by: Optional[str] = None,
-        order_by: Optional[Tuple[str, int]] = None,
+        options: Optional[Dict[str, str]] = None,
+        limit: Optional[int] = None,
     ):
         # Check if there is an active connection
         if not self.connection:
@@ -69,8 +69,8 @@ class DatabaseConnection:
         # Build the SELECT clause dynamically
         select_clause = ', '.join(columns) if columns else '*'
 
-        if order_by:
-            query = f'SELECT TOP {order_by[1]} {select_clause} FROM {table}'
+        if limit and limit > 0:
+            query = f'SELECT TOP {limit} {select_clause} FROM {table}'
         else:
             query = f'SELECT {select_clause} FROM {table}'
 
@@ -86,13 +86,12 @@ class DatabaseConnection:
             where_values = ()
 
         # Add GROUP BY clause if provided
-        if group_by:
-            query += f' GROUP BY {group_by}'
-
-        # Add ORDER BY clause if provided
-        if order_by:
-            query += f' ORDER BY {order_by[0]}'
-
+        # Add GROUP BY and ORDER BY clauses if provided
+        if options:
+            if 'group_by' in options:
+                query += f' GROUP BY {options["group_by"]}'
+            if 'order_by' in options:
+                query += f' ORDER BY {options["order_by"]}'
         try:
             with self.connection.cursor() as cursor:
                 # Execute the query with the WHERE values if any are provided

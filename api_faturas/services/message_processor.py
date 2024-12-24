@@ -18,8 +18,8 @@ class MessageProcessorService:
 
         return sent_message
 
-    def update_database(self, file: str) -> bool:
-        update_ok = self.handle_messages.update_database(file)
+    def update_database(self, file: str, value: int) -> bool:
+        update_ok = self.handle_messages.update_database(file, value)
 
         if update_ok:
             print(f'Database updated for file {file}.')
