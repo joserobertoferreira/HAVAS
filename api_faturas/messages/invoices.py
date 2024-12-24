@@ -59,7 +59,7 @@ class HandleInvoices:
                     'TOTAL_AMOUNT_0',
                     'DISCOUNT_0',
                 ],
-                where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00020')},
+                # where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00020')},
             )
 
         # Check if the query was successful
@@ -84,15 +84,6 @@ class HandleInvoices:
                     f'{Path(settings.FOLDER_XML_IN) / invoice_number.replace("/", "")}'
                     '.xml'
                 )
-
-                # Read QR Code table from Portugal
-                # qr_code = HandleInvoices.get_qr_code(invoice_type, invoice_number)
-
-                # Read invoice lines
-                # invoice_lines = HandleInvoices.get_invoice_lines(invoice_number)
-
-                # Read VAT summary table
-                # vat_summary = HandleInvoices.get_vat_summary(invoice_number)
 
                 # Read the addresses referenced in the invoice
                 seller_address = HandleInvoices.get_addresses(
