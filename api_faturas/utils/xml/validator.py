@@ -75,7 +75,10 @@ class ValidatorData:
                 table=f'{settings.DB_SCHEMA}.ZSAPHLOG',
                 columns=['NUMLIG_0'],
                 where_clauses={'NUM_0': Condition('=', document_number)},
-                order_by=('NUMLIG_0 DESC', 1),
+                options={
+                    'order_by': 'NUMLIG_0 DESC',
+                },
+                limit=1,
             )
 
             # Check if the query was successful

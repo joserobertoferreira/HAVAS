@@ -59,7 +59,7 @@ class HandleInvoices:
                     'TOTAL_AMOUNT_0',
                     'DISCOUNT_0',
                 ],
-                # where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00020')},
+                # where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00001')},
             )
 
         # Check if the query was successful
