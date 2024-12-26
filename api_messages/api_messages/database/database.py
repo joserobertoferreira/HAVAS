@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict
 
 import pyodbc
 from database.condition import Condition
@@ -46,14 +46,38 @@ class DatabaseConnection:
 
         return {'status': 'info', 'message': 'No active connection to close'}
 
-    def execute_query(
-        self,
-        table: str,
-        columns: Optional[list[str]] = None,
-        where_clauses: Optional[Dict[str, Tuple[str, Any]]] = None,
-        group_by: Optional[str] = None,
-        order_by: Optional[str] = None,
-    ):
+    def execute_query(self, table: str, **kwargs):
+        """
+        Executes a SQL SELECT query on the specified table with optional parameters.
+        Parameters:
+        table (str): The name of the table to query.
+        **kwargs: Optional parameters for the query.
+            - columns (list of str, optional): List of columns to select. Defaults to
+              all columns.
+            - where_clauses (dict, optional): Dictionary of column names and their
+            conditions (operator, value).
+            - group_by (str, optional): Column name to group results by.
+            - order_by (str, optional): Column name to order results by.
+            - limit (int, optional): Maximum number of rows to return.
+        Returns:
+        dict: A dictionary containing the status of the query, a message, the column
+        names, the number of records, and the data.
+            - status (str): 'success' or 'error'.
+            - message (str): Description of the query result or error.
+            - columns (list of str): List of column names in the result.
+            - records (int): Number of records returned.
+            - data (list of dict or None): List of dictionaries representing the rows,
+              or None if no results.
+        Raises:
+        pyodbc.Error: If there is an error executing the query.
+        Exception: If there is an unexpected error.
+        """
+        columns = kwargs.get('columns', None)
+        where_clauses = kwargs.get('where_clauses', None)
+        group_by = kwargs.get('group_by', None)
+        order_by = kwargs.get('order_by', None)
+        limit = kwargs.get('limit', None)
+
         # Check if there is an active connection
         if not self.connection:
             try:
@@ -68,7 +92,10 @@ class DatabaseConnection:
         # Build the SELECT clause dynamically
         select_clause = ', '.join(columns) if columns else '*'
 
-        query = f'SELECT {select_clause} FROM {table}'
+        if limit and limit > 0:
+            query = f'SELECT TOP {limit} {select_clause} FROM {table}'
+        else:
+            query = f'SELECT {select_clause} FROM {table}'
 
         # Build the WHERE clause dynamically with multiple conditions
         if where_clauses:
@@ -108,19 +135,24 @@ class DatabaseConnection:
 
                 return {
                     'status': 'success',
-                    'message': 'Query executed successfully',
+                    'message': f'{len(results)} results found'
+                    if results
+                    else 'No results found',
                     'columns': columns_names,
-                    'data': results,
+                    'records': len(results),
+                    'data': results if results else None,
                 }
         except pyodbc.Error as e:
             return {
                 'status': 'error',
+                'records': 0,
                 'message': f'Error executing query: {e}',
                 'data': None,
             }
         except Exception as e:
             return {
                 'status': 'error',
+                'records': 0,
                 'message': f'Unexpected error: {e}',
                 'data': None,
             }
@@ -132,28 +164,28 @@ class DatabaseConnection:
         where_clauses: Dict[str, Condition],
     ) -> Dict[str, str]:
         """
-        Atualiza registros em uma tabela específica do banco de dados com múltiplas
-        condições no WHERE.
+        Updates records in a specific database table with multiple conditions in
+        the WHERE clause.
 
-        Parâmetros:
-        - table_name (str): nome da tabela a ser atualizada.
-        - set_columns (dict): dicionário onde as chaves são as colunas e os valores são os novos
-          dados a serem atualizados.
-        - where_conditions (dict): dicionário onde as chaves são as colunas e os valores são são instâncias
-          da classe Condition, representando as condições para cada campo.
+        Parameters:
+        - table_name (str): Name of the table to be updated.
+        - set_columns (dict): Dictionary where keys are columns and values are the new
+          data to be updated.
+        - where_conditions (dict): Dictionary where keys are columns and values are
+          instances of the Condition class, representing the conditions for each field.
 
-        Retorno:
+        Returns:
 
-        dict: Um dicionário contendo informações sobre o resultado da operação, como status (sucesso ou erro),
-          mensagem e dados adicionais (se houver).
+        dict: A dictionary containing information about the result of the operation, such
+        as status (success or error), message, and additional data (if any).
 
-        Exemplo de uso:
-        # Criando instâncias de Condition
-        condition1 = Condition("=", "valor1")
+        Example usage:
+        # Creating instances of Condition
+        condition1 = Condition("=", "value1")
         condition2 = Condition(">", 10)
 
-        update_table("Customers", {"Name": "John", "Age": 30}, {"ID": 1, "Campo 1": condition1, "Campo 2": condition2})
-        """  # noqa: E501
+        update_table("Customers", {"Name": "John", "Age": 30}, {"ID": 1, "Field 1": condition1, "Field 2": condition2})
+        """  # noqa E501
 
         # Check if there is an active connection
         if not self.connection:
@@ -244,19 +276,19 @@ class DatabaseConnection:
         values_columns: Dict[str, Any],
     ) -> Dict[str, str]:
         """
-        Insere um novo registro em uma tabela específica do banco de dados.
+        Inserts a new record into a specific database table.
 
-        Parâmetros:
-        - table_name (str): Nome da tabela onde o registro será inserido.
-        - values_columns (dict): Dicionário onde as chaves são as colunas e os valores
-        são os dados a serem inseridos.
+        Parameters:
+        - table_name (str): Name of the table where the record will be inserted.
+        - values_columns (dict): Dictionary where keys are columns and values are the
+        data to be inserted.
 
-        Retorno:
+        Returns:
 
-        dict: Um dicionário contendo informações sobre o resultado da operação, como
-        status (sucesso ou erro), mensagem e dados adicionais (se houver).
+        dict: A dictionary containing information about the result of the operation, such
+        as status (success or error), message, and additional data (if any).
 
-        Exemplo de uso:
+        Example usage:
         insert_into_table("Customers", {"Name": "John", "Age": 30})
         """
 
@@ -305,6 +337,17 @@ class DatabaseConnection:
                 'message': f'Error executing query: {e}',
                 'data': None,
             }
+
+    def __enter__(self):
+        self.connect()
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        if exc_type:
+            print(f'Exception: {exc_type}')
+            print(f'Exception: {exc_value}')
+
+        self.disconnect()
 
     # def execute_pandas_query(
     #     self,
@@ -361,14 +404,3 @@ class DatabaseConnection:
     #             'message': f'Unexpected error: {e}',
     #             'data': None,
     #         }
-
-    def __enter__(self):
-        self.connect()
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        if exc_type:
-            print(f'Exception: {exc_type}')
-            print(f'Exception: {exc_value}')
-
-        self.disconnect()

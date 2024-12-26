@@ -25,8 +25,8 @@ def api_messages():
             messages = download.download_messages()
 
             # Marking the message as processed
-            for message in messages:
-                MessageProcessorService(token).mark_as_processed(message['ResultData'])
+            # for message in messages:
+            # MessageProcessorService(token).mark_as_processed(message['ResultData'])
 
             # Logout from API
             auth_service.logout(token['Token'])

@@ -61,7 +61,7 @@ class Messages:
             if response['status'] == 'success':
                 # Update table ZLOGFAT
                 table_name = f'{settings.DB_SCHEMA}.ZLOGFAT'
-                set_columns = {'STATUT_0': 7}
+                set_columns = {'STATUT_0': 8}
                 where_clause = {'SIHNUM_0': Condition('=', document_number)}
 
                 response = db.execute_update(
@@ -81,13 +81,36 @@ class Messages:
                 settings.DB_USERNAME,
                 settings.DB_PASSWORD,
             ) as db:
+                last_record = 0
+
+                # Read the last error number
+                result_query = db.execute_query(
+                    table=f'{settings.DB_SCHEMA}.ZSAPHLOG',
+                    columns=['NUMLIG_0'],
+                    where_clauses={
+                        'NUM_0': Condition('=', data_log['document_number']).as_tuple()
+                    },
+                    order_by='NUMLIG_0 DESC',
+                    limit=1,
+                )
+
+                # Check if the query was successful
+                if result_query['status'] == 'success':
+                    last_record = result_query.get('records', 0)
+
+                    if last_record > 0:
+                        for row in result_query['data']:
+                            last_record = row.get('NUMLIG_0', 0)
+
+                last_record += 1
+
                 table_name = f'{settings.DB_SCHEMA}.ZSAPHLOG'
 
                 current_date = HandleFiles.get_current_date_time()
 
                 payload = {
                     'NUM_0': data_log['document_number'],
-                    'NUMLIG_0': data_log['info_index'],
+                    'NUMLIG_0': last_record,
                     'STATUT_0': data_log['status'],
                     'ERRORCODE_0': data_log['info_code'],
                     'NOTE_0': data_log['info_note'],
@@ -101,7 +124,7 @@ class Messages:
                 response = db.execute_insert(table_name, payload)
 
                 if response['status'] == 'success':
-                    if data_log['status'] == 'ACCEPTED':
+                    if data_log['info_index'] == 'information':
                         Messages.update_invoice(data_log['document_number'])
 
                     print(f'Log inserted for file {payload["NUM_0"]}.')

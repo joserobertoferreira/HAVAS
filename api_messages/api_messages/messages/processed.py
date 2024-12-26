@@ -107,13 +107,13 @@ class ProcessedMessage:
 
                 # If the document is a status file and an error code is not
                 # ERROR then log the information
-                if status == 'information' and info_code != 'ERROR':
-                    # Log each information separately
-                    Messages.update_log({
-                        'document_number': document_number,
-                        'document_date': document_date,
-                        'status': status,
-                        'info_code': info_code,
-                        'info_note': info_note,
-                        'info_index': index,
-                    })
+                # if status == 'information' and info_code != 'ERROR':
+                # Log each information separately
+                Messages.update_log({
+                    'document_number': document_number,
+                    'document_date': document_date,
+                    'status': status,
+                    'info_code': info_code,
+                    'info_note': info_note,
+                    'info_index': document_type,
+                })
