@@ -152,6 +152,9 @@ class Validator:
             'datetime': Validator._try_datetime,
             'enum': lambda v: v in self.config.get('enum', []),
             'pattern': lambda v: Validator._try_regex(v, self.config.get('pattern')),
+            'email_pattern': lambda v: Validator._try_email(
+                v, self.config.get('email_pattern')
+            ),
         }
 
         # Required field validation
@@ -199,3 +202,10 @@ class Validator:
     @staticmethod
     def _try_regex(value, pattern):
         return bool(pattern and re.fullmatch(pattern, value))
+
+    @staticmethod
+    def _try_email(value, pattern):
+        if pattern:
+            values = value.split(',')
+            return all(re.fullmatch(pattern, v.strip()) for v in values)
+        return False

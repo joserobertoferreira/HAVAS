@@ -48,6 +48,11 @@
     "documentDate": "{{invoice_date}}",
     "schemaVersion": "1.1"
   },
+  "binaryDocumentFormat": {
+    "name": "{{invoice_num}}",
+    "contentType": "application/pdf",
+    "content": "{{attachment_base64}}"
+  },
   "binaryDocumentAttachment": {
     "name": "{{invoice_num}}",
     "contentType": "application/pdf",

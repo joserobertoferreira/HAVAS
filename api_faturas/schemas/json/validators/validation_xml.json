@@ -275,7 +275,7 @@
           "data_type": "nonEmptyString",
           "required": false,
           "maxLength": 100,
-          "pattern": "([a-zA-Z0-9_\\-\\.\\+])+@(([0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5])|((([a-zA-Z0-9\\-])+\\.)+([a-zA-Z\\-])+))",
+          "email_pattern": "([a-zA-Z0-9_\\-\\.\\+])+@(([0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5])|((([a-zA-Z0-9\\-])+\\.)+([a-zA-Z\\-])+))",
           "message": "Email inválido",
           "documentation": "Formato para endereços de email"
         }
@@ -368,7 +368,7 @@
           "data_type": "nonEmptyString",
           "required": false,
           "maxLength": 100,
-          "pattern": "([a-zA-Z0-9_\\-\\.\\+])+@(([0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5])|((([a-zA-Z0-9\\-])+\\.)+([a-zA-Z\\-])+))",
+          "email_pattern": "([a-zA-Z0-9_\\-\\.\\+])+@(([0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5]\\.[0-2]?[0-5]?[0-5])|((([a-zA-Z0-9\\-])+\\.)+([a-zA-Z\\-])+))",
           "message": "Email inválido",
           "documentation": "Formato para endereços de email"
         }

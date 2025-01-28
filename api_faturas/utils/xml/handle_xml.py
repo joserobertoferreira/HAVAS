@@ -79,30 +79,28 @@ class HandleXML(Placeholder, TagFactory):
         )
 
     def add_binary_document_attachment(self, invoice):
-        attach_pdf = self.data_cache.get('SEND_METHOD_0')
+        self.data_cache.get('SEND_METHOD_0')
 
-        if attach_pdf == ATTACH_PDF:
-            self.parent_tag = 'binaryDocumentAttachment'
+        # if attach_pdf == ATTACH_PDF:
+        self.parent_tag = 'binaryDocumentFormat'
 
-            binary_document = self.create_sub_element(
-                invoice,
-                'binaryDocumentAttachment',
-                {
-                    'name': self.process_mapping_value(
-                        self.mapping['binaryDocumentAttachment']['name']
-                    ),
-                    'contentType': self.mapping['binaryDocumentAttachment'][
-                        'contentType'
-                    ],
-                    'xmlns': '',
-                },
-            )
+        binary_document = self.create_sub_element(
+            invoice,
+            'binaryDocumentFormat',
+            {
+                'name': self.process_mapping_value(
+                    self.mapping['binaryDocumentFormat']['name']
+                ),
+                'contentType': self.mapping['binaryDocumentFormat']['contentType'],
+                'xmlns': '',
+            },
+        )
 
-            self.parent_tag = 'base64Attachment'
+        self.parent_tag = 'base64Attachment'
 
-            binary_document.text = self.process_mapping_value(
-                self.mapping['binaryDocumentAttachment']['content']
-            )
+        binary_document.text = self.process_mapping_value(
+            self.mapping['binaryDocumentAttachment']['content']
+        )
 
     def add_attachments(self, invoice):
         attachments = HandleFiles.list_folder(settings.FOLDER_XML_IN / 'attachments')
