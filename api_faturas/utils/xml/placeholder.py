@@ -54,13 +54,13 @@ class Placeholder:
 
         return return_date
 
-    def resolve_placeholder(self, placeholder: str) -> str:
+    def resolve_placeholder(self, placeholder: str, extra: str | None = None) -> str:
         """Substitute placeholders with the corresponding value from the database
         or the current date.
         """
 
         # Deal with the specific placeholders
-        return_value = self.resolve_specific_placeholder(placeholder)
+        return_value = self.resolve_specific_placeholder(placeholder, extra)
 
         if return_value:
             return return_value
@@ -102,7 +102,9 @@ class Placeholder:
 
         return str(placeholder)
 
-    def resolve_specific_placeholder(self, placeholder: str) -> str:
+    def resolve_specific_placeholder(
+        self, placeholder: str, extra: str | None = None
+    ) -> str:
         # Deal with the seller tag
         if self.parent_tag == 'seller':
             if 'seller' not in self.cache:
@@ -115,7 +117,7 @@ class Placeholder:
             if 'buyer' not in self.cache:
                 self.cache['buyer'] = Buyer(self.data_cache, self.addresses)
             buyer = self.cache['buyer']
-            return buyer.manage_buyers(placeholder)
+            return buyer.manage_buyers(placeholder, extra)
 
         # Deal with the QR Code tag
         if self.parent_tag == 'qrData':

@@ -2,16 +2,17 @@ import xml.etree.ElementTree as ET
 from typing import Any, Dict
 
 from utils.comparisons import compare
+from utils.handle_emails import HandleEmails
 
 
 class TagFactory:
     def __init__(self):
         pass
 
-    def process_mapping_value(self, value: Any) -> Any:
+    def process_mapping_value(self, value: Any, extra: str | None = None) -> Any:
         """Process a value from the mapping to replace placeholders."""
         if isinstance(value, str) and value.startswith('{{') and value.endswith('}}'):
-            return self.resolve_placeholder(value)
+            return self.resolve_placeholder(value, extra)
         elif isinstance(value, dict):
             return {k: self.process_mapping_value(v) for k, v in value.items()}
         return value
@@ -51,8 +52,10 @@ class TagFactory:
         # Determine how to process the config based on its type
         if isinstance(config, list):
             self.process_list_config(parent, tag, config)
-        elif isinstance(config, dict):
+        elif isinstance(config, dict) and tag != 'contactInformation':
             self.process_dict_config(parent, tag, config)
+        elif isinstance(config, dict) and tag == 'contactInformation':
+            self.process_contact_config(parent, tag, config)
         else:
             # If not a dictionary, treat as a direct value of the element
             self.process_direct_value(parent, tag, config)
@@ -105,6 +108,59 @@ class TagFactory:
                 else:
                     sub_elem = ET.SubElement(element, key)
                     sub_elem.text = self.process_mapping_value(value)
+
+    def process_contact_config(self, parent: ET.Element, tag: str, config: dict) -> None:
+        """Process the case where config is a dictionary, handling attributes and
+        sub-elements."""
+        if parent.tag == 'seller':
+            email_list = HandleEmails().extract_from_dict(self.addresses[0], 'WEB')
+        else:
+            email_list = HandleEmails().extract_from_dict(self.addresses[1], 'WEB')
+
+        if len(email_list) == 0:
+            self.process_dict_config(parent, tag, config)
+        else:
+            self.process_dict_contact(parent, tag, config, email_list)
+
+    def process_dict_contact(
+        self, parent: ET.Element, tag: str, config: dict, email_list: list
+    ) -> None:
+        # Create the XML sub-element
+        for email in email_list:
+            element = ET.SubElement(parent, tag)
+
+            # Check and apply attributes if `attributes` key is present
+            if 'attributes' in config and isinstance(config['attributes'], list):
+                for attr_dict in config['attributes']:
+                    if 'attribute' in attr_dict and 'attr_value' in attr_dict:
+                        attribute_name = self.process_mapping_value(
+                            attr_dict['attribute']
+                        )
+                        attribute_value = self.process_mapping_value(
+                            attr_dict['attr_value']
+                        )
+                        element.set(attribute_name, attribute_value)
+
+            # Define the element text if the `value` key is present
+            if 'value' in config:
+                element.text = self.process_mapping_value(config['value'])
+
+            # Process other keys, creating sub-elements as needed
+            for key, value in config.items():
+                if key not in {'attributes', 'value'}:
+                    if isinstance(value, dict):
+                        # Recursively handle nested dictionaries
+                        self.create_sub_element_from_mapping(element, key, value)
+                    # Create a sub-element for other simple values
+                    elif self.is_special_case(tag, key):
+                        text = self.process_mapping_value(value, email)
+
+                        if len(text.strip()) > 0:
+                            sub_elem = ET.SubElement(element, key)
+                            sub_elem.text = text
+                    else:
+                        sub_elem = ET.SubElement(element, key)
+                        sub_elem.text = self.process_mapping_value(value)
 
     @staticmethod
     def is_special_case(tag: str, key: str) -> bool:

@@ -59,7 +59,7 @@ class HandleInvoices:
                     'TOTAL_AMOUNT_0',
                     'DISCOUNT_0',
                 ],
-                # where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00001')},
+                # where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00002')},
             )
 
         # Check if the query was successful
@@ -86,7 +86,7 @@ class HandleInvoices:
                 )
 
                 # Read the addresses referenced in the invoice
-                seller_address = HandleInvoices.get_addresses(
+                addresses = HandleInvoices.get_addresses(
                     parameters=[
                         {
                             'address_type': 3,
@@ -109,7 +109,7 @@ class HandleInvoices:
                     'db_qrcode': HandleInvoices.get_qr_code(invoice_type, invoice_number),
                     'db_lines': HandleInvoices.get_invoice_lines(invoice_number),
                     'db_vat_summary': HandleInvoices.get_vat_summary(invoice_number),
-                    'db_addresses': seller_address,
+                    'db_addresses': addresses,
                 }
 
                 xmlHandler = HandleXML(**xml_parameters)
@@ -165,6 +165,10 @@ class HandleInvoices:
                         'TEL_0',
                         'FAX_0',
                         'WEB_0',
+                        'WEB_1',
+                        'WEB_2',
+                        'WEB_3',
+                        'WEB_4',
                     ],
                     where_clauses={
                         'BPATYP_0': Condition('=', address_type),

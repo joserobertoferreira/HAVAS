@@ -10,7 +10,7 @@ class Buyer:
         self.addresses = addresses
         self.address_type = 1
 
-    def manage_buyers(self, placeholder: str) -> str:
+    def manage_buyers(self, placeholder: str, email: str | None = None) -> str:
         normal_mapping = {
             '{{buyer_name}}': 'BUYER_NAME_0',
             '{{type_cod_buyer}}': 'TYPE_COD_REC_0',
@@ -29,14 +29,17 @@ class Buyer:
             '{{buyer_zip}}': 'POSCOD_0',
             '{{buyer_area}}': 'CTY_0',
             '{{buyer_phone}}': 'TEL_0',
-            '{{buyer_email}}': 'WEB_0',
             '{{billTo_address}}': 'BPAADDLIG_0',
             '{{billTo_city}}': 'CTY_0',
             '{{billTo_country}}': 'CRY_0',
             '{{billTo_zip}}': 'POSCOD_0',
             '{{billTo_area}}': 'CTY_0',
             '{{billTo_phone}}': 'TEL_0',
-            '{{billTo_email}}': 'WEB_0',
+        }
+
+        email_mapping = {
+            '{{buyer_email}}': email,
+            '{{billTo_email}}': email,
         }
 
         return_value = ''
@@ -47,6 +50,9 @@ class Buyer:
             for address in self.addresses:
                 if address.get('BPATYP_0') == self.address_type:
                     return self.return_address_values(field_name, address)
+
+        if placeholder in email_mapping:
+            return email_mapping.get(placeholder)
 
         if placeholder in normal_mapping:
             field_name = normal_mapping.get(placeholder)

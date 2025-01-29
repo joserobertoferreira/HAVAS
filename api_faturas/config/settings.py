@@ -10,6 +10,7 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SERVER_BASE_ADDRESS = os.environ.get('SERVER_BASE_ADDRESS', '')
+SERVER_BASE_ADDRESS += '/TradeHttp/MessageServiceRest'
 
 API_USER = os.environ.get('API_USER', 'admin')
 API_PASSWORD = os.environ.get('API_PASSWORD', 'admin')
