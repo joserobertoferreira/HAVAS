@@ -37,8 +37,7 @@ class HandleXML(Placeholder, TagFactory):
         invoice = self.add_invoice(root)
         self.add_binary_document_attachment(invoice)
         self.add_attachments(invoice)
-        self.add_seller(invoice)
-        self.add_buyer_billto(invoice)
+        self.add_seller_buyer_billto(invoice)
         self.add_saphety_specific_info(invoice)
         self.add_qr_data(invoice)
         self.add_line_items(invoice)
@@ -124,13 +123,8 @@ class HandleXML(Placeholder, TagFactory):
                     f'{attachment.get("file_name")}{attachment.get("suffix")}',
                 )
 
-    def add_seller(self, invoice):
-        element = (invoice, 'seller')
-        self.parent_tag = element[1]
-        self.insert_element(*element)
-
-    def add_buyer_billto(self, invoice):
-        elements = [(invoice, 'buyer'), (invoice, 'billTo')]
+    def add_seller_buyer_billto(self, invoice):
+        elements = [(invoice, 'seller'), (invoice, 'buyer'), (invoice, 'billTo')]
         for element in elements:
             self.parent_tag = element[1]
             self.insert_element(*element)
