@@ -65,7 +65,7 @@ class HandleXML(Placeholder, TagFactory):
     def add_invoice(self, root):
         return self.create_sub_element(
             root,
-            'invoice',
+            'invoice' if self.data_cache.get('INVOICE_TYP_0') == 'FT' else 'creditNote',
             {
                 'documentNumber': self.process_mapping_value(
                     self.mapping['invoice']['documentNumber']
@@ -103,6 +103,9 @@ class HandleXML(Placeholder, TagFactory):
         )
 
     def add_attachments(self, invoice):
+        if len(self.data_cache.get('ATT_PATH_0').strip()) == 0:
+            return
+
         attachments = HandleFiles.list_folder(settings.FOLDER_XML_IN / 'attachments')
 
         if attachments:
@@ -168,9 +171,9 @@ class HandleXML(Placeholder, TagFactory):
             self.mapping['currencyCode']['value']
         )
 
-        elements = [(invoice, 'discount')]
-        for element in elements:
-            self.insert_element(*element)
+        # elements = [(invoice, 'discount')]
+        # for element in elements:
+        #     self.insert_element(*element)
 
         comment = self.create_sub_element(
             invoice,
