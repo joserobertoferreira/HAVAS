@@ -144,7 +144,7 @@ class HandleXML(Placeholder, TagFactory):
             self.mapping['additionalDate']['value']
         )
 
-        cost_center = self.data_cache.get('COST_CENTER_0', '')
+        cost_center = self.data_cache.get('COST_CENTER_0', '').strip()
 
         if len(cost_center) > 0:
             self.create_sub_element(
@@ -153,13 +153,31 @@ class HandleXML(Placeholder, TagFactory):
                 {'type': 'COSTCENTER', 'referencedDocumentId': cost_center, 'xmlns': ''},
             )
 
-        order = self.data_cache.get('REF_ORDER_0', '')
+        order = self.data_cache.get('REF_ORDER_0', '').strip()
 
         if len(order) > 0:
             self.create_sub_element(
                 invoice,
                 'reference',
                 {'type': 'ORDER', 'referencedDocumentId': order, 'xmlns': ''},
+            )
+
+        ref_invoice = self.data_cache.get('REF_INVOICE_0', '').strip()
+
+        if len(ref_invoice) > 0:
+            self.create_sub_element(
+                invoice,
+                'reference',
+                {'type': 'INVOICE', 'referencedDocumentId': ref_invoice, 'xmlns': ''},
+            )
+
+        commitment = self.data_cache.get('COMMITMENT_0', '').strip()
+
+        if len(commitment) > 0:
+            self.create_sub_element(
+                invoice,
+                'reference',
+                {'type': 'COMMITMENT', 'referencedDocumentId': commitment, 'xmlns': ''},
             )
 
         currency_code = self.create_sub_element(

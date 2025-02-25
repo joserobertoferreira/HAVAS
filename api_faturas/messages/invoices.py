@@ -50,16 +50,18 @@ class HandleInvoices:
                     'BUYER_NAME_0',
                     'BUYER_VAT_0',
                     'ADDITIONALDT_0',
+                    'COMMENT_0',
                     'COST_CENTER_0',
                     'REF_ORDER_0',
+                    'REF_INVOICE_0',
+                    'COMMITMENT_0',
                     'CURRENCY_COD_0',
-                    'COMMENT_0',
                     'TOT_VAT_AMT_0',
                     'TOT_TAX_AMT_0',
                     'TOTAL_AMOUNT_0',
                     'DISCOUNT_0',
                 ],
-                # where_clauses={'INVOICE_NUM_0': Condition('=', 'FT-01324/00002')},
+                # where_clauses={'INVOICE_NUM_0': Condition('=', 'NC-01425/00001')},
             )
 
         # Check if the query was successful
